@@ -10,7 +10,7 @@ import Table from "../../../component/Table";
 import {
   deleteOccupationAPI,
   fetchOccupationAPI,
-} from "../../../api/occupation";
+} from "../../../axiosApi/occupation";
 
 const Visa = () => {
   const navigate = useNavigate();
