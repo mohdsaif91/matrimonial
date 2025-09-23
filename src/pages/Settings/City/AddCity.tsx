@@ -4,12 +4,12 @@ import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptions, statusOptionsCap } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
-import { fetchReligion } from "../../../api/religion";
+import { fetchReligion } from "../../../axiosApi/religion";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addCasteAPI, updateCasteAPI } from "../../../api/caste";
+import { addCasteAPI, updateCasteAPI } from "../../../axiosApi/caste";
 import { CountryProps } from "../../../types/country";
-import { addCountry, updateCountry } from "../../../api/country";
+import { addCountry, updateCountry } from "../../../axiosApi/country";
 
 const initialFormItem = {
   id: 0,

@@ -10,7 +10,7 @@ import { QualificationProps } from "../../../types/qualification";
 import {
   addQualificationAPI,
   updateQualificationAPI,
-} from "../../../api/qualification";
+} from "../../../axiosApi/qualification";
 
 const initialFormItem = {
   name: "",

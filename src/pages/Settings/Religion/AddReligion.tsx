@@ -4,7 +4,7 @@ import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
-import { addReligion, updateReligion } from "../../../api/religion";
+import { addReligion, updateReligion } from "../../../axiosApi/religion";
 import { ReligionProps } from "../../../types/religion";
 import Button from "../../../component/form/Button";
 import { useLocation } from "react-router-dom";

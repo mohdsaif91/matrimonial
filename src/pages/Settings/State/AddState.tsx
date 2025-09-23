@@ -7,7 +7,11 @@ import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CountryProps } from "../../../types/country";
-import { addCountry, fetchCountry, updateCountry } from "../../../api/country";
+import {
+  addCountry,
+  fetchCountry,
+  updateCountry,
+} from "../../../axiosApi/country";
 
 const initialFormItem = {
   id: 0,

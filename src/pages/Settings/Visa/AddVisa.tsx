@@ -2,17 +2,13 @@ import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { statusOptions, statusOptionsCap } from "../../../data/ClientForm";
+import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { QualificationProps } from "../../../types/qualification";
-import {
-  addQualificationAPI,
-  updateQualificationAPI,
-} from "../../../api/qualification";
+import { updateQualificationAPI } from "../../../axiosApi/qualification";
 import { VisaProps } from "../../../types/visa";
-import { addVisaAPI } from "../../../api/visa";
+import { addVisaAPI } from "../../../axiosApi/visa";
 
 const initialFormItem = {
   name: "",

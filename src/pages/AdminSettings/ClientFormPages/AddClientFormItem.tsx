@@ -7,7 +7,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addFormItem } from "../../../api/clientForm";
+import { addFormItem } from "../../../axiosApi/clientForm";
 import { ClientFormItem } from "../../../types/form";
 import {
   clientFormbtn,
@@ -17,7 +17,7 @@ import {
   validationOptions,
   viewInPdfOptions,
 } from "../../../data/ClientForm";
-import { fetchModule } from "../../../api/module";
+import { fetchModule } from "../../../axiosApi/module";
 import { UpdateModuleProps } from "../../../types/module";
 import { toast, ToastContainer } from "react-toastify";
 import { Loader } from "lucide-react";

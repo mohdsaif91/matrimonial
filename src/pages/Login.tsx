@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/bg_image.webp";
 import ousplLogo from "../assets/ouspl_logo.png";
-import { loginApi } from "../api/auth";
+import { loginApi } from "../axiosApi/auth";
 import { useMutation } from "@tanstack/react-query";
 
 function LoginPage() {

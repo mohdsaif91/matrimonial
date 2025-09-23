@@ -11,7 +11,7 @@ import {
   addOccupationAPI,
   fetchOccupationAPI,
   updateOccupationAPI,
-} from "../../../api/occupation";
+} from "../../../axiosApi/occupation";
 import LoadingPage from "../../Loading/Loading";
 
 const initialFormItem = {
