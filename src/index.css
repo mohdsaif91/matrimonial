@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+body {
+  background-color: #66339912;
+}
+.logo_menu {
+  filter: brightness(20.5);
+}
+
+.rs__option {
+  color: #111827 !important;
+  font-size: 14px !important;
+  line-height: 20px;
+}
+.rs__option--is-selected {
+  color: #fff !important;
+  background-color: #465dff !important;
+}
+.rs__option--is-focused {
+  background-color: #e5e7eb !important;
+}
