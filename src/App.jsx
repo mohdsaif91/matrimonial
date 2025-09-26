@@ -1,6 +1,6 @@
-import { Routes, Route, useLocation } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import { Suspense } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+import { Suspense, useContext, useState } from "react";
 import LoginPage from "./pages/Login";
 import Footer from "./layout/Footer";
 import Header from "./layout/Header";
@@ -8,7 +8,7 @@ import { buildRoutes } from "./util/routeBuilder";
 import { headerLinks } from "./data/header";
 import LoadingPage from "./pages/Loading/Loading";
 import PrivateRoute from "./util/PrivateRoute";
-// import { useDrawer } from "./context/DrawerContext";
+import { useDrawer } from "./context/DrawerContext";
 
 function App() {
   const routes = buildRoutes(headerLinks);

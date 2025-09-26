@@ -4,7 +4,7 @@ import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptionsCap } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
-import { fetchReligion } from "../../../axiosApi/religion";
+import { fetchReligion } from "../../../api/religion";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SubCasteProps } from "../../../types/caste";
@@ -13,8 +13,8 @@ import {
   fetchCasteAPI,
   fetchSubCasteByRelIdAPI,
   updateCasteAPI,
-} from "../../../axiosApi/caste";
-import { addSubCasteAPI } from "../../../axiosApi/subCaste";
+} from "../../../api/caste";
+import { addSubCasteAPI } from "../../../api/subCaste";
 
 const initialFormItem = {
   religion_id: 0,

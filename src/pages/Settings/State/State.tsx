@@ -7,27 +7,28 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
-import { deleteCountry, fetchCountry } from "../../../axiosApi/country";
+import { deleteCountry } from "../../../api/country";
+import { deleteState, fetchState } from "../../../api/state";
 
 const City = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["country-list"],
-    queryFn: fetchCountry,
+    queryKey: ["state-list"],
+    queryFn: fetchState,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteCountry,
+    mutationFn: deleteState,
     onSuccess: () => {
-      toast("Successfully deleted Country");
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
+      toast("Successfully deleted State");
+      queryClient.invalidateQueries({ queryKey: ["state-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Country:", error);
-      toast(error.response?.data?.message || "Failed to delete Country");
+      console.error("❌ Error in deleting State:", error);
+      toast(error.response?.data?.message || "Failed to delete State");
     },
   });
 
@@ -40,6 +41,14 @@ const City = () => {
     {
       accessorKey: "name",
       header: "Name",
+    },
+    {
+      accessorKey: "",
+      header: "Country Name",
+      cell: ({ row }) => {
+        console.log(row.original);
+        return <span>{row.original.country.name}</span>;
+      },
     },
     {
       accessorKey: "status",
@@ -66,7 +75,7 @@ const City = () => {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/editCountry", { state: { data: row.original } });
+              navigate("/editState", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >

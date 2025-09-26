@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { statusOptions } from "../../../data/ClientForm";
+import { statusOptions, statusOptionsCap } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateQualificationAPI } from "../../../axiosApi/qualification";
+import { QualificationProps } from "../../../types/qualification";
+import {
+  addQualificationAPI,
+  updateQualificationAPI,
+} from "../../../api/qualification";
 import { VisaProps } from "../../../types/visa";
-import { addVisaAPI } from "../../../axiosApi/visa";
+import { addVisaAPI, updateVisaAPI } from "../../../api/visa";
 
 const initialFormItem = {
   name: "",
@@ -54,7 +58,7 @@ function AddCaste() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateQualificationAPI,
+    mutationFn: updateVisaAPI,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries

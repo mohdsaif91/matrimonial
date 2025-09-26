@@ -8,11 +8,11 @@ import {
   addReligion,
   fetchReligion,
   updateReligion,
-} from "../../../axiosApi/religion";
+} from "../../../api/religion";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CasteProps } from "../../../types/caste";
-import { addCasteAPI, updateCasteAPI } from "../../../axiosApi/caste";
+import { addCasteAPI, updateCasteAPI } from "../../../api/caste";
 
 const initialFormItem = {
   religion_id: 0,

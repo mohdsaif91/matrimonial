@@ -6,23 +6,19 @@ import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CountryProps } from "../../../types/country";
-import {
-  addCountry,
-  fetchCountry,
-  updateCountry,
-} from "../../../axiosApi/country";
+import { addCountry, fetchCountry, updateCountry } from "../../../api/country";
+import { StateProps } from "../../../types/state";
+import LoadingPage from "../../Loading/Loading";
+import { addState, updateState } from "../../../api/state";
 
 const initialFormItem = {
-  id: 0,
-  name: "",
   status: "",
-  created_at: "",
-  updated_at: "",
+  name: "",
+  country_id: 0,
 };
 
 function AddCountry() {
-  const [formData, setFormData] = useState<CountryProps>({
+  const [formData, setFormData] = useState<StateProps>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +27,7 @@ function AddCountry() {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const { data, isLoading: countryLoading } = useQuery({
+  const { data: countryData, isLoading: countryLoading } = useQuery({
     queryKey: ["country-list"],
     queryFn: fetchCountry,
     retry: false,
@@ -39,7 +35,7 @@ function AddCountry() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data);
+      console.log("FORM= ", state.data);
       setFormData({ ...state.data });
     }
   }, []);
@@ -49,37 +45,37 @@ function AddCountry() {
   };
 
   const mutation = useMutation({
-    mutationFn: addCountry,
+    mutationFn: addState,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
-      toast("Successfully added Country");
+      queryClient.invalidateQueries({ queryKey: ["state-list"] });
+      toast("Successfully added State");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding Country:", error);
-      toast(error.response?.data?.message || "Failed to add Country");
+      console.error("❌ Error adding State:", error);
+      toast(error.response?.data?.message || "Failed to add State");
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateCountry,
+    mutationFn: updateState,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
-      toast("Successfully Updated Country");
+      queryClient.invalidateQueries({ queryKey: ["state-list"] });
+      toast("Successfully Updated State");
       setFormData({ ...initialFormItem });
-      navigate("/country");
+      navigate("/state");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating Country:", error);
-      toast(error.response?.data?.message || "Failed to Update Country");
+      console.error("❌ Error updating State:", error);
+      toast(error.response?.data?.message || "Failed to Update State");
     },
   });
 
@@ -94,9 +90,14 @@ function AddCountry() {
       mutation.mutate(formData);
     }
   };
+  console.log(formData, " FORM DATA");
+
+  if (countryLoading) {
+    return <LoadingPage />;
+  }
 
   const transformCountryData =
-    data.data.map((m) => {
+    countryData.data.map((m) => {
       return {
         label: m.name,
         value: m.id,
@@ -118,8 +119,8 @@ function AddCountry() {
           label="Country"
           name="country"
           options={transformCountryData}
-          value={formData.status}
-          onChange={(val) => handleChange("status", val)}
+          value={formData.country_id}
+          onChange={(val) => handleChange("country_id", val)}
         />
         <TextField
           label="Name"
@@ -139,7 +140,7 @@ function AddCountry() {
         />
       </div>
       <Button
-        text={`${state && state.data ? "Update" : "Save"} Country`}
+        text={`${state && state.data ? "Update" : "Save"} State`}
         type="submit"
         loading={isLoading}
         className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"

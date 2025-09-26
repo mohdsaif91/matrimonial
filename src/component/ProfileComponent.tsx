@@ -1,6 +1,7 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search, CircleUserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ProfileDropdownProps } from "../types/header";
+import { useRef } from "react";
 
 function ProfileDropdown({
   user,
@@ -9,21 +10,34 @@ function ProfileDropdown({
   dropdownRef,
   handleLogout,
 }: ProfileDropdownProps) {
+  const searchInput = useRef<HTMLInputElement | null>(null);
   return (
     <div className="hidden md:flex relative items-center space-x-3">
+      <div className="relative w-[180px]">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ba6b7] w-4 h-4" />
+        <input
+          ref={searchInput}
+          type="text"
+          placeholder="Search..."
+          className="pl-10 pr-3 py-2 rounded-xl w-full outline-[#465dff] bg-[#F0F3F8] text-[#333] placeholder:text-[#9ba6b7]"
+        />
+      </div>
       {/* Profile button */}
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
         className="flex items-center focus:outline-none z-50"
       >
         {/* Avatar */}
-        <img
-          src={user?.avatar}
-          alt="User Profile"
-          className="w-8 h-8 rounded-full border border-gray-200 shadow-sm"
-        />
+        {user?.avatar ? (
+          <img
+            src={user?.avatar}
+            alt="User Profile"
+            className="w-8 h-8 rounded-full border border-gray-200 shadow-sm"
+          />
+        ) : (
+          <CircleUserIcon />
+        )}
 
-        {/* Name + Role */}
         <div className="flex flex-col items-start ml-2 text-left">
           <span className="text-sm font-medium text-gray-900">
             {user?.name || "User"}

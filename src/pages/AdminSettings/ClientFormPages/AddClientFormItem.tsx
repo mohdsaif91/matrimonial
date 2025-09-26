@@ -7,7 +7,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { addFormItem } from "../../../axiosApi/clientForm";
+import { addFormItem } from "../../../api/clientForm";
 import { ClientFormItem } from "../../../types/form";
 import {
   clientFormbtn,
@@ -17,7 +17,7 @@ import {
   validationOptions,
   viewInPdfOptions,
 } from "../../../data/ClientForm";
-import { fetchModule } from "../../../axiosApi/module";
+import { fetchModule } from "../../../api/module";
 import { UpdateModuleProps } from "../../../types/module";
 import { toast, ToastContainer } from "react-toastify";
 import { Loader } from "lucide-react";
@@ -48,7 +48,7 @@ function AddClientFormItem() {
     isLoading: moduleLoading,
     refetch: moduleRefetch,
   } = useQuery({
-    queryKey: ["addModule"],
+    queryKey: ["form-item-list"],
     queryFn: fetchModule,
     refetchOnWindowFocus: false,
     enabled: false,

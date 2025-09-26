@@ -82,6 +82,11 @@ export interface Field {
     | string[];
 }
 
+export interface staticClientFormTab {
+  id: number;
+  name: string;
+}
+
 export interface ClientFormItem {
   module_id: number;
   display_name: string;

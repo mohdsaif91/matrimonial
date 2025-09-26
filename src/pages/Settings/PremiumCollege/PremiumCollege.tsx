@@ -7,30 +7,32 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
-import { deleteReligionAPI, fetchReligion } from "../../../api/religion";
-import { deleteCasteAPI, fetchCasteAPI } from "../../../api/caste";
-import { deleteCountry, fetchCountry } from "../../../api/country";
-import { fetchCity } from "../../../api/city";
+import {
+  deletePremiumCollege,
+  fetchPremiumCollege,
+} from "../../../api/premiumCollege";
 
-const City = () => {
+const PremiumCollege = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["city-list"],
-    queryFn: fetchCity,
+    queryKey: ["premiumCollege-list"],
+    queryFn: fetchPremiumCollege,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteCountry,
+    mutationFn: deletePremiumCollege,
     onSuccess: () => {
-      toast("Successfully deleted Country");
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
+      toast("Successfully deleted Premium College");
+      queryClient.invalidateQueries({ queryKey: ["premiumCollege-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Country:", error);
-      toast(error.response?.data?.message || "Failed to delete Country");
+      console.error("❌ Error in deleting Premium College:", error);
+      toast(
+        error.response?.data?.message || "Failed to delete Premium College"
+      );
     },
   });
 
@@ -69,7 +71,9 @@ const City = () => {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/editCountry", { state: { data: row.original } });
+              navigate("/editPremiumCollege", {
+                state: { data: row.original },
+              });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -92,12 +96,13 @@ const City = () => {
     return <LoadingPage />;
   }
 
-  console.log(data);
-
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <Button text="+ Add City" onClick={() => navigate("/addCity")} />
+      <Button
+        text="+ Add Premium College"
+        onClick={() => navigate("/addPremiumCollege")}
+      />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />
       </div>
@@ -105,4 +110,4 @@ const City = () => {
   );
 };
 
-export default City;
+export default PremiumCollege;

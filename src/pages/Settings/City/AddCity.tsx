@@ -4,23 +4,29 @@ import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptions, statusOptionsCap } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
-import { fetchReligion } from "../../../axiosApi/religion";
+import { fetchReligion } from "../../../api/religion";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addCasteAPI, updateCasteAPI } from "../../../axiosApi/caste";
+import { addCasteAPI, updateCasteAPI } from "../../../api/caste";
 import { CountryProps } from "../../../types/country";
-import { addCountry, updateCountry } from "../../../axiosApi/country";
+import { addCountry, fetchCountry, updateCountry } from "../../../api/country";
+import { CityProps } from "../../../types/city";
+import { addCity, updateCity } from "../../../api/city";
+import { fetchState } from "../../../api/state";
+import LoadingPage from "../../Loading/Loading";
 
 const initialFormItem = {
   id: 0,
   name: "",
+  state_id: 0,
+  country_id: 0,
   status: "",
   created_at: "",
   updated_at: "",
 };
 
 function AddCountry() {
-  const [formData, setFormData] = useState<CountryProps>({
+  const [formData, setFormData] = useState<CityProps>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +34,18 @@ function AddCountry() {
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  const { data: stateData, isLoading: stateLoading } = useQuery({
+    queryKey: ["state-list"],
+    queryFn: fetchState,
+    retry: false,
+  });
+
+  const { data: countryData, isLoading: countryLoading } = useQuery({
+    queryKey: ["country-list"],
+    queryFn: fetchCountry,
+    retry: false,
+  });
 
   useEffect(() => {
     if (state && state.data) {
@@ -41,7 +59,7 @@ function AddCountry() {
   };
 
   const mutation = useMutation({
-    mutationFn: addCountry,
+    mutationFn: addCity,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
@@ -58,7 +76,7 @@ function AddCountry() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateCountry,
+    mutationFn: updateCity,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
@@ -87,6 +105,28 @@ function AddCountry() {
     }
   };
 
+  if (stateLoading || countryLoading) {
+    return <LoadingPage />;
+  }
+
+  console.log(stateData);
+
+  const transformStateData =
+    stateData.data.map((m) => {
+      return {
+        label: m.name,
+        value: m.id,
+      };
+    }) || [];
+
+  const transformCountryData =
+    countryData.data.map((m) => {
+      return {
+        label: m.name,
+        value: m.id,
+      };
+    }) || [];
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -97,6 +137,22 @@ function AddCountry() {
         {state && state.data ? "Edit" : "Add"} Country
       </h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
+        <DropDown
+          searchable={true}
+          label="Country"
+          name="country"
+          options={transformCountryData}
+          value={formData.country_id}
+          onChange={(val) => handleChange("country_id", val)}
+        />
+        <DropDown
+          searchable={true}
+          label="State"
+          name="state"
+          options={transformStateData}
+          value={formData.state_id}
+          onChange={(val) => handleChange("state_id", val)}
+        />
         <TextField
           label="Name"
           name="name"
@@ -104,7 +160,6 @@ function AddCountry() {
           onChange={(e) => handleChange("name", e.target.value)}
           required
         />
-
         <DropDown
           searchable={false}
           label="Status"

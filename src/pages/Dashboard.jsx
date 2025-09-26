@@ -1,19 +1,19 @@
-// import { useContext } from "react";
-// import { AuthContext } from "../context/AuthContext";
-// import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { FaRegUserCircle } from "react-icons/fa";
 import { TodaysBirthday } from "./TodaysBirthday";
 import { TodaysAnniversaries } from "./TodaysAnniversaries";
 import { AbsentToday } from "./AbsentToday";
 import { UserActivity } from "./UserActivity";
 function Dashboard() {
-  // const { user, logout } = useContext(AuthContext);
-  // const navigate = useNavigate();
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  // const handleLogout = () => {
-  //   logout();
-  //   navigate("/");
-  // };
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <div className="bg-white rounded-md">

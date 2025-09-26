@@ -1,7 +1,12 @@
 export const ROUTE = {
   LOGIN_ROUTE: "v1/auth/sign-in",
   ADD_CLIENT_ROUTE: "clients",
-  ADD_FORM_ITEM: "v1/client-form-fields",
+  ADD_FORM_ITEM: {
+    GET: "v1/client-form-fields",
+    UPDATE: "v1/client-form-fields",
+    POST: "v1/client-form-fields",
+    DELETE: "v1/client-form-fields",
+  },
   MODULE: {
     ADD: "v1/modules",
     GET: "v1/modules",
@@ -55,5 +60,23 @@ export const ROUTE = {
     GET: "v1/countries",
     UPDATE: "v1/countries",
     DELETE: "v1/countries",
+  },
+  STATE: {
+    ADD: "v1/states",
+    GET: "v1/states",
+    UPDATE: "v1/states",
+    DELETE: "v1/states",
+  },
+  CITY: {
+    ADD: "v1/cities",
+    GET: "v1/cities",
+    UPDATE: "v1/cities",
+    DELETE: "v1/cities",
+  },
+  PREMIUM_COLLEGE: {
+    ADD: "v1/premium-colleges",
+    GET: "v1/premium-colleges",
+    UPDATE: "v1/premium-colleges",
+    DELETE: "v1/premium-colleges",
   },
 };

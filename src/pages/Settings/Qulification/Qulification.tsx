@@ -7,10 +7,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
+import { deleteReligionAPI, fetchReligion } from "../../../api/religion";
+import { deleteCasteAPI, fetchCasteAPI } from "../../../api/caste";
 import {
   deleteQualificationAPI,
   fetchQualificationAPI,
-} from "../../../axiosApi/qualification";
+} from "../../../api/qualification";
 
 const Qulification = () => {
   const navigate = useNavigate();

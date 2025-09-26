@@ -9,14 +9,17 @@ export async function addModuleAPI(module: ModuleProps) {
 
 export async function fetchModule() {
   const response = await api.get(ROUTE.MODULE.GET);
+  return response.data;
+}
 
+export async function fetchModuleById(id: number) {
+  const response = await api.get(`${ROUTE.MODULE.GET}/${id}`);
   return response.data;
 }
 
 export async function updatemoduleAPI(data: UpdateModuleProps) {
   console.log(data);
   const { id, name, permission, slug } = data;
-
   const response = await api.put(`${ROUTE.MODULE.UPDATE}/${id}`, {
     name,
     permission,

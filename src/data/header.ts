@@ -190,7 +190,27 @@ export const headerLinks = [
         id: "s-2",
         text: "Premium College",
         link: "/premium-college",
-        element: lazy(() => import("../pages/Settings/PremiumCollege")),
+        element: lazy(
+          () => import("../pages/Settings/PremiumCollege/PremiumCollege")
+        ),
+        children: [
+          {
+            id: "pc-1",
+            text: "Add Premium college",
+            link: "/addPremiumCollege",
+            element: lazy(
+              () => import("../pages/Settings/PremiumCollege/AddPremiumCollege")
+            ),
+          },
+          {
+            id: "pc-2",
+            text: "Edit Premium College",
+            link: "/editPremiumCollege",
+            element: lazy(
+              () => import("../pages/Settings/PremiumCollege/AddPremiumCollege")
+            ),
+          },
+        ],
       },
       {
         id: "s-3",
@@ -365,6 +385,20 @@ export const headerLinks = [
         text: "City",
         link: "/city",
         element: lazy(() => import("../pages/Settings/City/City")),
+        children: [
+          {
+            id: "s-1",
+            text: "Add State",
+            link: "/addCity",
+            element: lazy(() => import("../pages/Settings/City/AddCity")),
+          },
+          {
+            id: "s-2",
+            text: "Edit City",
+            link: "/editCity",
+            element: lazy(() => import("../pages/Settings/City/AddCity")),
+          },
+        ],
       },
       {
         id: "s-11",
@@ -411,6 +445,39 @@ export const headerLinks = [
           },
         ],
       },
+      {
+        id: "as-15",
+        text: "Client Form Module",
+        link: "/clientFormModule",
+        element: lazy(
+          () =>
+            import("../pages/AdminSettings/ClientFormModule/ClientFormModule")
+        ),
+        children: [
+          {
+            id: "m-1",
+            text: "Add Client Form Module",
+            link: "/addClientFormModule",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/ClientFormModule/AddClientFormModule"
+                )
+            ),
+          },
+          {
+            id: "m-2",
+            text: "Edit Client Form Module",
+            link: "/editClientFormModule",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/ClientFormModule/AddClientFormModule"
+                )
+            ),
+          },
+        ],
+      },
       { id: "as-4", text: "Email Template", link: "/email-template" },
       { id: "as-5", text: "PDF Template", link: "/pdf-templte" },
       { id: "as-6", text: "Lead Status", link: "/lead-status" },
@@ -422,12 +489,25 @@ export const headerLinks = [
         id: "as-11",
         text: "Client Form",
         link: "/client-form",
-        element: lazy(() => import("../pages/AdminSettings/ClientForm")),
+        element: lazy(
+          () => import("../pages/AdminSettings/ClientFormPages/ClientForm")
+        ),
         children: [
           {
             id: "cf-1",
             text: "Add Client Forms",
             link: "/addClientFormItem",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/ClientFormPages/AddClientFormItem"
+                )
+            ),
+          },
+          {
+            id: "cf-2",
+            text: "Edit Client Forms",
+            link: "/editClientFormItem",
             element: lazy(
               () =>
                 import(

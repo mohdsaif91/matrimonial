@@ -1,36 +1,33 @@
 import Button from "../../../component/form/Button";
 import { useNavigate } from "react-router-dom";
+import Table from "../../../component/Table";
 import { Pencil, Trash } from "lucide-react";
 import { ModuleProps } from "../../../types/module";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteModuleAPI, fetchModule } from "../../../api/module";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
-import Table from "../../../component/Table";
-import { deleteReligionAPI, fetchReligion } from "../../../api/religion";
-import { deleteCasteAPI, fetchCasteAPI } from "../../../api/caste";
-import { deleteCountry, fetchCountry } from "../../../api/country";
-import { fetchCity } from "../../../api/city";
 
-const City = () => {
+const ClientFormModule = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["city-list"],
-    queryFn: fetchCity,
+    queryKey: ["client-form-module-list"],
+    queryFn: fetchModule,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteCountry,
+    mutationFn: deleteModuleAPI,
     onSuccess: () => {
-      toast("Successfully deleted Country");
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
+      toast("Successfully deleted module");
+      queryClient.invalidateQueries({ queryKey: ["addModule"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Country:", error);
-      toast(error.response?.data?.message || "Failed to delete Country");
+      console.error("❌ Error adding client:", error);
+      alert(error.response?.data?.message || "Failed to add client");
     },
   });
 
@@ -45,6 +42,14 @@ const City = () => {
       header: "Name",
     },
     {
+      accessorKey: "slug",
+      header: "Key",
+    },
+    {
+      accessorKey: "permission",
+      header: "Value",
+    },
+    {
       accessorKey: "status",
       header: "Status",
       cell: ({ getValue }) => {
@@ -52,7 +57,7 @@ const City = () => {
         return (
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${
-              status === "active"
+              status === "Active"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
@@ -69,7 +74,7 @@ const City = () => {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/editCountry", { state: { data: row.original } });
+              navigate("/editModule", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -97,12 +102,18 @@ const City = () => {
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <Button text="+ Add City" onClick={() => navigate("/addCity")} />
+      <Button
+        text="+ Add Form Module"
+        onClick={() => navigate("/addClientFormModule")}
+      />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={data.data || []} />
+        <Table
+          columns={columns}
+          data={(Array.isArray(data.data) && data.data) || []}
+        />
       </div>
     </div>
   );
 };
 
-export default City;
+export default ClientFormModule;
