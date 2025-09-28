@@ -8,12 +8,44 @@ import { DropDown } from "../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AddClientApi, fetchSourcedFrom } from "../../api/client";
 import LoadingPage from "../Loading/Loading";
-import { getLabelValue, yesNoArr } from "../../util/ClientUtils";
+import {
+  generateFormItem,
+  getLabelValue,
+  yesNoArr,
+} from "../../util/ClientUtils";
+import {
+  fetchClientFormModule,
+  fetchClientModuleById,
+} from "../../api/clientFormModule";
+import { ClientModuleField, ClientModuleProps } from "../../types/clientModule";
+import { staticClientFormTab } from "../../types/form";
 
 const AddClient = () => {
   const [clientData, setClientData] = useState(defaultClientData);
+  const [activeTab, setActiveTab] = useState<number>(1);
 
   const queryClient = useQueryClient();
+
+  const {
+    data: formItemData,
+    error: formItemError,
+    isLoading: formItemLoading,
+    refetch: formItemFromRefetch,
+  } = useQuery({
+    queryKey: ["form-item-list", activeTab],
+    queryFn: ({ queryKey }) => {
+      const [, id] = queryKey;
+      return fetchClientModuleById(id);
+    },
+  });
+
+  const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
+    useQuery({
+      queryKey: ["client-form-module-list"],
+      queryFn: fetchClientFormModule,
+      retry: false,
+    });
+
   const {
     data: sourcedData,
     error: sourcedError,
@@ -223,6 +255,10 @@ const AddClient = () => {
   //   return <LoadingPage />;
   // }
 
+  if (formItemLoading || clientFromModuleLoading) {
+    return <LoadingPage />;
+  }
+
   const handleChange = (name: string, value: any) => {
     console.log();
 
@@ -237,18 +273,74 @@ const AddClient = () => {
     mutation.mutate(clientData);
   };
 
+  const getFormItems = (item: ClientModuleField) => {
+    let comp = <></>;
+    switch (item.field_type) {
+      case "text":
+        comp = (
+          <TextField
+            key={item.field_name}
+            label={item.display_name}
+            name={item.field_name}
+            required={!!item.required}
+            value={""}
+            onChange={(e) => handleChange(item.field_name, e.target.value)}
+          />
+        );
+      case "dropdown":
+        comp = (
+          <DropDown
+            onClick={() => {
+              if (!sourcedData) {
+                sourcedFromRefetch();
+              }
+            }}
+            loading={sourcedLoading}
+            searchable
+            label={item.display_name}
+            name={item.field_name}
+            required={item.required === 1}
+            options={getOptions("sourcedFrom")}
+            value={clientData.sourced_from_id}
+            onChange={(val) => handleChange(item.field_name, val)}
+          />
+        );
+    }
+    return comp;
+  };
+
+  const handdledFromItemData = formItemData ? formItemData.client_forms : [];
+  const handleclientFromModule: any[] = clientFormModuleData
+    ? clientFormModuleData.data
+    : [];
+  console.log(handleclientFromModule, " <>? MAIN DATA");
+
   return (
     <div className="bg-white rounded-xl shadow-md m-1">
+      <div className="flex p-4">
+        {handleclientFromModule.map((moduleItem: staticClientFormTab) => (
+          <Button
+            disabled={true}
+            type="clientFormBtn"
+            className={`px-4 py-2 mr-2 text-sm font-medium text-white ${
+              activeTab === moduleItem.id ? "bg-[#161D27]" : "bg-[#a71634]"
+            } rounded-lg`}
+            key={moduleItem.name}
+            text={moduleItem.name}
+          />
+        ))}
+      </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3 p-6">
-        {/* Lead Id */}
-        <TextField
+        {handdledFromItemData.map((formItem: ClientModuleField) =>
+          getFormItems(formItem)
+        )}
+        {/* <TextField
           label={formSchema.leadId.label}
           name={formSchema.leadId.name}
           value={clientData.lead_id || ""}
           onChange={(e) => handleChange("lead_id", e.target.value)}
         />
 
-        {/* Sourced From */}
         <DropDown
           onClick={() => {
             if (!sourcedData) {
@@ -265,7 +357,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("sourced_from_id", val)}
         />
 
-        {/* Profile Handled */}
         <DropDown
           onClick={() => {
             if (!profileHandledData) {
@@ -282,7 +373,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("profile_handled_by", val)}
         />
 
-        {/* Profile Created */}
         <DropDown
           onClick={() => {
             if (!profileCreatedData) {
@@ -299,7 +389,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("profile_created_by", val)}
         />
 
-        {/* Profile Visited */}
         <DropDown
           onClick={() => {
             if (!profileVisitedData) {
@@ -315,7 +404,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("profile_visited", val)}
         />
 
-        {/* Client Type */}
         <DropDown
           onClick={() => {
             if (!clientTypeData) {
@@ -331,7 +419,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("client_type", val)}
         />
 
-        {/* Client Verification */}
         <DropDown
           onClick={() => {
             if (!clientVerificationData) {
@@ -347,7 +434,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("client_verification", val)}
         />
 
-        {/* Contact Person Name */}
         <TextField
           label={formSchema.contactPersonName.label}
           name={formSchema.contactPersonName.name}
@@ -355,7 +441,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("contact_person_name", e.target.value)}
         />
 
-        {/* Relation with Member */}
         <TextField
           key="relationWithMember"
           label="Relation with Member"
@@ -367,7 +452,6 @@ const AddClient = () => {
           }
         />
 
-        {/* Contact Person Address */}
         <TextField
           label={formSchema.contactPersonAddress.label}
           name={formSchema.contactPersonAddress.name}
@@ -377,7 +461,6 @@ const AddClient = () => {
           }
         />
 
-        {/* Whatsapp Number */}
         <TextField
           label={formSchema.whatsappNumber.label}
           name={formSchema.whatsappNumber.name}
@@ -385,7 +468,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("whatsapp_number", e.target.value)}
         />
 
-        {/* Mobile Number */}
         <TextField
           label={formSchema.mobileNumber.label}
           name={formSchema.mobileNumber.name}
@@ -393,7 +475,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("mobile", e.target.value)}
         />
 
-        {/* Contact Person Email */}
         <TextField
           label={formSchema.contactPersonEmail.label}
           name={formSchema.contactPersonEmail.name}
@@ -401,7 +482,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("contact_person_email", e.target.value)}
         />
 
-        {/* Client Name */}
         <TextField
           label={formSchema.clientName.label}
           name={formSchema.clientName.name}
@@ -410,7 +490,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("client_name", e.target.value)}
         />
 
-        {/* Client Mobile */}
         <TextField
           label={formSchema.clientMobile.label}
           name={formSchema.clientMobile.name}
@@ -419,7 +498,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("client_mobile", e.target.value)}
         />
 
-        {/* Client Email */}
         <TextField
           label={formSchema.clientEmail.label}
           name={formSchema.clientEmail.name}
@@ -428,7 +506,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("client_email", e.target.value)}
         />
 
-        {/* Profile Comment */}
         <TextField
           label={formSchema.profileComment.label}
           name={formSchema.profileComment.name}
@@ -436,7 +513,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("profile_comment", e.target.value)}
         />
 
-        {/* Gender */}
         <DropDown
           searchable={false}
           label={formSchema.gender.label}
@@ -447,7 +523,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("gender", val)}
         />
 
-        {/* Marital Status */}
         <DropDown
           searchable={false}
           label={formSchema.maritalStatus.label}
@@ -458,7 +533,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("marital_status", val)}
         />
 
-        {/* Religion */}
         <DropDown
           searchable
           label={formSchema.religion.label}
@@ -469,7 +543,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("religion_id", val)}
         />
 
-        {/* Caste */}
         <DropDown
           key="caste"
           label="Caste"
@@ -486,7 +559,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("cast_id", val)}
         />
 
-        {/* SubCaste */}
         <DropDown
           key="subCaste"
           label="Sub Caste"
@@ -502,7 +574,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("sub_caste_id", val)}
         />
 
-        {/* Date of Birth */}
         <DateOfBirthField
           key="dateOfBirth"
           label="Date of Birth"
@@ -512,7 +583,6 @@ const AddClient = () => {
           }
         />
 
-        {/* Time of Birth */}
         <TimeField
           key="timeOfBirth"
           label="Time of Birth"
@@ -520,7 +590,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("time_of_birth", val)}
         />
 
-        {/* Birth Place */}
         <TextField
           key="birthPlace"
           label="Birth Place"
@@ -529,7 +598,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("birth_place", e.target.value)}
         />
 
-        {/* Astrologically */}
         <DropDown
           key="astrologically"
           label="Astrologically"
@@ -545,7 +613,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("astrologically", val)}
         />
 
-        {/* Gotra */}
         <TextField
           key="gotra"
           label="Gotra"
@@ -554,7 +621,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("gotra", e.target.value)}
         />
 
-        {/* Height */}
         <DropDown
           key="height"
           label="Height"
@@ -571,7 +637,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("height", val)}
         />
 
-        {/* Weight */}
         <TextField
           key="weight"
           label="Weight"
@@ -580,7 +645,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("weight", e.target.value)}
         />
 
-        {/* Complexion */}
         <DropDown
           searchable={true}
           key="complexion"
@@ -598,7 +662,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("complexion", val)}
         />
 
-        {/* Personality */}
         <DropDown
           key="personality"
           label="Personality"
@@ -615,7 +678,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("personality", val)}
         />
 
-        {/* Drinking Habits */}
         <DropDown
           key="drinkingHabits"
           label="Drinking Habits"
@@ -631,7 +693,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("drinking_habits", val)}
         />
 
-        {/* Eating Habits */}
         <DropDown
           key="eatingHabits"
           label="Eating Habits"
@@ -648,7 +709,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("eating_habits", val)}
         />
 
-        {/* Smoking Habits */}
         <DropDown
           key="smokingHabits"
           label="Smoking Habits"
@@ -664,7 +724,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("smoking_habits", val)}
         />
 
-        {/* Partner Preferences */}
         <TextField
           required={true}
           key="partnerPreferences"
@@ -674,7 +733,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("partner_preferences", e.target.value)}
         />
 
-        {/* Open for Other Caste */}
         <DropDown
           searchable={false}
           name="openForOtherCaste"
@@ -685,7 +743,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("open_for_other_caste", val)}
         />
 
-        {/* Open for Divorcee */}
         <DropDown
           searchable={false}
           name="openForDivorce"
@@ -696,7 +753,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("open_for_divorce", val)}
         />
 
-        {/* Open for Other State */}
         <DropDown
           searchable={false}
           name="openForOtherState"
@@ -707,7 +763,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("open_for_other_state", val)}
         />
 
-        {/* Health Screening Consent */}
         <DropDown
           searchable={false}
           name="healthScreeningConsent"
@@ -718,7 +773,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("health_screening_consent", val)}
         />
 
-        {/* Eye Sight */}
         <DropDown
           searchable={false}
           name="eyeSight"
@@ -729,7 +783,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("eye_sight", val)}
         />
 
-        {/* Believes in Patri */}
         <DropDown
           searchable={false}
           name="believesInPatri"
@@ -740,7 +793,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("believes_in_patri", val)}
         />
 
-        {/* Native Town */}
         <TextField
           required={true}
           key="nativeTown"
@@ -750,7 +802,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("native_town", e.target.value)}
         />
 
-        {/* Native State */}
         <TextField
           required={true}
           key="nativeState"
@@ -760,7 +811,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("native_state", e.target.value)}
         />
 
-        {/* Willing to go Abroad */}
         <DropDown
           searchable={false}
           name="willingToGoAbroad"
@@ -771,7 +821,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("willing_to_go_abroad", val)}
         />
 
-        {/* Hobbies */}
         <TextField
           required={true}
           key="hobbies"
@@ -781,7 +830,6 @@ const AddClient = () => {
           onChange={(e) => handleChange("hobbies", e.target.value)}
         />
 
-        {/* Disability */}
         <DropDown
           searchable={false}
           name="disability"
@@ -792,7 +840,6 @@ const AddClient = () => {
           onChange={(val) => handleChange("disability", val)}
         />
 
-        {/* NRI Status */}
         <DropDown
           key="nriStatus"
           label="NRI Status"
@@ -803,7 +850,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("nri_status", val)}
         />
 
-        {/* Visa */}
         <DropDown
           key="visa"
           label="Visa"
@@ -817,7 +863,6 @@ const AddClient = () => {
           onChange={(val: string) => handleChange("visa", val)}
         />
 
-        {/* Details */}
         <div key="details" className="flex flex-col gap-1 col-span-2">
           <label className="text-sm font-medium text-gray-700">Details</label>
           <textarea
@@ -829,7 +874,6 @@ const AddClient = () => {
           />
         </div>
 
-        {/* Client Notes */}
         <div key="clientNotes" className="flex flex-col gap-1 col-span-2">
           <label className="text-sm font-medium text-gray-700">
             Client Notes
@@ -841,8 +885,8 @@ const AddClient = () => {
             className="rounded-xl w-full px-3 py-2 outline-[#465dff] bg-[#F0F3F8] text-[#333] placeholder:text-[#9ba6b7]"
             rows={3}
           />
-        </div>
-        <div className="flex flex-12 mt-4 cursor-pointer">
+        </div> */}
+        <div className="flex-1 mt-4 cursor-pointer">
           <Button
             onClick={() => {}}
             type="submit"

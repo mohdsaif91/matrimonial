@@ -14,6 +14,7 @@ import { CityProps } from "../../../types/city";
 import { addCity, updateCity } from "../../../api/city";
 import { fetchState } from "../../../api/state";
 import LoadingPage from "../../Loading/Loading";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
   id: 0,
@@ -63,15 +64,15 @@ function AddCountry() {
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
-      toast("Successfully added Country");
+      queryClient.invalidateQueries({ queryKey: ["city-list"] });
+      toast("Successfully added City");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding Country:", error);
-      toast(error.response?.data?.message || "Failed to add Country");
+      console.error("❌ Error adding City:", error);
+      toast(error.response?.data?.message || "Failed to add City");
     },
   });
 
@@ -80,16 +81,16 @@ function AddCountry() {
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
-      toast("Successfully Updated Country");
+      queryClient.invalidateQueries({ queryKey: ["city-list"] });
+      toast("Successfully Updated City");
       setFormData({ ...initialFormItem });
-      navigate("/country");
+      navigate("/city");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating Country:", error);
-      toast(error.response?.data?.message || "Failed to Update Country");
+      console.error("❌ Error updating City:", error);
+      toast(error.response?.data?.message || "Failed to Update City");
     },
   });
 
@@ -134,7 +135,7 @@ function AddCountry() {
     >
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "Add"} Country
+        {state && state.data ? "Edit" : "Add"} City
       </h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <DropDown
@@ -169,12 +170,15 @@ function AddCountry() {
           onChange={(val) => handleChange("status", val)}
         />
       </div>
-      <Button
-        text={`${state && state.data ? "Update" : "Save"} Country`}
-        type="submit"
-        loading={isLoading}
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      />
+      <div className="flex">
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} City`}
+          type="submit"
+          loading={isLoading}
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

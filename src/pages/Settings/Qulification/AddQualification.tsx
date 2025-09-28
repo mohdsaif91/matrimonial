@@ -11,6 +11,7 @@ import {
   addQualificationAPI,
   updateQualificationAPI,
 } from "../../../api/qualification";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
   name: "",
@@ -91,7 +92,7 @@ function AddCaste() {
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
       <ToastContainer />
-      <h2 className="text-xl font-semibold mb-4">Add Qulification</h2>
+      <h2 className="text-xl font-semibold mb-4">Add Qualification</h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <TextField
           label="Name"
@@ -111,12 +112,15 @@ function AddCaste() {
           onChange={(val) => handleChange("status", val)}
         />
       </div>
-      <Button
-        text={`${state && state.data ? "Update" : "Save"} Qualification`}
-        type="submit"
-        loading={isLoading}
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      />
+      <div className="flex">
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} Qualification`}
+          type="submit"
+          loading={isLoading}
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

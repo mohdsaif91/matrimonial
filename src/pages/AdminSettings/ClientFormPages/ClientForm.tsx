@@ -5,26 +5,34 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ClientFormItem, staticClientFormTab } from "../../../types/form";
 import Table from "../../../component/Table";
 import { Pencil, Trash } from "lucide-react";
-import { fetchFormItemById } from "../../../api/clientForm";
 import { useQuery } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
-import { staticClientTab } from "../../StaticData/ClientForm";
-import { fetchModuleById } from "../../../api/module";
+import {
+  fetchClientFormModule,
+  fetchClientModuleById,
+} from "../../../api/clientFormModule";
 
 const ClientForm = () => {
-  const [activeTab, setActiveTab] = useState<number>(2);
+  const [activeTab, setActiveTab] = useState<number>(1);
   const navigate = useNavigate();
 
   const { data: moduleByIdData, isLoading: moduleByIdLoading } = useQuery({
     queryKey: ["form-item-list", activeTab],
     queryFn: ({ queryKey }) => {
       const [, id] = queryKey;
-      return fetchModuleById(id);
+      return fetchClientModuleById(id);
     },
     retry: false,
     enabled: !!activeTab,
     refetchOnWindowFocus: false,
   });
+
+  const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
+    useQuery({
+      queryKey: ["client-form-module-list"],
+      queryFn: fetchClientFormModule,
+      retry: false,
+    });
 
   const columns: ColumnDef<ClientFormItem>[] = [
     {
@@ -43,8 +51,13 @@ const ClientForm = () => {
     {
       accessorKey: "module",
       header: "Module",
-      cell: ({ row }) => {
-        return <span>{""}</span>;
+      cell: () => {
+        const selectedCleintModule =
+          Array.isArray(handledClientFormModule) &&
+          handledClientFormModule.length > 0
+            ? handledClientFormModule.find((f) => f.id === activeTab)
+            : { name: "" };
+        return <span>{selectedCleintModule.name ?? ""}</span>;
       },
     },
     {
@@ -106,11 +119,15 @@ const ClientForm = () => {
     },
   ];
 
-  if (moduleByIdLoading) {
+  if (moduleByIdLoading || clientFromModuleLoading) {
     return <LoadingPage />;
   }
 
-  console.log(moduleByIdData.client_forms);
+  const handledData = moduleByIdData ? moduleByIdData.client_forms : [];
+  const handledClientFormModule = clientFormModuleData
+    ? clientFormModuleData.data
+    : [];
+  console.log(handledClientFormModule);
 
   return (
     <div>
@@ -121,10 +138,9 @@ const ClientForm = () => {
         />
       </div>
       <div className="flex flex-row mt-3">
-        {staticClientTab.map((m: staticClientFormTab) => (
+        {handledClientFormModule.map((m: staticClientFormTab) => (
           <Button
             onClick={() => {
-              console.log(m);
               setActiveTab(m.id);
             }}
             type="clientFormBtn"
@@ -137,7 +153,7 @@ const ClientForm = () => {
         ))}
       </div>
       <div className="mt-2">
-        <Table columns={columns} data={moduleByIdData.client_forms || []} />
+        <Table columns={columns} data={handledData} />
       </div>
     </div>
   );

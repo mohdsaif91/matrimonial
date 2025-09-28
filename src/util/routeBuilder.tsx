@@ -32,6 +32,20 @@ export const buildRoutes = (links: HeaderLink[]) => {
               path: innerChild.link,
               element: <ChildComponent />,
             });
+            //
+            if (innerChild.children && innerChild.children.length > 0) {
+              innerChild.children.forEach((innerChildInner: HeaderLink) => {
+                const ChildComponent =
+                  innerChildInner.element as unknown as LazyExoticComponent<
+                    React.ComponentType<any>
+                  >;
+                routes.push({
+                  path: innerChildInner.link,
+                  element: <ChildComponent />,
+                });
+              });
+            }
+            //
           });
         }
       });

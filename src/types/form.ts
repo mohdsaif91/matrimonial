@@ -5,7 +5,7 @@ export interface ButtonProps {
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
-  type?: "button" | "submit" | "reset" | "clientFormBtn";
+  type?: "button" | "submit" | "reset" | "clientFormBtn" | "none";
   loading?: boolean;
 }
 
@@ -88,7 +88,7 @@ export interface staticClientFormTab {
 }
 
 export interface ClientFormItem {
-  module_id: number;
+  client_module_id: number;
   display_name: string;
   field_name: string;
   validation: string;
@@ -96,4 +96,5 @@ export interface ClientFormItem {
   view_in_pdf: boolean;
   status: boolean; // restricts values
   div_css: string;
+  field_type: string;
 }

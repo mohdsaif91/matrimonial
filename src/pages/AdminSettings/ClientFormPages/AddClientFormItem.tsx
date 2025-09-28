@@ -1,31 +1,24 @@
 import { useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addFormItem } from "../../../api/clientForm";
 import { ClientFormItem } from "../../../types/form";
 import {
-  clientFormbtn,
-  moduleOptions,
+  formItemOptions,
   requiredOptions,
   statusOptions,
   validationOptions,
   viewInPdfOptions,
 } from "../../../data/ClientForm";
-import { fetchModule } from "../../../api/module";
 import { UpdateModuleProps } from "../../../types/module";
 import { toast, ToastContainer } from "react-toastify";
-import { Loader } from "lucide-react";
-import LoadingPage from "../../Loading/Loading";
 import ButtonLoader from "../../Loading/ButtonLoader";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
+import { fetchClientFormModule } from "../../../api/clientFormModule";
 
 const initialFormItem = {
-  module_id: 0,
+  client_module_id: 0,
   display_name: "",
   field_name: "",
   validation: "",
@@ -33,6 +26,7 @@ const initialFormItem = {
   view_in_pdf: false,
   status: false,
   div_css: "",
+  field_type: "text",
 };
 
 function AddClientFormItem() {
@@ -46,17 +40,13 @@ function AddClientFormItem() {
   const {
     data: moduleData,
     isLoading: moduleLoading,
-    refetch: moduleRefetch,
+    refetch: clientModuleRefetch,
   } = useQuery({
-    queryKey: ["form-item-list"],
-    queryFn: fetchModule,
+    queryKey: ["client-form-module-list"],
+    queryFn: fetchClientFormModule,
     refetchOnWindowFocus: false,
     enabled: false,
   });
-
-  console.log(moduleData);
-
-  // Example dropdown options (replace with your dynamic options later)
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -81,8 +71,6 @@ function AddClientFormItem() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    // TODO: send API request
     setIsLoading(true);
     mutation.mutate(formData);
   };
@@ -90,20 +78,9 @@ function AddClientFormItem() {
   const transformedModuleData =
     moduleData && Array.isArray(moduleData.data) && moduleData.data.length > 0
       ? moduleData.data.map((m: UpdateModuleProps) => {
-          return { value: m.id, label: m.slug };
+          return { value: m.id, label: m.name };
         })
       : [];
-
-  const data = {
-    module_id: 4,
-    display_name: "Name of the Contact Person",
-    field_name: "name_of_the_contact_person",
-    validation: "",
-    required: false,
-    view_in_pdf: false,
-    status: "active",
-    div_css: "col-12 col-xxl-3 mb-2",
-  };
 
   return (
     <form
@@ -112,7 +89,6 @@ function AddClientFormItem() {
     >
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">Add Client Forms</h2>
-
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <TextField
           label="Display Name"
@@ -130,15 +106,14 @@ function AddClientFormItem() {
         />
         <DropDown
           searchable={false}
-          onClick={() => moduleRefetch()}
+          onClick={() => clientModuleRefetch()}
           loading={moduleLoading}
           label="Module"
           name="module"
           options={transformedModuleData}
-          value={formData.module_id}
-          onChange={(val) => handleChange("module_id", val)}
+          value={formData.client_module_id}
+          onChange={(val) => handleChange("client_module_id", val)}
         />
-
         <DropDown
           searchable={false}
           label="Validation"
@@ -172,6 +147,14 @@ function AddClientFormItem() {
           value={formData.status}
           onChange={(val) => handleChange("status", val)}
         />
+        <DropDown
+          searchable={false}
+          label="Status"
+          name="status"
+          options={formItemOptions}
+          value={formData.field_type}
+          onChange={(val) => handleChange("field_type", val)}
+        />
         <TextField
           label="Div Css"
           name="divCss"
@@ -180,12 +163,15 @@ function AddClientFormItem() {
         />
       </div>
 
-      <button
-        type="submit"
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      >
-        {isLoading ? <ButtonLoader /> : "Save all"}
-      </button>
+      <div className="flex">
+        <button
+          type="submit"
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        >
+          {isLoading ? <ButtonLoader /> : "Save all"}
+        </button>
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

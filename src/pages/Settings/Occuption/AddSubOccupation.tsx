@@ -13,6 +13,7 @@ import {
   updateOccupationAPI,
 } from "../../../api/occupation";
 import LoadingPage from "../../Loading/Loading";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
   id: 0,
@@ -150,12 +151,15 @@ function AddSubOccupation() {
           onChange={(val) => handleChange("status", val)}
         />
       </div>
-      <Button
-        text={`${state && state.data ? "Update" : "Save"} Occupation`}
-        type="submit"
-        loading={isLoading}
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      />
+      <div className="flex">
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} Occupation`}
+          type="submit"
+          loading={isLoading}
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

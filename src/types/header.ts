@@ -3,14 +3,14 @@ import { JSX } from "react";
 export interface MenuItem {
   id: number | string;
   text: string;
-  link: string;
+  link?: string;
   children?: MenuItem[];
 }
 
 export interface HeaderLink extends MenuItem {
   id: number;
   text: string;
-  link: string;
+  link?: string;
   element: JSX.Element;
   children: HeaderLink[];
 }

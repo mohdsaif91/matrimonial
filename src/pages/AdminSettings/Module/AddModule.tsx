@@ -4,6 +4,7 @@ import { addModuleAPI, updatemoduleAPI } from "../../../api/module";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialModuleData = {
   slug: "",
@@ -42,7 +43,7 @@ export default function AddModule() {
     onSuccess: (data) => {
       toast("Module added successfully !");
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["addModule"] });
+      queryClient.invalidateQueries({ queryKey: ["module-list"] });
       setFormData({ ...initialModuleData });
       setIsLoading(false);
     },
@@ -59,14 +60,14 @@ export default function AddModule() {
       console.log(data, " <>?");
       toast("Module Updated successfully !", {
         onClose: () => {
-          queryClient.invalidateQueries({ queryKey: ["addModule"] });
+          queryClient.invalidateQueries({ queryKey: ["module-list"] });
           setIsLoading(false);
           navigate("/module");
           setFormData({ ...initialModuleData });
         },
       });
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["addModule"] });
+      queryClient.invalidateQueries({ queryKey: ["module-list"] });
       navigate("/module");
       setIsLoading(false);
       setFormData({ ...initialModuleData });
@@ -134,13 +135,14 @@ export default function AddModule() {
             />
           </div>
         </div>
-        <div className="mt-6">
+        <div className="flex">
           <Button
             loading={isLoading}
-            text="Save all"
+            text={`${pathname === "/editModule" ? "Edit" : "Save"} Module`}
             type="submit"
-            className="px-6 py-2 bg-[#465dff] text-white font-medium rounded-lg hover:bg-blue-600"
+            className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
           />
+          <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
         </div>
       </form>
     </div>

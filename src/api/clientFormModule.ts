@@ -1,27 +1,33 @@
-import { CountryProps } from "../types/country";
+import { ClientModuleProps } from "../types/clientModule";
 import api from "./axios";
 import { ROUTE } from "./route";
 
-export async function addClientFormModule(relData: CountryProps) {
-  const response = await api.post(ROUTE.COUNTRY.ADD, { ...relData });
+export async function addClientFormModule(relData: ClientModuleProps) {
+  const response = await api.post(ROUTE.CLIENT_MODULE.ADD, { ...relData });
   return response.data;
 }
 
 export async function fetchClientFormModule() {
-  const response = await api.get(ROUTE.COUNTRY.GET);
+  const response = await api.get(ROUTE.CLIENT_MODULE.GET);
   return response.data;
 }
 
-export async function updateClientFormModule(data: CountryProps) {
-  const { name, status, id } = data;
-  const response = await api.put(`${ROUTE.COUNTRY.UPDATE}/${id}`, {
+export async function updateClientFormModule(data: ClientModuleProps) {
+  const { name, status, slug, id } = data;
+  const response = await api.put(`${ROUTE.CLIENT_MODULE.UPDATE}/${id}`, {
     name,
     status,
+    slug,
   });
   return response.data;
 }
 
 export async function deleteClientFormModule(id: number) {
-  const response = await api.delete(`${ROUTE.COUNTRY.DELETE}/${id}`);
+  const response = await api.delete(`${ROUTE.CLIENT_MODULE.DELETE}/${id}`);
+  return response.data;
+}
+
+export async function fetchClientModuleById(id: number) {
+  const response = await api.get(`${ROUTE.CLIENT_MODULE.GET}/${id}`);
   return response.data;
 }

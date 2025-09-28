@@ -24,7 +24,7 @@ const Module = () => {
     mutationFn: deleteModuleAPI,
     onSuccess: () => {
       toast("Successfully deleted module");
-      queryClient.invalidateQueries({ queryKey: ["addModule"] });
+      queryClient.invalidateQueries({ queryKey: ["module-list"] });
     },
     onError: (error: any) => {
       console.error("❌ Error adding client:", error);

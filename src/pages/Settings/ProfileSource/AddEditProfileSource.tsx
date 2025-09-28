@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { statusOptions, statusOptionsCap } from "../../../data/ClientForm";
+import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
+import { addReligion, updateReligion } from "../../../api/religion";
+import { ReligionProps } from "../../../types/religion";
 import Button from "../../../component/form/Button";
-import { useLocation, useNavigate } from "react-router-dom";
-import { VisaProps } from "../../../types/visa";
-import { addVisaAPI, updateVisaAPI } from "../../../api/visa";
+import { useLocation } from "react-router-dom";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
@@ -15,15 +15,14 @@ const initialFormItem = {
   status: "",
 };
 
-export default function AddVisa() {
-  const [formData, setFormData] = useState<VisaProps>({
+function AddEditProfileSource() {
+  const [formData, setFormData] = useState<ReligionProps>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const queryClient = useQueryClient();
   const { state } = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (state && state.data) {
@@ -37,37 +36,36 @@ export default function AddVisa() {
   };
 
   const mutation = useMutation({
-    mutationFn: addVisaAPI,
+    mutationFn: addReligion,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["visa-list"] });
-      toast("Successfully added Visa");
+      queryClient.invalidateQueries({ queryKey: ["addReligion"] });
+      toast("Successfully added Religion");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding Visa:", error);
-      toast(error.response?.data?.message || "Failed to add Visa");
+      console.error("❌ Error adding religion:", error);
+      toast(error.response?.data?.message || "Failed to add religion");
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateVisaAPI,
+    mutationFn: updateReligion,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["visa-list"] });
-      toast("Successfully Updated Visa");
+      queryClient.invalidateQueries({ queryKey: ["religion-list"] });
+      toast("Successfully Updated Religion");
       setFormData({ ...initialFormItem });
-      navigate("/visa");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating Visa:", error);
-      toast(error.response?.data?.message || "Failed to Update Visa");
+      console.error("❌ Error updating religion:", error);
+      toast(error.response?.data?.message || "Failed to Update religion");
     },
   });
 
@@ -89,9 +87,7 @@ export default function AddVisa() {
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
       <ToastContainer />
-      <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "Add"} Visa
-      </h2>
+      <h2 className="text-xl font-semibold mb-4">Add Religion</h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <TextField
           label="Name"
@@ -100,9 +96,7 @@ export default function AddVisa() {
           onChange={(e) => handleChange("name", e.target.value)}
           required
         />
-
         <DropDown
-          required
           searchable={false}
           label="Status"
           name="module"
@@ -113,7 +107,7 @@ export default function AddVisa() {
       </div>
       <div className="flex">
         <Button
-          text={`${state && state.data ? "Update" : "Save"} Visa`}
+          text={`${state && state.data ? "Update" : "Save"} Religion`}
           type="submit"
           loading={isLoading}
           className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
@@ -123,3 +117,5 @@ export default function AddVisa() {
     </form>
   );
 }
+
+export default AddEditProfileSource;

@@ -6,11 +6,16 @@ import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CountryProps } from "../../../types/country";
-import { addCountry, updateCountry } from "../../../api/country";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
+import {
+  addClientFormModule,
+  updateClientFormModule,
+} from "../../../api/clientFormModule";
+import { ClientModuleProps } from "../../../types/clientModule";
 
 const initialFormItem = {
   id: 0,
+  slug: "",
   name: "",
   status: "",
   created_at: "",
@@ -18,7 +23,7 @@ const initialFormItem = {
 };
 
 function AddClientFormModule() {
-  const [formData, setFormData] = useState<CountryProps>({
+  const [formData, setFormData] = useState<ClientModuleProps>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +44,7 @@ function AddClientFormModule() {
   };
 
   const mutation = useMutation({
-    mutationFn: addCountry,
+    mutationFn: addClientFormModule,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
@@ -58,11 +63,11 @@ function AddClientFormModule() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateCountry,
+    mutationFn: updateClientFormModule,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["country-list"] });
+      queryClient.invalidateQueries({ queryKey: ["client-module-list"] });
       toast("Successfully Updated Client Form Module");
       setFormData({ ...initialFormItem });
       navigate("/clientFormModule");
@@ -106,7 +111,13 @@ function AddClientFormModule() {
           onChange={(e) => handleChange("name", e.target.value)}
           required
         />
-
+        <TextField
+          label="Slug"
+          name="slug"
+          value={formData.slug}
+          onChange={(e) => handleChange("slug", e.target.value)}
+          required
+        />
         <DropDown
           searchable={false}
           label="Status"
@@ -116,12 +127,15 @@ function AddClientFormModule() {
           onChange={(val) => handleChange("status", val)}
         />
       </div>
-      <Button
-        text={`${state && state.data ? "Update" : "Save"} Client Form Module`}
-        type="submit"
-        loading={isLoading}
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      />
+      <div className="flex align-middle">
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} Client Form Module`}
+          type="submit"
+          loading={isLoading}
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2 text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

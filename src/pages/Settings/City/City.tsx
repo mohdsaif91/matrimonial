@@ -1,16 +1,14 @@
 import Button from "../../../component/form/Button";
 import { useNavigate } from "react-router-dom";
 import { Pencil, Trash } from "lucide-react";
-import { ModuleProps } from "../../../types/module";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
-import { deleteReligionAPI, fetchReligion } from "../../../api/religion";
-import { deleteCasteAPI, fetchCasteAPI } from "../../../api/caste";
-import { deleteCountry, fetchCountry } from "../../../api/country";
+import { deleteCountry } from "../../../api/country";
 import { fetchCity } from "../../../api/city";
+import { CityProps } from "../../../types/city";
 
 const City = () => {
   const navigate = useNavigate();
@@ -34,7 +32,7 @@ const City = () => {
     },
   });
 
-  const columns: ColumnDef<ModuleProps>[] = [
+  const columns: ColumnDef<CityProps>[] = [
     {
       accessorKey: "id",
       header: "#",
@@ -43,6 +41,20 @@ const City = () => {
     {
       accessorKey: "name",
       header: "Name",
+    },
+    {
+      accessorKey: "name",
+      header: "Country",
+      cell: ({ row }) => {
+        return <span>{row.original.country.name}</span>;
+      },
+    },
+    {
+      accessorKey: "name",
+      header: "City",
+      cell: ({ row }) => {
+        return <span>{row.original.state.name}</span>;
+      },
     },
     {
       accessorKey: "status",

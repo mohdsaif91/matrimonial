@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { HeaderProps, MenuItem } from "../types/header";
-import { Search } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import ProfileComponent from "../component/ProfileComponent";
 import { headerLinks } from "../data/header";
 import ousplLogo from "../assets/one_unit_sol.png";
@@ -12,6 +12,7 @@ function Header({ className }: HeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [linkMenuOpen, setLinkMenuOpen] = useState("");
+  const [innerLinkMenuOpen, setinnerLinkMenuOpen] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -26,10 +27,10 @@ function Header({ className }: HeaderProps) {
         menuRef.current && !menuRef.current.contains(e.target as Node)
       );
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setLinkMenuOpen(""); // close menu if click outside
+        setLinkMenuOpen("");
+        setinnerLinkMenuOpen("");
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -54,7 +55,7 @@ function Header({ className }: HeaderProps) {
         <nav className="mt-10 md:mt-0 ml-8">
           <ul
             ref={menuRef}
-            className="flex flex-col md:flex-row md:space-x-4 space-y-6 md:space-y-0 text-white text-lg md:text-base p-4 md:p-0 gap-3"
+            className="flex flex-col md:flex-row md:space-x-4 space-y-6 md:space-y-0 text-white text-lg md:text-base p-4 md:p-0 gap-3 z-[99]"
           >
             {headerLinks.map((headerItem: MenuItem) => (
               <li
@@ -63,35 +64,71 @@ function Header({ className }: HeaderProps) {
               >
                 {headerItem.children && headerItem.children.length > 0 ? (
                   <>
-                    {/* Parent link with dropdown toggle */}
                     <button
-                      className="cursor-pointer py-2 md:py-0 md:text-[14.4px] lg:text-[15px] group-hover:block flex items-center gap-1"
+                      className="cursor-pointer py-2 md:py-0 md:text-[14.4px] lg:text-[15px] group flex items-center gap-1"
                       onClick={() => setLinkMenuOpen(headerItem.text)}
                     >
                       {headerItem.text}
+                      <ChevronDown size={18} />
                     </button>
-
-                    {/* Dropdown */}
                     <ul
-                      className={`absolute left-0 top-full mt-2 bg-white text-black shadow-lg rounded w-48 z-50 ${
+                      className={`absolute left-0 top-full mt-2 bg-white text-black shadow-lg rounded w-max z-[99] ${
                         linkMenuOpen === headerItem.text ? "block" : "hidden"
                       }`}
                     >
-                      {headerItem.children.map((child) => (
-                        <li key={child.id}>
-                          <Link
-                            to={child.link}
-                            className="block px-4 py-2 hover:bg-gray-100 text-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setLinkMenuOpen("");
-                              setMenuOpen(false);
-                            }}
-                          >
-                            {child.text}
-                          </Link>
-                        </li>
-                      ))}
+                      {headerItem.children.map((child) => {
+                        return child.children && !child.link ? (
+                          <li key={child.id} className="relative">
+                            <button
+                              className="cursor-pointer px-4 py-2 flex items-center hover:bg-gray-100 text-sm w-full justify-between"
+                              onClick={() => setinnerLinkMenuOpen(child.text)}
+                            >
+                              <div>{child.text}</div>
+                              <div>
+                                <ChevronRight className="ml-1" size={18} />
+                              </div>
+                            </button>
+                            <ul
+                              className={`absolute left-full top-0 bg-white text-black shadow-lg rounded w-max z-[99] ${
+                                innerLinkMenuOpen === child.text
+                                  ? "block"
+                                  : "hidden"
+                              }`}
+                            >
+                              {child.children.map((innerChildItem) => (
+                                <li key={innerChildItem.id}>
+                                  <Link
+                                    to={innerChildItem.link}
+                                    className="px-4 py-2 flex items-center hover:bg-gray-100 text-sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setLinkMenuOpen("");
+                                      setinnerLinkMenuOpen("");
+                                      setMenuOpen(false);
+                                    }}
+                                  >
+                                    {innerChildItem.text}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                        ) : (
+                          <li key={child.id}>
+                            <Link
+                              to={child.link}
+                              className="px-4 py-2 flex items-center hover:bg-gray-100 text-sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setLinkMenuOpen("");
+                                setMenuOpen(false);
+                              }}
+                            >
+                              {child.text}
+                            </Link>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </>
                 ) : (

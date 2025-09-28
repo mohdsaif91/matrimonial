@@ -10,6 +10,7 @@ import { updateQualificationAPI } from "../../../api/qualification";
 import { addVisaAPI } from "../../../api/visa";
 import { OccupationProps } from "../../../types/occupation";
 import { addOccupationAPI, updateOccupationAPI } from "../../../api/occupation";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
   id: 0,
@@ -46,14 +47,14 @@ function AddOccupation() {
       setIsLoading(false);
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["occupation-list"] });
-      toast("Successfully added Visa");
+      toast("Successfully added Occupation");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding Visa:", error);
-      toast(error.response?.data?.message || "Failed to add Visa");
+      console.error("❌ Error adding Occupation:", error);
+      toast(error.response?.data?.message || "Failed to add Occupation");
     },
   });
 
@@ -63,15 +64,15 @@ function AddOccupation() {
       setIsLoading(false);
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["occupation-list"] });
-      toast("Successfully Updated Visa");
+      toast("Successfully Updated Occupation");
       setFormData({ ...initialFormItem });
       navigate("/occupation");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating Visa:", error);
-      toast(error.response?.data?.message || "Failed to Update Visa");
+      console.error("❌ Error updating Occupation:", error);
+      toast(error.response?.data?.message || "Failed to Update Occupation");
     },
   });
 
@@ -118,12 +119,15 @@ function AddOccupation() {
           onChange={(val) => handleChange("status", val)}
         />
       </div>
-      <Button
-        text={`${state && state.data ? "Update" : "Save"} Occupation`}
-        type="submit"
-        loading={isLoading}
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      />
+      <div className="flex">
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} Occupation`}
+          type="submit"
+          loading={isLoading}
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

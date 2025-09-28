@@ -1,36 +1,36 @@
 import Button from "../../../component/form/Button";
 import { useNavigate } from "react-router-dom";
-import Table from "../../../component/Table";
 import { Pencil, Trash } from "lucide-react";
 import { ModuleProps } from "../../../types/module";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
+import Table from "../../../component/Table";
 import {
-  deleteClientFormModule,
-  fetchClientFormModule,
-} from "../../../api/clientFormModule";
+  deleteQualificationAPI,
+  fetchQualificationAPI,
+} from "../../../api/qualification";
 
-const ClientFormModule = () => {
+export default function ProfileSource() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["client-form-module-list"],
-    queryFn: fetchClientFormModule,
+    queryKey: ["profile-source-list"],
+    queryFn: fetchQualificationAPI,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteClientFormModule,
+    mutationFn: deleteQualificationAPI,
     onSuccess: () => {
-      toast("Successfully deleted module");
-      queryClient.invalidateQueries({ queryKey: ["addModule"] });
+      toast("Successfully deleted Qualification");
+      queryClient.invalidateQueries({ queryKey: ["profile-source-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error adding client:", error);
-      alert(error.response?.data?.message || "Failed to add client");
+      console.error("❌ Error in deleting Qualification:", error);
+      toast(error.response?.data?.message || "Failed to delete Qualification");
     },
   });
 
@@ -43,10 +43,6 @@ const ClientFormModule = () => {
     {
       accessorKey: "name",
       header: "Name",
-    },
-    {
-      accessorKey: "slug",
-      header: "Key",
     },
     {
       accessorKey: "status",
@@ -73,9 +69,7 @@ const ClientFormModule = () => {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/addClientFormModule", {
-                state: { data: row.original },
-              });
+              navigate("/editQulification", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -104,17 +98,12 @@ const ClientFormModule = () => {
     <div className="p-4 bg-white">
       <ToastContainer />
       <Button
-        text="+ Add Client Form Module"
-        onClick={() => navigate("/addClientFormModule")}
+        text="+ Add Profile Source"
+        onClick={() => navigate("/addProfileSource")}
       />
       <div className="mt-2 mb-2">
-        <Table
-          columns={columns}
-          data={(Array.isArray(data.data) && data.data) || []}
-        />
+        <Table columns={columns} data={data.data || []} />
       </div>
     </div>
   );
-};
-
-export default ClientFormModule;
+}

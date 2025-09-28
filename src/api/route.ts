@@ -79,4 +79,10 @@ export const ROUTE = {
     UPDATE: "v1/premium-colleges",
     DELETE: "v1/premium-colleges",
   },
+  CLIENT_MODULE: {
+    ADD: "v1/client/modules",
+    GET: "v1/client/modules",
+    UPDATE: "v1/client/modules",
+    DELETE: "v1/client/modules",
+  },
 };

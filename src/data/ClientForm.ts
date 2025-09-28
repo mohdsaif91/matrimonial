@@ -555,3 +555,11 @@ export const statusOptionsCap = [
   { value: "Active", label: "Active" },
   { value: "Inactive", label: "In Active" },
 ];
+
+export const formItemOptions = [
+  { value: "text", label: "Text" },
+  { value: "dropdown", label: "Dropdown" },
+  { value: "textArea", label: "Text Area" },
+  { value: "radio", label: "Radio Button" },
+  { value: "checkbox", label: "Checkbox" },
+];
