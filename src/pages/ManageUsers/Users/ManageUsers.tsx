@@ -7,34 +7,31 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
+import { deleteCasteAPI } from "../../../api/caste";
 import {
-  deleteProfileSource,
-  fetchProfileSource,
-} from "../../../api/profileSource";
-import { TextField } from "../../../component/form/TextField";
-import { useState } from "react";
-import { DropDown } from "../../../component/form/SearchableDropdown";
+  deleteManageUserAPI,
+  fetchManageUserAPI,
+} from "../../../api/manageUser";
 
-export default function ProfileSource() {
-  const [filter, setFilter] = useState({ name: "", type: "", status: "" });
+export default function ManageUsers() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["profile-source-list"],
-    queryFn: fetchProfileSource,
+    queryKey: ["manage-user-list"],
+    queryFn: fetchManageUserAPI,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteProfileSource,
+    mutationFn: deleteManageUserAPI,
     onSuccess: () => {
-      toast("Successfully deleted Profile Source");
-      queryClient.invalidateQueries({ queryKey: ["profile-source-list"] });
+      toast("Successfully deleted Managed user");
+      queryClient.invalidateQueries({ queryKey: ["manage-user-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Profile Source:", error);
-      toast(error.response?.data?.message || "Failed to delete Profile Source");
+      console.error("❌ Error in deleting Managed user:", error);
+      toast(error.response?.data?.message || "Failed to delete Managed user");
     },
   });
 
@@ -49,12 +46,20 @@ export default function ProfileSource() {
       header: "Name",
     },
     {
+      accessorKey: "email",
+      header: "Email",
+    },
+    {
       accessorKey: "phone",
       header: "Phone",
     },
     {
-      accessorKey: "type",
-      header: "Type",
+      accessorKey: "gender",
+      header: "Gender",
+    },
+    {
+      accessorKey: "role",
+      header: "Role",
     },
     {
       accessorKey: "status",
@@ -64,7 +69,7 @@ export default function ProfileSource() {
         return (
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${
-              status === "active"
+              status === "Active"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
@@ -81,7 +86,7 @@ export default function ProfileSource() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/editProfileSource", { state: { data: row.original } });
+              navigate("/editManageUsers", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -104,23 +109,15 @@ export default function ProfileSource() {
     return <LoadingPage />;
   }
 
+  console.log(data);
+
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <div className="flex">
-        <TextField
-          label="Name"
-          name="name"
-          onChange={(e) => setFilter({ ...filter, name: e.target.value })}
-          value={filter.name}
-          key="filter-name"
-        />
-        {/* <DropDown label="Type" name="type" onChange={(e)=>} /> */}
-        <Button
-          text="+ Add Profile Source"
-          onClick={() => navigate("/addProfileSource")}
-        />
-      </div>
+      <Button
+        text="+ Add Manage User"
+        onClick={() => navigate("/addManageUsers")}
+      />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />
       </div>

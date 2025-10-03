@@ -52,9 +52,9 @@ const customStyles = {
   }),
   dropdownIndicator: (provided: any, state: any) => ({
     ...provided,
-    color: state.isFocused ? "#465dff" : "#9ba6b7",
+    color: state.isFocused ? "#9ba6b7" : "#465dff",
     "&:hover": {
-      color: "#465dff",
+      color: "#000",
     },
   }),
 };

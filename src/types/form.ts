@@ -16,7 +16,9 @@ export interface textFeildProps {
   placeholder?: string;
   required?: boolean;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
 }
 
 export interface DateFeildProps {

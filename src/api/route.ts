@@ -85,4 +85,16 @@ export const ROUTE = {
     UPDATE: "v1/client/modules",
     DELETE: "v1/client/modules",
   },
+  PROFILE_SOURCE: {
+    ADD: "v1/profile-sources",
+    GET: "v1/profile-sources",
+    UPDATE: "v1/profile-sources",
+    DELETE: "v1/profile-sources",
+  },
+  MANAGE_USER: {
+    ADD: "v1/users",
+    GET: "v1/users",
+    UPDATE: "v1/users",
+    DELETE: "v1/users",
+  },
 };

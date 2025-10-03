@@ -556,10 +556,61 @@ export const statusOptionsCap = [
   { value: "Inactive", label: "In Active" },
 ];
 
+export const techLeadOptions = [
+  { value: "Lead", label: "Lead" },
+  { value: "Profile", label: "Profile" },
+];
+
 export const formItemOptions = [
   { value: "text", label: "Text" },
   { value: "dropdown", label: "Dropdown" },
   { value: "textArea", label: "Text Area" },
   { value: "radio", label: "Radio Button" },
   { value: "checkbox", label: "Checkbox" },
+  { value: "datepicker", label: "Date Picker" },
+];
+
+export const addClientFormClientType = [
+  { value: "general", label: "General" },
+  { value: "imporatnt(vip)", label: "Important (VIP)" },
+  { value: "confidential", label: "Confidential" },
+];
+
+export const clientVerificationOptions = [
+  { value: "physical", label: "Physical" },
+  { value: "video", label: "Video" },
+  { value: "kyc", label: "KYC" },
+];
+
+export const complexionOptions = [
+  { label: "Very Fair", value: "very_fair" },
+  { label: "Fair", value: "fair" },
+  { label: "Wheatish", value: "wheatish" },
+  { label: "Dusky", value: "dusky" },
+  { label: "Dark", value: "dark" },
+];
+
+export const eatingHabitOptions = [
+  { label: "Vegetarian", value: "veg" },
+  { label: "Non-Vegetarian", value: "non_veg" },
+  { label: "Eggetarian", value: "egg" },
+  { label: "Vegan", value: "vegan" },
+];
+
+export const personalityOptions = [
+  { label: "slim", value: "veg" },
+  { label: "average", value: "non_veg" },
+  { label: "athletic", value: "Athletic" },
+  { label: "heavy", value: "Heavy" },
+];
+
+export const drinkingHabitOptions = [
+  { label: "No", value: "no" },
+  { label: "Occasionally", value: "occasionally" },
+  { label: "Yes", value: "yes" },
+];
+
+export const yesNoOptions = [
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "no" },
 ];

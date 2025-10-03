@@ -124,7 +124,19 @@ export const headerLinks = [
         id: "mu-1",
         text: "Manage Users",
         link: "/manage-users",
-        element: lazy(() => import("../pages/ManageUsers/ManageUsers")),
+        element: lazy(() => import("../pages/ManageUsers/Users/ManageUsers")),
+      },
+      {
+        id: "mu-4",
+        text: "Add Manage Users",
+        link: "/addManageUsers",
+        element: lazy(() => import("../pages/ManageUsers/Users/AddEditUsers")),
+      },
+      {
+        id: "mu-5",
+        text: "Edit Manage Users",
+        link: "/editManageUsers",
+        element: lazy(() => import("../pages/ManageUsers/Users/AddEditUsers")),
       },
       {
         id: "mu-2",
@@ -197,20 +209,24 @@ export const headerLinks = [
             children: [
               {
                 id: "ps-1",
-                text: "Add Premium college",
+                text: "Add Profile Source",
                 link: "/addProfileSource",
                 element: lazy(
                   () =>
-                    import("../pages/Settings/PremiumCollege/AddPremiumCollege")
+                    import(
+                      "../pages/Settings/ProfileSource/AddEditProfileSource"
+                    )
                 ),
               },
               {
                 id: "pc-2",
-                text: "Edit Premium College",
-                link: "/editPremiumCollege",
+                text: "Edit Profile Source",
+                link: "/editProfileSource",
                 element: lazy(
                   () =>
-                    import("../pages/Settings/PremiumCollege/AddPremiumCollege")
+                    import(
+                      "../pages/Settings/ProfileSource/AddEditProfileSource"
+                    )
                 ),
               },
             ],
@@ -445,7 +461,25 @@ export const headerLinks = [
             id: "s-11",
             text: "Income",
             link: "/income",
-            element: lazy(() => import("../pages/Settings/Income")),
+            element: lazy(() => import("../pages/Settings/Income/Income")),
+            children: [
+              {
+                id: "s-1",
+                text: "Add Income",
+                link: "/addIncome",
+                element: lazy(
+                  () => import("../pages/Settings/Income/AddEditIncome")
+                ),
+              },
+              {
+                id: "s-2",
+                text: "Edit Income",
+                link: "/editIncome",
+                element: lazy(
+                  () => import("../pages/Settings/Income/AddEditIncome")
+                ),
+              },
+            ],
           },
           {
             id: "s-12",

@@ -11,17 +11,13 @@ import {
   deleteProfileSource,
   fetchProfileSource,
 } from "../../../api/profileSource";
-import { TextField } from "../../../component/form/TextField";
-import { useState } from "react";
-import { DropDown } from "../../../component/form/SearchableDropdown";
 
-export default function ProfileSource() {
-  const [filter, setFilter] = useState({ name: "", type: "", status: "" });
+export default function Income() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["profile-source-list"],
+    queryKey: ["income-list"],
     queryFn: fetchProfileSource,
     retry: false,
   });
@@ -30,7 +26,7 @@ export default function ProfileSource() {
     mutationFn: deleteProfileSource,
     onSuccess: () => {
       toast("Successfully deleted Profile Source");
-      queryClient.invalidateQueries({ queryKey: ["profile-source-list"] });
+      queryClient.invalidateQueries({ queryKey: ["income-list"] });
     },
     onError: (error: any) => {
       console.error("❌ Error in deleting Profile Source:", error);
@@ -107,20 +103,7 @@ export default function ProfileSource() {
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <div className="flex">
-        <TextField
-          label="Name"
-          name="name"
-          onChange={(e) => setFilter({ ...filter, name: e.target.value })}
-          value={filter.name}
-          key="filter-name"
-        />
-        {/* <DropDown label="Type" name="type" onChange={(e)=>} /> */}
-        <Button
-          text="+ Add Profile Source"
-          onClick={() => navigate("/addProfileSource")}
-        />
-      </div>
+      <Button text="+ Add Income" onClick={() => navigate("/addIncome")} />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />
       </div>

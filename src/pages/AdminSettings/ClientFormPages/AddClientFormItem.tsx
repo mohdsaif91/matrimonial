@@ -16,6 +16,8 @@ import { toast, ToastContainer } from "react-toastify";
 import ButtonLoader from "../../Loading/ButtonLoader";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { fetchClientFormModule } from "../../../api/clientFormModule";
+import Button from "../../../component/form/Button";
+import { useLocation } from "react-router-dom";
 
 const initialFormItem = {
   client_module_id: 0,
@@ -34,6 +36,7 @@ function AddClientFormItem() {
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { state } = useLocation();
 
   const queryClient = useQueryClient();
 
@@ -109,6 +112,7 @@ function AddClientFormItem() {
           onClick={() => clientModuleRefetch()}
           loading={moduleLoading}
           label="Module"
+          required
           name="module"
           options={transformedModuleData}
           value={formData.client_module_id}
@@ -149,8 +153,8 @@ function AddClientFormItem() {
         />
         <DropDown
           searchable={false}
-          label="Status"
-          name="status"
+          label="Field Type"
+          name="form_type"
           options={formItemOptions}
           value={formData.field_type}
           onChange={(val) => handleChange("field_type", val)}
@@ -164,12 +168,18 @@ function AddClientFormItem() {
       </div>
 
       <div className="flex">
-        <button
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} Client Form Item`}
           type="submit"
+          loading={isLoading}
           className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        {/* <button
+          type="submit"
+          className="cursor-pointer mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
         >
           {isLoading ? <ButtonLoader /> : "Save all"}
-        </button>
+        </button> */}
         <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
       </div>
     </form>
