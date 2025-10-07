@@ -5,16 +5,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ClientFormItem, staticClientFormTab } from "../../../types/form";
 import Table from "../../../component/Table";
 import { Pencil, Trash } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import {
   fetchClientFormModule,
   fetchClientModuleById,
 } from "../../../api/clientFormModule";
+import { deleteFormItem } from "../../../api/clientForm";
+import { toast } from "react-toastify";
 
 const ClientForm = () => {
   const [activeTab, setActiveTab] = useState<number>(1);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: moduleByIdData, isLoading: moduleByIdLoading } = useQuery({
     queryKey: ["form-item-list", activeTab],
@@ -33,6 +36,18 @@ const ClientForm = () => {
       queryFn: fetchClientFormModule,
       retry: false,
     });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteFormItem,
+    onSuccess: () => {
+      toast("Successfully deleted Form item");
+      queryClient.invalidateQueries({ queryKey: ["form-item-list"] });
+    },
+    onError: (error: any) => {
+      console.error("❌ Error deleting Form item:", error);
+      alert(error.response?.data?.message || "Failed to delete Form item");
+    },
+  });
 
   const columns: ColumnDef<ClientFormItem>[] = [
     {
@@ -87,7 +102,7 @@ const ClientForm = () => {
         return (
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${
-              status === "Active"
+              status === "active"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
@@ -103,14 +118,18 @@ const ClientForm = () => {
       cell: ({ row }) => (
         <div className="flex gap-2">
           <button
-            onClick={() => alert(`Edit ${row.original.id}`)}
-            className="p-2 rounded hover:bg-gray-200"
+            onClick={() =>
+              navigate("/editClientFormItem", { state: { data: row.original } })
+            }
+            className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
             <Pencil size={16} className="text-gray-600" />
           </button>
           <button
-            onClick={() => alert(`Delete ${row.original.id}`)}
-            className="p-2 rounded hover:bg-gray-200"
+            onClick={() =>
+              row.original.id && deleteMutation.mutate(row.original.id)
+            }
+            className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
             <Trash size={16} className="text-red-500" />
           </button>

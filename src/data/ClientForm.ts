@@ -450,75 +450,6 @@ export const defaultClientData = {
   client_name: "",
   clientMobile: "",
   client_email: "",
-  // client_email: "",
-  // client_name: "",
-  // client_mobile: "",
-  // profile_id: "CL1236",
-  // lead_id: "LD003",
-  // name: "john",
-  // email: "john@example.com",
-  // mobile: "9876543212",
-  // gender: "male",
-  // marital_status: "Single (Never Married)",
-  // open_for_divorce: false,
-  // relationship_with_member: "",
-  // occupation_id: 1,
-  // profile_visited: 1,
-  // sourced_from_id: 1,
-  // profile_handled_by: 1,
-  // profile_created_by: 1,
-  // membership_profile: "Paid",
-  // premium_college: "Yes",
-  // active: true,
-  // client_type: "General",
-  // client_verification: "KYC",
-
-  // religion_id: 1,
-  // cast_id: 1,
-  // sub_caste_id: 1,
-
-  // country: "India",
-  // state: "Maharashtra",
-  // city: "Mumbai",
-  // native_town: "Pune",
-  // native_state: "Maharashtra",
-
-  // contact_person_name: "Ravi Kumar",
-  // contact_person_address: "123, XYZ Street, Mumbai",
-  // whatsapp_number: "9876543211",
-  // contact_person_email: "ravi.k@example.com",
-
-  // date_of_birth: "1995-06-15",
-  // time_of_birth: "14:30:00",
-  // birth_place: "Mumbai",
-  // astrologically: "Not Manglik",
-  // gotra: "Bharadwaj",
-
-  // height: "5.9",
-  // weight: "70",
-  // complexion: "Average",
-  // personality: "Athletic",
-
-  // drinking_habits: "Never",
-  // eating_habits: "Vegetarian",
-  // smoking_habits: "Never",
-
-  // partner_preferences:
-  //   "Looking for well-educated, vegetarian, working professional",
-  // open_for_other_caste: true,
-  // open_for_other_state: false,
-  // health_screening_consent: true,
-  // eye_sight: "Normal",
-  // believes_in_patri: false,
-  // willing_to_go_abroad: true,
-  // nri_status: false,
-  // visa: "H1",
-  // disability: false,
-
-  // hobbies: "Reading, Traveling, Music",
-  // profile_comment: "Highly educated, humble and respectful",
-  // details: "Completed Master's in Computer Science from IIT Bombay",
-  // client_notes: "Initial call scheduled for next week",
 };
 
 export const clientFormbtn = [
@@ -590,13 +521,6 @@ export const complexionOptions = [
   { label: "Dark", value: "dark" },
 ];
 
-export const eatingHabitOptions = [
-  { label: "Vegetarian", value: "veg" },
-  { label: "Non-Vegetarian", value: "non_veg" },
-  { label: "Eggetarian", value: "egg" },
-  { label: "Vegan", value: "vegan" },
-];
-
 export const personalityOptions = [
   { label: "slim", value: "veg" },
   { label: "average", value: "non_veg" },
@@ -604,13 +528,93 @@ export const personalityOptions = [
   { label: "heavy", value: "Heavy" },
 ];
 
-export const drinkingHabitOptions = [
-  { label: "No", value: "no" },
-  { label: "Occasionally", value: "occasionally" },
-  { label: "Yes", value: "yes" },
-];
-
 export const yesNoOptions = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
+];
+
+export const genderOptions = [
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
+  { label: "Other", value: "other" },
+];
+
+export const maritialStatusOptions = [
+  { label: "Single", value: "0" },
+  { label: "Married", value: "1" },
+  { label: "Divorced", value: "2" },
+  { label: "Widowed", value: "3" },
+  { label: "Single (Never Married)", value: "4" },
+];
+
+export const astrologicalOptions = [
+  { label: "Manglik", value: "manglik" },
+  { label: "Not Manglik", value: "notmanglik" },
+  { label: "Partially Manglik", value: "partiallymanglik" },
+  { label: "Don't Know", value: "DontKnow" },
+];
+
+export const heightOptions = [
+  { label: "4ft", value: "4.0" },
+  { label: "4ft 1in", value: "4.01" },
+  { label: "4ft 2in", value: "4.02" },
+  { label: "4ft 3in", value: "4.03" },
+  { label: "4ft 4in", value: "4.04" },
+  { label: "4ft 5in", value: "4.05" },
+  { label: "4ft 6in", value: "4.06" },
+  { label: "4ft 7in", value: "4.07" },
+  { label: "4ft 8in", value: "4.08" },
+  { label: "4ft 9in", value: "4.09" },
+  { label: "4ft 10in", value: "4.10" },
+  { label: "4ft 11in", value: "4.11" },
+  { label: "5ft", value: "5.0" },
+  { label: "5ft 1in", value: "5.01" },
+  { label: "5ft 2in", value: "5.02" },
+  { label: "5ft 3in", value: "5.03" },
+  { label: "5ft 4in", value: "5.04" },
+  { label: "5ft 5in", value: "5.05" },
+  { label: "5ft 6in", value: "5.06" },
+  { label: "5ft 7in", value: "5.07" },
+  { label: "5ft 8in", value: "5.08" },
+  { label: "5ft 9in", value: "5.09" },
+  { label: "5ft 10in", value: "5.10" },
+  { label: "5ft 11in", value: "5.11" },
+  { label: "6ft", value: "6.0" },
+  { label: "6ft 1in", value: "6.01" },
+  { label: "6ft 2in", value: "6.02" },
+  { label: "6ft 3in", value: "6.03" },
+  { label: "6ft 4in", value: "6.04" },
+  { label: "6ft 5in", value: "6.05" },
+  { label: "6ft 6in", value: "6.06" },
+  { label: "6ft 7in", value: "6.07" },
+  { label: "6ft 8in", value: "6.08" },
+  { label: "6ft 9in", value: "6.09" },
+];
+
+export const drinkingHabitOptions = [
+  { label: "Never", value: "never" },
+  { label: "regularly", value: "regularly" },
+  { label: "Seldom", value: "seldom" },
+  { label: "Occasionally/Rarely", value: "occasionally/rarely" },
+];
+
+export const eatingHabitOptions = [
+  { label: "Non-Vegetarain", value: "non-vegetarain" },
+  { label: "Vegetarain", value: "vegetarain" },
+  { label: "Both", value: "both" },
+  { label: "Occasionally non-veg", value: "occasionally non-veg" },
+  { label: "Eggetarian", value: "eggetarian" },
+];
+
+export const smokingHabitsOptions = [
+  { label: "Never", value: "never" },
+  { label: "regularly", value: "regularly" },
+  { label: "Seldom", value: "seldom" },
+  { label: "Occasionally/Rarely", value: "occasionally/rarely" },
+];
+
+export const eyeSightOptions = [
+  { label: "Normal", value: "Normal" },
+  { label: "Use Spectacles", value: "Use Spectacles" },
+  { label: "Lenses", value: "Lenses" },
 ];

@@ -90,6 +90,7 @@ export interface staticClientFormTab {
 }
 
 export interface ClientFormItem {
+  id?: number;
   client_module_id: number;
   display_name: string;
   field_name: string;

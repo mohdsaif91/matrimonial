@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast, ToastContainer } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { statusOptions, statusOptionsCap } from "../../../data/ClientForm";
-import { toast, ToastContainer } from "react-toastify";
-import {
-  addReligion,
-  fetchReligion,
-  updateReligion,
-} from "../../../api/religion";
+import { statusOptions } from "../../../data/ClientForm";
+import { fetchReligion } from "../../../api/religion";
 import Button from "../../../component/form/Button";
-import { useLocation, useNavigate } from "react-router-dom";
 import { CasteProps } from "../../../types/caste";
 import { addCasteAPI, updateCasteAPI } from "../../../api/caste";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
   religion_id: 0,
@@ -143,18 +141,20 @@ function AddCaste() {
           searchable={false}
           label="Status"
           name="module"
-          options={statusOptionsCap}
+          options={statusOptions}
           value={formData.status}
           onChange={(val) => handleChange("status", val)}
         />
       </div>
-      <Button
-        text={`${state && state.data ? "Update" : "Save"} Caste`}
-        type="submit"
-        loading={isLoading}
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      />
-      <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      <div className="flex">
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} Caste`}
+          type="submit"
+          loading={isLoading}
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

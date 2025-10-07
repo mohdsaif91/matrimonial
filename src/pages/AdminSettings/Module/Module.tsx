@@ -14,7 +14,7 @@ const Module = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["module-list"],
     queryFn: fetchModule,
     retry: false,
@@ -96,6 +96,10 @@ const Module = () => {
 
   if (isLoading) {
     return <LoadingPage />;
+  }
+
+  if (error) {
+    navigate("/error");
   }
 
   console.log(data);

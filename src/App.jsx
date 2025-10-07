@@ -8,6 +8,7 @@ import { buildRoutes } from "./util/routeBuilder";
 import { headerLinks } from "./data/header";
 import LoadingPage from "./pages/Loading/Loading";
 import PrivateRoute from "./util/PrivateRoute";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   const routes = buildRoutes(headerLinks);
@@ -34,6 +35,7 @@ function App() {
                 element={<PrivateRoute>{r.element}</PrivateRoute>}
               />
             ))}
+            <Route key="error" path="/error" element={<ErrorPage />} />
           </Routes>
         </Suspense>
       </div>

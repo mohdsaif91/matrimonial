@@ -2,19 +2,15 @@ import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { statusOptionsCap } from "../../../data/ClientForm";
+import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import { fetchReligion } from "../../../api/religion";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SubCasteProps } from "../../../types/caste";
-import {
-  addCasteAPI,
-  fetchCasteAPI,
-  fetchSubCasteByRelIdAPI,
-  updateCasteAPI,
-} from "../../../api/caste";
+import { fetchCasteAPI, updateCasteAPI } from "../../../api/caste";
 import { addSubCasteAPI } from "../../../api/subCaste";
+import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
   religion_id: 0,
@@ -143,7 +139,9 @@ function AddCaste() {
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
       <ToastContainer />
-      <h2 className="text-xl font-semibold mb-4">Add Caste</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {state && state.data ? "Edit" : "Add"} Sub Caste
+      </h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <DropDown
           searchable={false}
@@ -177,17 +175,20 @@ function AddCaste() {
           searchable={false}
           label="Status"
           name="module"
-          options={statusOptionsCap}
+          options={statusOptions}
           value={formData.status}
           onChange={(val) => handleChange("status", val)}
         />
       </div>
-      <Button
-        text={`${state && state.data ? "Update" : "Save"} Sub Caste`}
-        type="submit"
-        loading={isLoading}
-        className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-      />
+      <div className="flex">
+        <Button
+          text={`${state && state.data ? "Update" : "Save"} Sub Caste`}
+          type="submit"
+          loading={isLoading}
+          className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
+        />
+        <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
+      </div>
     </form>
   );
 }

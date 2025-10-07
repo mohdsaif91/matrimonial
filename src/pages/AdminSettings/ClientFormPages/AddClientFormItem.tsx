@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addFormItem } from "../../../api/clientForm";
+import { addFormItem, updateFormItem } from "../../../api/clientForm";
 import { ClientFormItem } from "../../../types/form";
 import {
   formItemOptions,
@@ -17,7 +17,7 @@ import ButtonLoader from "../../Loading/ButtonLoader";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { fetchClientFormModule } from "../../../api/clientFormModule";
 import Button from "../../../component/form/Button";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const initialFormItem = {
   client_module_id: 0,
@@ -37,8 +37,17 @@ function AddClientFormItem() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useLocation();
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (state && state.data) {
+      console.log(state.data);
+
+      setFormData({ ...state.data });
+    }
+  }, []);
 
   const {
     data: moduleData,
@@ -67,15 +76,44 @@ function AddClientFormItem() {
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding client:", error);
-      alert(error.response?.data?.message || "Failed to add client");
+      console.error("❌ Error adding Form Item:", error);
+      alert(error.response?.data?.message || "Failed to add Form Item");
+    },
+  });
+
+  const editMutation = useMutation({
+    mutationFn: updateFormItem,
+    onSuccess: (data) => {
+      console.log(data, " <>?");
+      toast("Client form item Updated successfully !", {
+        onClose: () => {
+          queryClient.invalidateQueries({ queryKey: ["form-item-list"] });
+          setIsLoading(false);
+          navigate("/client-form");
+          setFormData({ ...initialFormItem });
+        },
+      });
+      // invalidate or refresh client list queries
+      queryClient.invalidateQueries({ queryKey: ["form-item-list"] });
+      navigate("/client-form");
+      setIsLoading(false);
+      setFormData({ ...initialFormItem });
+    },
+    onError: (error: any) => {
+      setIsLoading(false);
+      console.error("❌ Error adding Form Item:", error);
+      alert(error.response?.data?.message || "Failed to add Form Item");
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    mutation.mutate(formData);
+    if (state && state.data) {
+      editMutation.mutate(formData);
+    } else {
+      mutation.mutate(formData);
+    }
   };
 
   const transformedModuleData =
@@ -91,7 +129,9 @@ function AddClientFormItem() {
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
       <ToastContainer />
-      <h2 className="text-xl font-semibold mb-4">Add Client Forms</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {state && state.data ? "Edit" : "Add"} Client Forms
+      </h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <TextField
           label="Display Name"
@@ -174,12 +214,6 @@ function AddClientFormItem() {
           loading={isLoading}
           className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
         />
-        {/* <button
-          type="submit"
-          className="cursor-pointer mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
-        >
-          {isLoading ? <ButtonLoader /> : "Save all"}
-        </button> */}
         <BackNavigationButton className="ml-2 mt-6 px-6 py-2  text-white rounded-xl hover:bg-blue-600 flex align-middle" />
       </div>
     </form>

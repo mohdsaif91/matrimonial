@@ -18,10 +18,28 @@ export async function fetchFormItemById(id: number) {
 }
 
 export async function updateFormItem(data: ClientFormItem) {
-  const { name, status, id } = data;
-  const response = await api.put(`${ROUTE.ADD_FORM_ITEM.UPDATE}/${id}`, {
-    name,
+  const {
     status,
+    client_module_id,
+    display_name,
+    div_css,
+    field_name,
+    field_type,
+    required,
+    validation,
+    view_in_pdf,
+    id,
+  } = data;
+  const response = await api.put(`${ROUTE.ADD_FORM_ITEM.UPDATE}/${id}`, {
+    status,
+    client_module_id,
+    display_name,
+    div_css,
+    field_name,
+    field_type,
+    required,
+    validation,
+    view_in_pdf,
   });
   return response.data;
 }

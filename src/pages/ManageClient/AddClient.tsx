@@ -1,10 +1,19 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import {
   addClientFormClientType,
+  astrologicalOptions,
   clientVerificationOptions,
   complexionOptions,
   defaultClientData,
+  drinkingHabitOptions,
+  eatingHabitOptions,
+  eyeSightOptions,
+  genderOptions,
+  heightOptions,
+  maritialStatusOptions,
   personalityOptions,
+  smokingHabitsOptions,
+  yesNoOptions,
 } from "../../data/ClientForm";
 import { TextField } from "../../component/form/TextField";
 import Button from "../../component/form/Button";
@@ -20,11 +29,12 @@ import {
 import { ClientModuleField } from "../../types/clientModule";
 import { staticClientFormTab } from "../../types/form";
 import TextArea from "../../component/form/TextArea";
-import { fetchProfileSource } from "../../api/profileSource";
 import { fetchCasteAPI } from "../../api/caste";
 import { fetchSubCasteAPI } from "../../api/subCaste";
 import { fetchManageUserAPI } from "../../api/manageUser";
 import { DateOfBirthField } from "../../component/form/DateField";
+import { fetchState } from "../../api/state";
+import { fetchVisaAPI } from "../../api/visa";
 
 const AddClient = () => {
   const [clientData, setClientData] = useState(defaultClientData);
@@ -100,7 +110,7 @@ const AddClient = () => {
     isLoading: subCasteLoading,
     refetch: subCasteRefetch,
   } = useQuery({
-    queryKey: ["subCaste"], // unique cache key
+    queryKey: ["sub-caste-list"], // unique cache key
     queryFn: fetchSubCasteAPI,
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
@@ -109,13 +119,27 @@ const AddClient = () => {
   });
 
   const {
-    data: complexionData,
-    error: complexionError,
-    isLoading: complexionLoading,
-    refetch: complexionRefetch,
+    data: stateData,
+    error: stateError,
+    isLoading: stateLoading,
+    refetch: stateRefetch,
   } = useQuery({
-    queryKey: ["complexion"], // unique cache key
-    queryFn: fetchSourcedFrom,
+    queryKey: ["state-list"], // unique cache key
+    queryFn: fetchState,
+    staleTime: 1000 * 60 * 60 * 3,
+    gcTime: 1000 * 60 * 60 * 3,
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+
+  const {
+    data: visaData,
+    error: visaError,
+    isLoading: visaLoading,
+    refetch: visaRefetch,
+  } = useQuery({
+    queryKey: ["visa-list"], // unique cache key
+    queryFn: fetchVisaAPI,
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
@@ -137,6 +161,8 @@ const AddClient = () => {
 
   const getOptions = (fieldName: string) => {
     let arr: { label: string; value: string | number }[] = [];
+    console.log(fieldName, " <>?");
+
     switch (fieldName) {
       case "sourced_from":
         arr = getLabelValue(sourcedData ? sourcedData.data : []);
@@ -168,10 +194,48 @@ const AddClient = () => {
       case "personality":
         arr = personalityOptions;
         break;
+      case "gender":
+        arr = genderOptions;
+      case "marital_status":
+        arr = maritialStatusOptions;
+        break;
+      case "astrologically":
+        arr = astrologicalOptions;
+        break;
+      case "height":
+        arr = heightOptions;
+        break;
+      case "drinking_habits":
+        arr = drinkingHabitOptions;
+        break;
+      case "eating_habits":
+        arr = eatingHabitOptions;
+        break;
+      case "smoking_habits":
+        arr = smokingHabitsOptions;
+        break;
+      case "open_for_other_caste":
+      case "open_for_divorcee":
+      case "health_screening_consent":
+      case "believes_in_patri":
+      case "willing_to_go_abroad":
+      case "open_for_other_state":
+      case "nri_status":
+      case "disability":
+        arr = yesNoOptions;
+        break;
+      case "eye_sight":
+        arr = eyeSightOptions;
+        break;
+      case "native_state":
+        arr = getLabelValue(stateData ? stateData.data : []);
+        break;
+      case "visa":
+        arr = getLabelValue(visaData ? visaData.data : []);
+        break;
       default:
         arr = [];
     }
-
     return arr;
   };
 
@@ -189,8 +253,10 @@ const AddClient = () => {
         return casteLoading;
       case "sub_caste":
         return subCasteLoading;
-      // case "personality":
-      //   return personalityLoading;
+      case "native_state":
+        return stateLoading;
+      case "visa":
+        return visaLoading;
       default:
         return false;
     }
@@ -216,9 +282,11 @@ const AddClient = () => {
       case "sub_caste":
         subCasteRefetch();
         break;
-      case "complexion":
+      case "native_state":
+        stateRefetch();
         break;
-      case "personality":
+      case "visa":
+        visaRefetch();
         break;
       default:
         return false;
@@ -283,7 +351,8 @@ const AddClient = () => {
             name={item.field_name}
             required={item.required === 1}
             options={getOptions(item.field_name)}
-            value={clientData.sourced_from_id}
+            value=""
+            // value={clientData.sourced_from_id}
             onChange={(val) => handleChange(item.field_name, val)}
           />
         );
@@ -303,7 +372,7 @@ const AddClient = () => {
         return (
           <DateOfBirthField
             value=""
-            label={item.field_name}
+            label={item.display_name}
             onChange={() => {}}
           />
         );
@@ -331,8 +400,9 @@ const AddClient = () => {
         ))}
       </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3 p-6">
-        {handdledFromItemData.map((formItem: ClientModuleField) =>
-          getFormItems(formItem)
+        {handdledFromItemData.map(
+          (formItem: ClientModuleField) =>
+            formItem.status === "active" && getFormItems(formItem)
         )}
         <div className="flex-1 mt-4 cursor-pointer">
           <Button
