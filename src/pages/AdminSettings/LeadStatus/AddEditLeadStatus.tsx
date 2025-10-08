@@ -2,31 +2,23 @@ import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  incomeOptions,
-  statusOptions,
-  techLeadOptions,
-} from "../../../data/ClientForm";
+import { incomeOptions, statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import {
-  addProfileSource,
-  updateProfileSource,
-} from "../../../api/profileSource";
-import { IncomeProps } from "../../../types/income";
 import { addIncome, updateIncome } from "../../../api/income";
+import { LeadStatusProps } from "../../../types/leadStatus";
+import { addLeadStatus, updateLeadStatus } from "../../../api/leadStatus";
 
 const initialFormItem = {
-  amount: 0,
-  type: "",
+  name: "",
   status: "",
   id: 0,
 };
 
-function AddEditProfileSource() {
-  const [formData, setFormData] = useState<IncomeProps>({
+export default function AddEditLeadStatus() {
+  const [formData, setFormData] = useState<LeadStatusProps>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -47,37 +39,37 @@ function AddEditProfileSource() {
   };
 
   const mutation = useMutation({
-    mutationFn: addIncome,
+    mutationFn: addLeadStatus,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["income-list"] });
-      toast("Successfully added Income");
+      queryClient.invalidateQueries({ queryKey: ["lead-status-list"] });
+      toast("Successfully added Lead Status");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding Income:", error);
-      toast(error.response?.data?.message || "Failed to add Income");
+      console.error("❌ Error adding Lead Status:", error);
+      toast(error.response?.data?.message || "Failed to add Lead Status");
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateIncome,
+    mutationFn: updateLeadStatus,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["income-list"] });
-      toast("Successfully Updated Incom");
+      queryClient.invalidateQueries({ queryKey: ["lead-status-list"] });
+      toast("Successfully Updated Lead Status");
       setFormData({ ...initialFormItem });
-      navigate("/income");
+      navigate("/lead-status");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating Incom:", error);
-      toast(error.response?.data?.message || "Failed to Update Incom");
+      console.error("❌ Error updating Lead Status:", error);
+      toast(error.response?.data?.message || "Failed to Update Lead Status");
     },
   });
 
@@ -100,25 +92,14 @@ function AddEditProfileSource() {
     >
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "Add"} Profile Source
+        {state && state.data ? "Edit" : "Add"} Lead Status
       </h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <TextField
-          extraText="Note:- For 1 lakh, enter 1."
-          type="number"
-          label="Amount"
-          name="amount"
-          value={formData.amount}
-          onChange={(e) => handleChange("amount", e.target.value)}
-          required
-        />
-        <DropDown
-          searchable={false}
-          label="Type"
-          name="type"
-          options={incomeOptions}
-          value={formData.type}
-          onChange={(val) => handleChange("type", val)}
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={(e) => handleChange("name", e.target.value)}
           required
         />
         <DropDown
@@ -133,7 +114,7 @@ function AddEditProfileSource() {
       </div>
       <div className="flex">
         <Button
-          text={`${state && state.data ? "Update" : "Save"} Income`}
+          text={`${state && state.data ? "Update" : "Save"} Lead Status`}
           type="submit"
           loading={isLoading}
           className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
@@ -143,5 +124,3 @@ function AddEditProfileSource() {
     </form>
   );
 }
-
-export default AddEditProfileSource;

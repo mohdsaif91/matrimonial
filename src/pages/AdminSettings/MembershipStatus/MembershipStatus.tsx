@@ -7,27 +7,36 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
-import { deleteIncome, fetchIncome } from "../../../api/income";
+import {
+  deleteMembershipPlan,
+  fetchMembershipPlan,
+} from "../../../api/membershipPlan";
+import {
+  deleteMembershipStatus,
+  fetchMembershipStatus,
+} from "../../../api/membershipStatus";
 
-export default function Income() {
+export default function MembershipStatus() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["income-list"],
-    queryFn: fetchIncome,
+    queryKey: ["membership-status-list"],
+    queryFn: fetchMembershipStatus,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteIncome,
+    mutationFn: deleteMembershipStatus,
     onSuccess: () => {
-      toast("Successfully deleted Income");
-      queryClient.invalidateQueries({ queryKey: ["income-list"] });
+      toast("Successfully deleted Membership Status");
+      queryClient.invalidateQueries({ queryKey: ["membership-status-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Income:", error);
-      toast(error.response?.data?.message || "Failed to delete Income");
+      console.error("❌ Error in deleting Membership Status:", error);
+      toast(
+        error.response?.data?.message || "Failed to delete Membership Status"
+      );
     },
   });
 
@@ -38,12 +47,8 @@ export default function Income() {
       cell: (info) => info.getValue(),
     },
     {
-      accessorKey: "amount",
-      header: "Amount",
-    },
-    {
-      accessorKey: "type",
-      header: "Amount Type",
+      accessorKey: "name",
+      header: "Name",
     },
     {
       accessorKey: "status",
@@ -70,7 +75,9 @@ export default function Income() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/editIncome", { state: { data: row.original } });
+              navigate("/editMembershipPlan", {
+                state: { data: row.original },
+              });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -96,7 +103,10 @@ export default function Income() {
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <Button text="+ Add Income" onClick={() => navigate("/addIncome")} />
+      <Button
+        text="+ Add Membership Status"
+        onClick={() => navigate("/addMembershipStatus")}
+      />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />
       </div>

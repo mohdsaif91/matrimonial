@@ -557,11 +557,163 @@ export const headerLinks = [
       },
       { id: "as-4", text: "Email Template", link: "/email-template" },
       { id: "as-5", text: "PDF Template", link: "/pdf-templte" },
-      { id: "as-6", text: "Lead Status", link: "/lead-status" },
-      { id: "as-7", text: "Membership Plan", link: "/membership-plan" },
-      { id: "as-8", text: "Membership Status", link: "/membership-status" },
-      { id: "as-9", text: "Membership Type", link: "/membership-type" },
-      { id: "as-10", text: "Task Category", link: "/task-category" },
+      {
+        id: "as-6",
+        text: "Lead Status",
+        link: "/lead-status",
+        element: lazy(
+          () => import("../pages/AdminSettings/LeadStatus/LeadStatus")
+        ),
+        children: [
+          {
+            id: "ls-1",
+            text: "Add Lead Status",
+            link: "/addLeadStatus",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/LeadStatus/AddEditLeadStatus")
+            ),
+          },
+          {
+            id: "ls-2",
+            text: "Edit Lead status",
+            link: "/editLeadStatus",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/LeadStatus/AddEditLeadStatus")
+            ),
+          },
+        ],
+      },
+      {
+        id: "as-7",
+        text: "Membership Plan",
+        link: "/membership-plan",
+        element: lazy(
+          () => import("../pages/AdminSettings/MembershipPlan/MembershipPlan")
+        ),
+        children: [
+          {
+            id: "mp-1",
+            text: "Add Membership Plan",
+            link: "/addMembershipPlan",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/MembershipPlan/AddEditMembershipPlan"
+                )
+            ),
+          },
+          {
+            id: "mp-2",
+            text: "Edit Membership Plan",
+            link: "/editMembershipPlan",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/MembershipPlan/AddEditMembershipPlan"
+                )
+            ),
+          },
+        ],
+      },
+      {
+        id: "as-8",
+        text: "Membership Status",
+        link: "/membership-status",
+        element: lazy(
+          () =>
+            import("../pages/AdminSettings/MembershipStatus/MembershipStatus")
+        ),
+        children: [
+          {
+            id: "mp-1",
+            text: "Add Membership Status",
+            link: "/addMembershipStatus",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/MembershipStatus/AddEditMembershipStatus"
+                )
+            ),
+          },
+          {
+            id: "mp-2",
+            text: "Edit Membership Status",
+            link: "/editMembershipStatus",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/MembershipStatus/AddEditMembershipStatus"
+                )
+            ),
+          },
+        ],
+      },
+      {
+        id: "as-9",
+        text: "Membership Type",
+        link: "/membership-type",
+        element: lazy(
+          () => import("../pages/AdminSettings/TaskCategory/TaskCategory")
+        ),
+        children: [
+          {
+            id: "mp-1",
+            text: "Add Membership Type",
+            link: "/addMembershipType",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/MembershipType/AddEditMembershipType"
+                )
+            ),
+          },
+          {
+            id: "mp-2",
+            text: "Edit Membership Type",
+            link: "/editMembershipType",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/MembershipType/AddEditMembershipType"
+                )
+            ),
+          },
+        ],
+      },
+      {
+        id: "as-10",
+        text: "Task Category",
+        link: "/task-category",
+        element: lazy(
+          () => import("../pages/AdminSettings/TaskCategory/TaskCategory")
+        ),
+        children: [
+          {
+            id: "mp-1",
+            text: "Add Task Category",
+            link: "/addTaskCategory",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/TaskCategory/AddEditTaskCategory"
+                )
+            ),
+          },
+          {
+            id: "mp-2",
+            text: "Edit Task Category",
+            link: "/editTaskCategory",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/TaskCategory/AddEditTaskCategory"
+                )
+            ),
+          },
+        ],
+      },
       {
         id: "as-11",
         text: "Client Form",

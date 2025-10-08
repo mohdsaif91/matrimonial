@@ -97,4 +97,40 @@ export const ROUTE = {
     UPDATE: "v1/users",
     DELETE: "v1/users",
   },
+  INCOME: {
+    ADD: "v1/incomes",
+    GET: "v1/incomes",
+    UPDATE: "v1/incomes",
+    DELETE: "v1/incomes",
+  },
+  LEAD_STATUS: {
+    ADD: "v1/lead-statuses",
+    GET: "v1/lead-statuses",
+    UPDATE: "v1/lead-statuses",
+    DELETE: "v1/lead-statuses",
+  },
+  MEMBERSHIP_PLAN: {
+    ADD: "v1/membership-plans",
+    GET: "v1/membership-plans",
+    UPDATE: "v1/membership-plans",
+    DELETE: "v1/membership-plans",
+  },
+  MEMBERSHIP_STATUS: {
+    ADD: "v1/membership-statuses",
+    GET: "v1/membership-statuses",
+    UPDATE: "v1/membership-statuses",
+    DELETE: "v1/membership-statuses",
+  },
+  MEMBERSHIP_TYPE: {
+    ADD: "v1/membership-types",
+    GET: "v1/membership-types",
+    UPDATE: "v1/membership-types",
+    DELETE: "v1/membership-types",
+  },
+  TASK_CATEGORY: {
+    ADD: "v1/task-categories",
+    GET: "v1/task-categories",
+    UPDATE: "v1/task-categories",
+    DELETE: "v1/task-categories",
+  },
 };

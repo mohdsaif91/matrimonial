@@ -618,3 +618,14 @@ export const eyeSightOptions = [
   { label: "Use Spectacles", value: "Use Spectacles" },
   { label: "Lenses", value: "Lenses" },
 ];
+
+export const incomeOptions = [
+  {
+    label: "Lakh",
+    value: "lakh",
+  },
+  {
+    label: "Cr",
+    value: "cr",
+  },
+];

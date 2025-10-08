@@ -9,6 +9,7 @@ export function TextField({
   required = false,
   value,
   onChange,
+  extraText,
 }: textFeildProps) {
   return (
     <div className="flex flex-col gap-1">
@@ -24,6 +25,9 @@ export function TextField({
         onChange={onChange}
         className="rounded-xl w-full px-3 py-2 outline-[#465dff] bg-[#F0F3F8] text-[#333] placeholder:text-[#9ba6b7] placeholder:text-[14px]"
       />
+      {extraText && extraText !== "" && (
+        <span className="text-red-500"> {extraText}</span>
+      )}
     </div>
   );
 }

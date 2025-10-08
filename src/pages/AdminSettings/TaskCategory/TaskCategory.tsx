@@ -1,34 +1,40 @@
-import React from "react";
 import Button from "../../../component/form/Button";
 import { useNavigate } from "react-router-dom";
-import ModuleTable from "./ModuleTable";
 import { Pencil, Trash } from "lucide-react";
 import { ModuleProps } from "../../../types/module";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteModuleAPI, fetchModule } from "../../../api/module";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
+import Table from "../../../component/Table";
+import {
+  deleteMembershipType,
+  fetchMembershipType,
+} from "../../../api/membershipType";
+import {
+  deleteTaskCategory,
+  fetchTaskCategory,
+} from "../../../api/taskCategory";
 
-const TaskCategory = () => {
+export default function TaskCategory() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["module-list"],
-    // queryFn: fetchTask,
+    queryKey: ["task-category-list"],
+    queryFn: fetchTaskCategory,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteModuleAPI,
+    mutationFn: deleteTaskCategory,
     onSuccess: () => {
-      toast("Successfully deleted module");
-      queryClient.invalidateQueries({ queryKey: ["addModule"] });
+      toast("Successfully deleted Task Category");
+      queryClient.invalidateQueries({ queryKey: ["task-category-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error adding client:", error);
-      alert(error.response?.data?.message || "Failed to add client");
+      console.error("❌ Error in deleting Task Category:", error);
+      toast(error.response?.data?.message || "Failed to delete Task Category");
     },
   });
 
@@ -43,14 +49,6 @@ const TaskCategory = () => {
       header: "Name",
     },
     {
-      accessorKey: "slug",
-      header: "Key",
-    },
-    {
-      accessorKey: "permission",
-      header: "Value",
-    },
-    {
       accessorKey: "status",
       header: "Status",
       cell: ({ getValue }) => {
@@ -58,7 +56,7 @@ const TaskCategory = () => {
         return (
           <span
             className={`px-3 py-1 rounded-full text-xs font-medium ${
-              status === "Active"
+              status === "active"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
@@ -75,7 +73,9 @@ const TaskCategory = () => {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/editModule", { state: { data: row.original } });
+              navigate("/editTaskCategory", {
+                state: { data: row.original },
+              });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -98,20 +98,16 @@ const TaskCategory = () => {
     return <LoadingPage />;
   }
 
-  console.log(data);
-
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <Button text="+ Add Module" onClick={() => navigate("/addModule")} />
+      <Button
+        text="+ Add Task Category"
+        onClick={() => navigate("/addTaskCategory")}
+      />
       <div className="mt-2 mb-2">
-        <ModuleTable
-          columns={columns}
-          data={(Array.isArray(data.data) && data.data) || []}
-        />
+        <Table columns={columns} data={data.data || []} />
       </div>
     </div>
   );
-};
-
-export default TaskCategory;
+}

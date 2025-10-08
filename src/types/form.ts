@@ -15,10 +15,11 @@ export interface textFeildProps {
   type?: string;
   placeholder?: string;
   required?: boolean;
-  value: string;
+  value: string | number;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  extraText?: string;
 }
 
 export interface DateFeildProps {
