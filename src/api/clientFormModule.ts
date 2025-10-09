@@ -27,7 +27,7 @@ export async function deleteClientFormModule(id: number) {
   return response.data;
 }
 
-export async function fetchClientModuleById(id: number) {
+export async function fetchClientModuleById(id: string) {
   const response = await api.get(`${ROUTE.CLIENT_MODULE.GET}/${id}`);
   return response.data;
 }

@@ -82,6 +82,9 @@ const ClientForm = () => {
     {
       accessorKey: "required",
       header: "Required",
+      cell: ({ row }) => {
+        return <span>{row.original.required === 1 ? "Yes" : "No"}</span>;
+      },
     },
     {
       accessorKey: "view_in_pdf",

@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   addClientFormClientType,
   astrologicalOptions,
   clientVerificationOptions,
   complexionOptions,
-  defaultClientData,
   drinkingHabitOptions,
   eatingHabitOptions,
   eyeSightOptions,
@@ -35,25 +34,21 @@ import { fetchManageUserAPI } from "../../api/manageUser";
 import { DateOfBirthField } from "../../component/form/DateField";
 import { fetchState } from "../../api/state";
 import { fetchVisaAPI } from "../../api/visa";
+import { ClientForm, ClientModulesResponse } from "../../types/module";
+
+const MemoizedTextField = React.memo(TextField);
+const MemoizedDropDown = React.memo(DropDown);
+const MemoizedTextArea = React.memo(TextArea);
+const MemoizedDateField = React.memo(DateOfBirthField);
 
 const AddClient = () => {
-  const [clientData, setClientData] = useState(defaultClientData);
-  const [activeTab, setActiveTab] = useState<number>(1);
+  const [clientData, setClientData] = useState<ClientForm[]>([]);
+  const [activeTab, setActiveTab] = useState<number>(0);
+  const [modules, setModules] = useState<ClientModulesResponse>([]);
+  const [formValues, setFormValues] = useState<any>();
 
+  let clientModuleRef = useRef(null);
   const queryClient = useQueryClient();
-
-  const {
-    data: formItemData,
-    error: formItemError,
-    isLoading: formItemLoading,
-    refetch: formItemFromRefetch,
-  } = useQuery({
-    queryKey: ["form-item-list", activeTab],
-    queryFn: ({ queryKey }) => {
-      const [, id] = queryKey;
-      return fetchClientModuleById(id);
-    },
-  });
 
   const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
     useQuery({
@@ -61,6 +56,20 @@ const AddClient = () => {
       queryFn: fetchClientFormModule,
       retry: false,
     });
+
+  useEffect(() => {
+    if (clientFormModuleData?.data?.length) {
+      const forms = clientFormModuleData.data[activeTab].client_forms;
+      setClientData(forms);
+
+      // Initialize form values from API data
+      const initialValues: Record<string, any> = {};
+      forms.forEach((item: ClientForm) => {
+        initialValues[item.field_name] = item.value || "";
+      });
+      setFormValues(initialValues);
+    }
+  }, [clientFormModuleData, activeTab]);
 
   const {
     data: sourcedData,
@@ -161,8 +170,6 @@ const AddClient = () => {
 
   const getOptions = (fieldName: string) => {
     let arr: { label: string; value: string | number }[] = [];
-    console.log(fieldName, " <>?");
-
     switch (fieldName) {
       case "sourced_from":
         arr = getLabelValue(sourcedData ? sourcedData.data : []);
@@ -293,55 +300,38 @@ const AddClient = () => {
     }
   };
 
-  // if (
-  //   sourcedLoading ||
-  //   personalityLoading ||
-  //   clientTypeLoading ||
-  //   complexionLoading ||
-  //   subCasteLoading ||
-  //   casteLoading ||
-  //   clientVerificationLoading ||
-  //   profileVisitedLoading ||
-  //   profileCreatedLoading ||
-  //   profileHandledLoading
-  // ) {
-  //   return <LoadingPage />;
-  // }
-
-  if (formItemLoading || clientFromModuleLoading) {
+  if (clientFromModuleLoading) {
     return <LoadingPage />;
   }
 
   const handleChange = (name: string, value: any) => {
-    console.log();
-
-    setClientData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate(clientData);
+    console.log(clientData, " MAIN FINAL SUBMISSION");
+
+    // mutation.mutate(clientData);
   };
 
-  const getFormItems = (item: ClientModuleField) => {
+  const getFormItems = (item: ClientForm, index: number) => {
     switch (item.field_type) {
       case "text":
         return (
-          <TextField
+          <MemoizedTextField
             key={item.field_name}
             label={item.display_name}
             name={item.field_name}
             required={item.required === 1}
-            value={""}
+            value={formValues[item.field_name] || ""}
             onChange={(e) => handleChange(item.field_name, e.target.value)}
           />
         );
       case "dropdown":
         return (
-          <DropDown
+          <MemoizedDropDown
+            key={item.field_name}
             onClick={() => {
               fetchData(item.field_name);
             }}
@@ -351,65 +341,68 @@ const AddClient = () => {
             name={item.field_name}
             required={item.required === 1}
             options={getOptions(item.field_name)}
-            value=""
-            // value={clientData.sourced_from_id}
+            value={formValues[item.field_name] || ""}
             onChange={(val) => handleChange(item.field_name, val)}
           />
         );
       case "textArea":
         return (
           <div key={item.field_name} className="col-span-4">
-            <TextArea
+            <MemoizedTextArea
               label={item.display_name}
               name={item.field_name}
               required={item.required === 1}
-              value={clientData.sourced_from_id}
+              value={formValues[item.field_name] || ""}
               onChange={(val) => handleChange(item.field_name, val)}
             />
           </div>
         );
       case "datepicker":
         return (
-          <DateOfBirthField
-            value=""
+          <MemoizedDateField
+            key={item.field_name}
             label={item.display_name}
-            onChange={() => {}}
+            value={formValues[item.field_name] || ""}
+            onChange={(val) => handleChange(item.field_name, val)}
           />
         );
     }
   };
 
-  const handdledFromItemData = formItemData ? formItemData.client_forms : [];
-  const handleclientFromModule: any[] = clientFormModuleData
+  const handleClientFromModule: any[] = clientFormModuleData
     ? clientFormModuleData.data
     : [];
+
+  console.log(clientData, " <>? ");
 
   return (
     <div className="bg-white rounded-xl shadow-md m-1">
       <div className="flex p-4">
-        {handleclientFromModule.map((moduleItem: staticClientFormTab) => (
-          <Button
-            disabled={true}
-            type="clientFormBtn"
-            className={`px-4 py-2 mr-2 text-sm font-medium text-white ${
-              activeTab === moduleItem.id ? "bg-[#161D27]" : "bg-[#a71634]"
-            } rounded-lg`}
-            key={moduleItem.name}
-            text={moduleItem.name}
-          />
-        ))}
+        {handleClientFromModule.map(
+          (moduleItem: staticClientFormTab, moduleIndex: number) => (
+            <Button
+              disabled={true}
+              type="clientFormBtn"
+              className={`px-4 py-2 mr-2 text-sm font-medium text-white ${
+                activeTab === moduleIndex ? "bg-[#161D27]" : "bg-[#a71634]"
+              } rounded-lg`}
+              key={moduleItem.name}
+              text={moduleItem.name}
+            />
+          )
+        )}
       </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3 p-6">
-        {handdledFromItemData.map(
-          (formItem: ClientModuleField) =>
-            formItem.status === "active" && getFormItems(formItem)
+        {clientData.map(
+          (formItem, index: number) =>
+            formItem.status === "active" && getFormItems(formItem, index)
         )}
         <div className="flex-1 mt-4 cursor-pointer">
           <Button
             onClick={() => {}}
             type="submit"
             className=""
-            text="Save All"
+            text={`Save ${1}`}
           />
         </div>
       </form>

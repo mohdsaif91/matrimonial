@@ -468,13 +468,13 @@ export const validationOptions = [
 ];
 
 export const requiredOptions = [
-  { value: true, label: "Yes" },
-  { value: false, label: "No" },
+  { value: 1, label: "Yes" },
+  { value: 0, label: "No" },
 ];
 
 export const viewInPdfOptions = [
-  { value: true, label: "Yes" },
-  { value: false, label: "No" },
+  { value: 1, label: "Yes" },
+  { value: 0, label: "No" },
 ];
 
 export const statusOptions = [

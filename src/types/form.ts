@@ -16,9 +16,7 @@ export interface textFeildProps {
   placeholder?: string;
   required?: boolean;
   value: string | number;
-  onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  onChange: (value: string | number) => void;
   extraText?: string;
 }
 
