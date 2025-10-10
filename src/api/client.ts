@@ -1,9 +1,9 @@
-import { Client } from "../types/client";
+import { Client, FormSubmitProps } from "../types/client";
 import api from "./axios";
 import { ROUTE } from "./route";
 
-export async function AddClientApi(clientData: Client) {
-  const response = await api.post(ROUTE.ADD_CLIENT_ROUTE, clientData);
+export async function AddClientApi(clientData: FormSubmitProps) {
+  const response = await api.post(ROUTE.CLIENTS.POST, clientData);
   return response.data;
 }
 

@@ -5,8 +5,8 @@ export const gendereOptions = [
 ];
 
 export const roleOptions = [
-  { label: "OUSPL Admin", value: "1" },
-  { label: "OUSPL Manager", value: "2" },
-  { label: "OUSPL Staff", value: "3" },
-  { label: "Sales", value: "4" },
+  { label: "OUSPL Admin", value: 1 },
+  { label: "OUSPL Manager", value: 2 },
+  { label: "OUSPL Staff", value: 3 },
+  { label: "Sales", value: 4 },
 ];

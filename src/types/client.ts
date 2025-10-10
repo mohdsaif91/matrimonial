@@ -62,3 +62,11 @@ export interface Client {
   details: string;
   client_notes: string;
 }
+
+export interface FormSubmitItemProps {
+  field_id: number;
+  value: string;
+}
+export interface FormSubmitProps {
+  form_fields: FormSubmitItemProps[];
+}

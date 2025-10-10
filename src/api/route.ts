@@ -1,6 +1,12 @@
 export const ROUTE = {
   LOGIN_ROUTE: "v1/auth/sign-in",
   ADD_CLIENT_ROUTE: "clients",
+  CLIENTS: {
+    GET: "v1/clients",
+    UPDATE: "v1/clients",
+    POST: "v1/clients",
+    DELETE: "v1/clients",
+  },
   ADD_FORM_ITEM: {
     GET: "v1/client-form-fields",
     UPDATE: "v1/client-form-fields",

@@ -13,7 +13,7 @@ import {
   fetchManageUserAPI,
 } from "../../../api/manageUser";
 
-export default function ManageUsers() {
+export default function Roles() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -114,10 +114,7 @@ export default function ManageUsers() {
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <Button
-        text="+ Add Manage User"
-        onClick={() => navigate("/addManageUsers")}
-      />
+      <Button text="+ Add Roles" onClick={() => navigate("/addRoles")} />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />
       </div>

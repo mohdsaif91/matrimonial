@@ -3,7 +3,7 @@ import { ClientModuleField } from "../types/clientModule";
 export const getLabelValue = (arr: any[] = []) => {
   return arr.map((s: any) => ({
     label: s.name,
-    value: `${s.id}`,
+    value: s.id,
   }));
 };
 

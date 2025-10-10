@@ -42,3 +42,8 @@ export interface ClientModule {
 }
 
 export type ClientModulesResponse = ClientModule[];
+
+export interface FormValuesProps {
+  id: number;
+  value: string;
+}

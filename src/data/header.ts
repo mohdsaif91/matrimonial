@@ -148,7 +148,25 @@ export const headerLinks = [
         id: "mu-3",
         text: "Manage Roles",
         link: "/manage-roles",
-        element: lazy(() => import("../pages/ManageUsers/ManageRoles")),
+        element: lazy(() => import("../pages/ManageUsers/Roles/Roles")),
+        children: [
+          {
+            id: "ps-1",
+            text: "Add Roles",
+            link: "/addRoles",
+            element: lazy(
+              () => import("../pages/ManageUsers/Roles/AddEditRoles")
+            ),
+          },
+          {
+            id: "pc-2",
+            text: "Edit Roles",
+            link: "/editRoles",
+            element: lazy(
+              () => import("../pages/ManageUsers/Roles/AddEditRoles")
+            ),
+          },
+        ],
       },
     ],
   },

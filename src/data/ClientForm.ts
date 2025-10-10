@@ -529,8 +529,8 @@ export const personalityOptions = [
 ];
 
 export const yesNoOptions = [
-  { label: "Yes", value: "yes" },
-  { label: "No", value: "no" },
+  { label: "Yes", value: 1 },
+  { label: "No", value: 0 },
 ];
 
 export const genderOptions = [

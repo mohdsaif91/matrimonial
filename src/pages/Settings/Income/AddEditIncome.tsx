@@ -100,7 +100,7 @@ function AddEditProfileSource() {
     >
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "Add"} Profile Source
+        {state && state.data ? "Edit" : "Add"} Income
       </h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <TextField
