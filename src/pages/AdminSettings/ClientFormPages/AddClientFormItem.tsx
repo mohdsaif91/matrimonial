@@ -102,7 +102,7 @@ function AddClientFormItem() {
     onError: (error: any) => {
       setIsLoading(false);
       console.error("❌ Error adding Form Item:", error);
-      alert(error.response?.data?.message || "Failed to add Form Item");
+      toast(error.response?.data?.message || "Failed to add Lead Status");
     },
   });
 

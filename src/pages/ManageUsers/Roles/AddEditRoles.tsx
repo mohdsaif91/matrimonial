@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
@@ -10,6 +10,7 @@ import { ManageUserProps } from "../../../types/manageUser";
 import { gendereOptions, roleOptions } from "../../../data/manageUser";
 import { addManageUserAPI, updateManageUserAPI } from "../../../api/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
+import { getPermissionData } from "../../../api/roles";
 
 const initialFormItem = {
   name: "",
@@ -32,6 +33,13 @@ function AddEditRoles() {
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  const { data, isLoading: permissionLoading } = useQuery({
+    queryKey: ["permission-list"],
+    queryFn: getPermissionData,
+    retry: false,
+  });
+  // getPermissionData
 
   useEffect(() => {
     if (state && state.data) {

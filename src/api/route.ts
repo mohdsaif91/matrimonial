@@ -139,4 +139,7 @@ export const ROUTE = {
     UPDATE: "v1/task-categories",
     DELETE: "v1/task-categories",
   },
+  PERMISSION: {
+    GET: "v1/permissions",
+  },
 };

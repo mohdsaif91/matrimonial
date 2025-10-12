@@ -70,3 +70,50 @@ export interface FormSubmitItemProps {
 export interface FormSubmitProps {
   form_fields: FormSubmitItemProps[];
 }
+
+export interface clientFiltersProps {
+  onSubmit: (items: FormFilterProps) => void;
+}
+
+export interface FormFilterProps {
+  profileId: string;
+  leadId: string;
+  clientName: string;
+  clientMobile: string;
+  clientEmail: string;
+  gender: string;
+  religion: string;
+  caste: string;
+  occupation: string;
+  maritalStatus: string;
+  fromDate: Date | null;
+  toDate: Date | null;
+}
+
+export interface ClientData {
+  client_id: number;
+  modules: Module[];
+}
+
+export interface Module {
+  module_id: number;
+  module_name: string;
+  module_slug: string;
+  fields: Field[];
+}
+
+export interface Field {
+  field_name: string;
+  display_name: string;
+  value: string | number | boolean | null;
+  field_type: FieldType;
+  required: boolean;
+}
+
+export type FieldType =
+  | "text"
+  | "textArea"
+  | "dropdown"
+  | "datepicker"
+  | "checkbox"
+  | "radio";

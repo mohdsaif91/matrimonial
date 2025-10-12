@@ -7,6 +7,11 @@ export async function AddClientApi(clientData: FormSubmitProps) {
   return response.data;
 }
 
+export async function fetchClientList() {
+  const response = await api.get(ROUTE.CLIENTS.GET);
+  return response.data;
+}
+
 export async function fetchSourcedFrom() {
   const response = await api.get(ROUTE.PROFILE_SOURCE.GET);
   return response.data;

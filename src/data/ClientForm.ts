@@ -465,6 +465,7 @@ export const validationOptions = [
   { value: "alphabet", label: "Alphabet" },
   { value: "number", label: "Number" },
   { value: "email", label: "Email" },
+  { value: "none", label: "None" },
 ];
 
 export const requiredOptions = [
@@ -499,6 +500,7 @@ export const formItemOptions = [
   { value: "radio", label: "Radio Button" },
   { value: "checkbox", label: "Checkbox" },
   { value: "datepicker", label: "Date Picker" },
+  { value: "richText", label: "Rich Text" },
 ];
 
 export const addClientFormClientType = [
