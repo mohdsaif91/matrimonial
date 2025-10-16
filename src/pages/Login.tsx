@@ -15,7 +15,6 @@ function LoginPage() {
   const mutation = useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
-      console.log("Login response:", data); // check the actual token
       const token = data?.token || data?.access_token || data?.data?.token;
 
       if (token) {

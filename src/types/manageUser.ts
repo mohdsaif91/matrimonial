@@ -9,3 +9,22 @@ export interface ManageUserProps {
   password: string;
   password_confirmation: string;
 }
+
+export interface Permission {
+  module: string;
+  permissions: {
+    [key: string]: boolean;
+  };
+}
+
+interface GroupedPermission {
+  group: string;
+  permissions: Permission[];
+}
+
+export interface PermissionFormData {
+  roleName: string;
+  roleFor: string;
+  status: string;
+  permission: GroupedPermission[];
+}

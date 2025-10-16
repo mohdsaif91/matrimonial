@@ -38,8 +38,11 @@ export default function ClientList() {
       header: "Handle By | Sex | Height",
       cell: ({ row }) => {
         const value =
-          (row.original && row.original.items.profile_handled.value) || "";
-        console.log(value, " <>? ", row.original);
+          (row.original &&
+            row.original.items &&
+            row.original.items.profile_handled &&
+            row.original.items.profile_handled.value) ||
+          "";
         return (
           <div className="">
             <span>JACK- {value}</span>
@@ -67,7 +70,6 @@ export default function ClientList() {
       accessorKey: "name",
       header: "Country | City",
       cell: ({ row }) => {
-        console.log(row.original, " <>?");
         return <div className="">{/* {row.original.} */}</div>;
       },
     },
@@ -93,8 +95,6 @@ export default function ClientList() {
     return <LoadingPage />;
   }
 
-  console.log(clientListData, " <>?");
-
   const transformedClientList =
     Array.isArray(clientListData.data) &&
     clientListData.data.map((m: ClientData) => ({
@@ -106,17 +106,10 @@ export default function ClientList() {
       ),
     }));
 
-  console.log(transformedClientList, " <>?");
-
   return (
     <div className="">
       <div className="">
-        <ClientFilterForm
-          onSubmit={(filter) => {
-            console.log(filter);
-          }}
-          key="Client-form-list"
-        />
+        <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" />
       </div>
       <div className="mt-2 mb-2">
         <Table columns={columns} data={transformedClientList || []} />

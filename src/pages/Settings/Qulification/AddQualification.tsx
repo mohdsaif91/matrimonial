@@ -30,7 +30,6 @@ function AddCaste() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data);
       setFormData({ ...state.data });
     }
   }, []);
@@ -76,8 +75,6 @@ function AddCaste() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    // TODO: send API request
     setIsLoading(true);
     if (state && state.data) {
       updateMutation.mutate(formData);

@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }) => {
         const userProfile = await fetchUserProfile(access_token);
 
         if (userProfile) {
-          console.log("User profile fetched successfully:", userProfile);
         } else {
           const userData = {
             email: email,
@@ -93,8 +92,6 @@ export const AuthProvider = ({ children }) => {
           Authorization: `Bearer ${tokenToUse}`,
         },
       });
-
-      console.log("Profile API Response:", res.data); // Debug log
 
       setUser(res.data);
       localStorage.setItem("user", JSON.stringify(res.data));

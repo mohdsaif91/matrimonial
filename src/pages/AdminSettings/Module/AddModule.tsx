@@ -57,7 +57,6 @@ export default function AddModule() {
   const editMutation = useMutation({
     mutationFn: updatemoduleAPI,
     onSuccess: (data) => {
-      console.log(data, " <>?");
       toast("Module Updated successfully !", {
         onClose: () => {
           queryClient.invalidateQueries({ queryKey: ["module-list"] });
@@ -81,7 +80,6 @@ export default function AddModule() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
     setIsLoading(true);
     if (pathname === "/editModule") {
       editMutation.mutate(formData);

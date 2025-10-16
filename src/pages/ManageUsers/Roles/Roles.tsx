@@ -7,31 +7,31 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
-import { deleteCasteAPI } from "../../../api/caste";
 import {
   deleteManageUserAPI,
   fetchManageUserAPI,
 } from "../../../api/manageUser";
+import { deleteRole, fetchRole } from "../../../api/roles";
 
 export default function Roles() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["manage-user-list"],
-    queryFn: fetchManageUserAPI,
+    queryKey: ["role-list"],
+    queryFn: fetchRole,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteManageUserAPI,
+    mutationFn: deleteRole,
     onSuccess: () => {
-      toast("Successfully deleted Managed user");
-      queryClient.invalidateQueries({ queryKey: ["manage-user-list"] });
+      toast("Successfully deleted Role");
+      queryClient.invalidateQueries({ queryKey: ["role-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Managed user:", error);
-      toast(error.response?.data?.message || "Failed to delete Managed user");
+      console.error("❌ Error in deleting Role:", error);
+      toast(error.response?.data?.message || "Failed to delete Role");
     },
   });
 
@@ -46,20 +46,8 @@ export default function Roles() {
       header: "Name",
     },
     {
-      accessorKey: "email",
-      header: "Email",
-    },
-    {
-      accessorKey: "phone",
-      header: "Phone",
-    },
-    {
-      accessorKey: "gender",
-      header: "Gender",
-    },
-    {
-      accessorKey: "role",
-      header: "Role",
+      accessorKey: "role_for",
+      header: "	Role For",
     },
     {
       accessorKey: "status",
@@ -86,7 +74,7 @@ export default function Roles() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/editManageUsers", { state: { data: row.original } });
+              navigate("/editRoles", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -108,8 +96,6 @@ export default function Roles() {
   if (isLoading) {
     return <LoadingPage />;
   }
-
-  console.log(data);
 
   return (
     <div className="p-4 bg-white">

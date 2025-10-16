@@ -142,4 +142,10 @@ export const ROUTE = {
   PERMISSION: {
     GET: "v1/permissions",
   },
+  ROLE: {
+    ADD: "v1/roles",
+    GET: "v1/roles",
+    UPDATE: "v1/roles",
+    DELETE: "v1/roles",
+  },
 };

@@ -36,7 +36,6 @@ function AddCountry() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log("FORM= ", state.data);
       setFormData({ ...state.data });
     }
   }, []);
@@ -82,8 +81,6 @@ function AddCountry() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    // TODO: send API request
     setIsLoading(true);
     if (state && state.data) {
       updateMutation.mutate(formData);
@@ -91,7 +88,6 @@ function AddCountry() {
       mutation.mutate(formData);
     }
   };
-  console.log(formData, " FORM DATA");
 
   if (countryLoading) {
     return <LoadingPage />;

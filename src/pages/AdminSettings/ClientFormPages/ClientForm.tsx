@@ -149,8 +149,6 @@ const ClientForm = () => {
   const handledClientFormModule = clientFormModuleData
     ? clientFormModuleData.data
     : [];
-  console.log(handledClientFormModule);
-
   return (
     <div>
       <div className="flex">

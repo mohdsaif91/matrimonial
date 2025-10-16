@@ -18,7 +18,6 @@ export async function fetchModuleById(id: number) {
 }
 
 export async function updatemoduleAPI(data: UpdateModuleProps) {
-  console.log(data);
   const { id, name, permission, slug } = data;
   const response = await api.put(`${ROUTE.MODULE.UPDATE}/${id}`, {
     name,

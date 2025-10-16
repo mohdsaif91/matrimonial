@@ -42,7 +42,6 @@ function AddSubOccupation() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data);
       setFormData({ ...state.data });
     }
   }, []);
@@ -88,8 +87,6 @@ function AddSubOccupation() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    // TODO: send API request
     setIsLoading(true);
     if (state && state.data) {
       const now = new Date();
@@ -112,8 +109,6 @@ function AddSubOccupation() {
         label: m.name,
       };
     }) || [];
-
-  console.log(transformOccupationData, " <>?");
 
   return (
     <form

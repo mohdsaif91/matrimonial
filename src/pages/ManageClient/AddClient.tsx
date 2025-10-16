@@ -4,21 +4,32 @@ import {
   astrologicalOptions,
   clientVerificationOptions,
   complexionOptions,
+  deadAliveOptions,
   drinkingHabitOptions,
   eatingHabitOptions,
   eyeSightOptions,
+  familyTypeOptions,
   genderOptions,
   heightOptions,
+  houseTypeOptions,
   maritialStatusOptions,
+  membershipProfileStatus,
+  packageTypeOptions,
+  personalIncomeOptions,
   personalityOptions,
   smokingHabitsOptions,
+  statusOption,
   yesNoOptions,
 } from "../../data/ClientForm";
 import { TextField } from "../../component/form/TextField";
 import Button from "../../component/form/Button";
 import { DropDown } from "../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AddClientApi, fetchSourcedFrom } from "../../api/client";
+import {
+  AddClientApi,
+  AddClientImageApi,
+  fetchSourcedFrom,
+} from "../../api/client";
 import LoadingPage from "../Loading/Loading";
 import { getLabelValue } from "../../util/ClientUtils";
 import { fetchClientFormModule } from "../../api/clientFormModule";
@@ -34,15 +45,25 @@ import { ClientForm } from "../../types/module";
 import { fetchCity } from "../../api/city";
 import { fetchReligion } from "../../api/religion";
 import { FormSubmitItemProps } from "../../types/client";
+import { fetchPremiumCollege } from "../../api/premiumCollege";
+import { fetchQualificationAPI } from "../../api/qualification";
+import { fetchOccupationAPI } from "../../api/occupation";
+import { fetchCountry } from "../../api/country";
+import { ImageField } from "../../component/form/ImageField";
+import { toast } from "react-toastify";
+import CustomEditor from "../../component/form/RichText";
+import PhotoBioData from "./PhotoBioData";
 
 const MemoizedTextField = React.memo(TextField);
 const MemoizedDropDown = React.memo(DropDown);
 const MemoizedTextArea = React.memo(TextArea);
 const MemoizedDateField = React.memo(DateOfBirthField);
+const MemoizedImageField = React.memo(ImageField);
+const MemoizedRichText = React.memo(CustomEditor);
 
 const AddClient = () => {
   const [clientData, setClientData] = useState<ClientForm[]>([]);
-  const [activeTab, setActiveTab] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<number>(4);
   const [formValues, setFormValues] = useState<any>();
 
   const queryClient = useQueryClient();
@@ -58,7 +79,6 @@ const AddClient = () => {
     if (clientFormModuleData?.data?.length) {
       const forms = clientFormModuleData.data[activeTab].client_forms;
       setClientData(forms);
-
       // Initialize form values from API data
       const initialValues: Record<string, any> = {};
       forms.forEach((item: ClientForm) => {
@@ -183,12 +203,84 @@ const AddClient = () => {
     enabled: false,
   });
 
+  const {
+    data: premiumCollegeData,
+    error: premiumCollegeError,
+    isLoading: premiumCollegeLoading,
+    refetch: premiumCollegeRefetch,
+  } = useQuery({
+    queryKey: ["premiumCollege-list"], // unique cache key
+    queryFn: fetchPremiumCollege,
+    staleTime: 1000 * 60 * 60 * 3,
+    gcTime: 1000 * 60 * 60 * 3,
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+  // highest_qualification
+
+  const {
+    data: qualificationData,
+    error: qualificationError,
+    isLoading: qualificationLoading,
+    refetch: qualificationRefetch,
+  } = useQuery({
+    queryKey: ["qualification-list"],
+    queryFn: fetchQualificationAPI,
+    staleTime: 1000 * 60 * 60 * 3,
+    gcTime: 1000 * 60 * 60 * 3,
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+
+  const {
+    data: occupationData,
+    error: occupationError,
+    isLoading: occupationLoading,
+    refetch: occupationRefetch,
+  } = useQuery({
+    queryKey: ["occupation-list"],
+    queryFn: fetchOccupationAPI,
+    staleTime: 1000 * 60 * 60 * 3,
+    gcTime: 1000 * 60 * 60 * 3,
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+
+  const {
+    data: countryData,
+    error: countryError,
+    isLoading: countryLoading,
+    refetch: countryRefetch,
+  } = useQuery({
+    queryKey: ["country-list"],
+    queryFn: fetchCountry,
+    staleTime: 1000 * 60 * 60 * 3,
+    gcTime: 1000 * 60 * 60 * 3,
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+
   const mutation = useMutation({
     mutationFn: AddClientApi,
     onSuccess: (data) => {
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["clients"] });
-      alert("Client added successfully!");
+      toast(`Stage ${activeTab + 1} Added.`);
+      setActiveTab((prevState) => prevState + 1);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding client:", error);
+      alert(error.response?.data?.message || "Failed to add client");
+    },
+  });
+
+  const imageMutation = useMutation({
+    mutationFn: AddClientImageApi,
+    onSuccess: (data) => {
+      // invalidate or refresh client list queries
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      toast(`Stage ${activeTab + 1} Added.`);
+      setActiveTab((prevState) => prevState + 1);
     },
     onError: (error: any) => {
       console.error("❌ Error adding client:", error);
@@ -258,15 +350,18 @@ const AddClient = () => {
       case "open_for_other_state":
       case "nri_status":
       case "disability":
+      case "do_you_have_any_siblings":
         arr = yesNoOptions;
         break;
       case "eye_sight":
         arr = eyeSightOptions;
         break;
       case "native_state":
+      case "residential_state":
         arr = getLabelValue(stateData ? stateData.data : []);
         break;
       case "native_town":
+      case "residential_city":
         arr = getLabelValue(CityData ? CityData.data : []);
         break;
       case "visa":
@@ -275,6 +370,50 @@ const AddClient = () => {
       case "religion":
         arr = getLabelValue(religionData ? religionData.data : []);
         break;
+      case "premium_college":
+        arr = getLabelValue(premiumCollegeData ? premiumCollegeData.data : []);
+        break;
+      case "fathers_qualification":
+      case "highest_qualification":
+      case "mothers_qualification":
+        arr = getLabelValue(qualificationData ? qualificationData.data : []);
+        break;
+      case "personal_income":
+        arr = personalIncomeOptions;
+        break;
+      case "occupation":
+      case "fathers_occupation":
+      case "mothers_occupation":
+        arr = getLabelValue(occupationData ? occupationData.data : []);
+        break;
+      case "family_type":
+        arr = familyTypeOptions;
+        break;
+      case "annual_family_income":
+      case "from_marriage_budget":
+      case "to_marriage_budget":
+        arr = personalIncomeOptions;
+        break;
+      case "father_is_alive":
+      case "mother_is_alive":
+        arr = deadAliveOptions;
+        break;
+      case "house_status":
+        arr = houseTypeOptions;
+        break;
+      case "residing_country":
+        arr = getLabelValue(countryData ? countryData.data : []);
+        break;
+      case "package_type":
+        arr = packageTypeOptions;
+        break;
+      case "membership_profile_status":
+        arr = membershipProfileStatus;
+        break;
+      case "member_status":
+        arr = statusOption;
+        break;
+
       default:
         arr = [];
     }
@@ -296,13 +435,27 @@ const AddClient = () => {
       case "sub_caste":
         return subCasteLoading;
       case "native_state":
+      case "residential_state":
         return stateLoading;
       case "visa":
         return visaLoading;
       case "native_town":
+      case "residential_city":
         return CityLoading;
       case "religion":
         return religionLoading;
+      case "premium_college":
+        return premiumCollegeLoading;
+      case "highest_qualification":
+      case "fathers_qualification":
+      case "mothers_qualification":
+        return qualificationLoading;
+      case "occupation":
+      case "fathers_occupation":
+      case "mothers_occupation":
+        return occupationLoading;
+      case "residing_country":
+        return countryLoading;
       default:
         return false;
     }
@@ -329,9 +482,11 @@ const AddClient = () => {
         subCasteRefetch();
         break;
       case "native_state":
+      case "residential_state":
         stateRefetch();
         break;
       case "native_town":
+      case "residential_city":
         CityRefetch();
         break;
       case "visa":
@@ -339,6 +494,22 @@ const AddClient = () => {
         break;
       case "religion":
         religionRefetch();
+        break;
+      case "premium_college":
+        premiumCollegeRefetch();
+        break;
+      case "highest_qualification":
+      case "fathers_qualification":
+      case "mothers_qualification":
+        qualificationRefetch();
+        break;
+      case "occupation":
+      case "fathers_occupation":
+      case "mothers_occupation":
+        occupationRefetch();
+        break;
+      case "residing_country":
+        countryRefetch();
         break;
       default:
         return false;
@@ -356,10 +527,8 @@ const AddClient = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formValues);
     const formData: FormSubmitItemProps[] = [];
     Object.keys(formValues).map((item) => {
-      console.log(formValues[item]);
       formData.push({
         field_id: formValues[item].id,
         value: formValues[item].value,
@@ -368,7 +537,11 @@ const AddClient = () => {
     const finalObj = {
       form_fields: formData,
     };
-    mutation.mutate(finalObj);
+    if (clientFormModuleData.data[activeTab].name === "Photo and Bio-Data") {
+      imageMutation.mutate(finalObj);
+    } else {
+      mutation.mutate(finalObj);
+    }
   };
 
   const getFormItems = (item: ClientForm, index: number) => {
@@ -420,6 +593,25 @@ const AddClient = () => {
             label={item.display_name}
             value={formValues[item.field_name].value || ""}
             onChange={(val) => handleChange(item.field_name, val)}
+            required={item.required === 1}
+          />
+        );
+      case "image":
+        return (
+          <MemoizedImageField
+            label={item.display_name}
+            onChange={(val) => handleChange(item.field_name, val)}
+            name={item.field_name}
+            required={item.required === 1}
+          />
+        );
+      case "richText":
+        return (
+          <MemoizedRichText
+            label={item.display_name}
+            onChange={(str) => handleChange(item.field_name, str)}
+            required={item.required === 1}
+            value={formValues[item.field_name].value || ""}
           />
         );
     }
@@ -428,8 +620,6 @@ const AddClient = () => {
   const handleClientFromModule: any[] = clientFormModuleData
     ? clientFormModuleData.data
     : [];
-
-  console.log(clientData, " <>? ");
 
   return (
     <div className="bg-white rounded-xl shadow-md m-1">
@@ -449,16 +639,22 @@ const AddClient = () => {
         )}
       </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3 p-6">
-        {clientData.map(
+        {/* {clientData.map(
           (formItem, index: number) =>
             formItem.status === "active" && getFormItems(formItem, index)
-        )}
-        <div className="flex-1 mt-4 cursor-pointer">
+        )} */}
+        {/* {clientFormModuleData.data[activeTab].name === "Photo and Bio-Data" && (
+          <div className="col-span-4">
+            <PhotoBioData />
+          </div>
+        )} */}
+        <div className="flex-1 mt-4 cursor-pointer col-span-4">
           <Button
             onClick={() => {}}
             type="submit"
             className=""
-            text={`Save ${1}`}
+            text=""
+            // text={`Save ${clientFormModuleData.data[activeTab].name}`}
           />
         </div>
       </form>

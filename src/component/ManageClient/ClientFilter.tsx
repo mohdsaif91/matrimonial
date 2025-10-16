@@ -27,7 +27,6 @@ export default function ClientFilterForm({ onSubmit }: clientFiltersProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(filters);
-    console.log("Filters:", filters);
   };
 
   const handleReset = () => {

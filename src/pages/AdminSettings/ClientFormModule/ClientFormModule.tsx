@@ -98,8 +98,6 @@ const ClientFormModule = () => {
     return <LoadingPage />;
   }
 
-  console.log(data);
-
   return (
     <div className="p-4 bg-white">
       <ToastContainer />

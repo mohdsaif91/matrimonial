@@ -94,8 +94,6 @@ export function DropDown({
         placeholder={`Select ${label}`}
         isClearable
         onChange={(item) => {
-          console.log(item, " Select");
-
           onChange(item.value);
         }}
         options={options}

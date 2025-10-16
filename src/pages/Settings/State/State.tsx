@@ -46,7 +46,6 @@ const City = () => {
       accessorKey: "",
       header: "Country Name",
       cell: ({ row }) => {
-        console.log(row.original);
         return <span>{row.original.country.name}</span>;
       },
     },
@@ -97,8 +96,6 @@ const City = () => {
   if (isLoading) {
     return <LoadingPage />;
   }
-
-  console.log(data);
 
   return (
     <div className="p-4 bg-white">

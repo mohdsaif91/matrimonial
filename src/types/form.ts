@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { ContentEditableEvent } from "react-simple-wysiwyg";
 
 export interface ButtonProps {
   text: string;
@@ -24,6 +25,7 @@ export interface DateFeildProps {
   label: string;
   value: string;
   onChange: (val: Date | string) => void;
+  required: boolean;
 }
 export interface SelectFeildProps {
   label: string;
@@ -39,7 +41,7 @@ export interface CheckboxProps {
   required?: boolean;
   onChange: (value: boolean) => void;
   checked: boolean;
-  value: number;
+  id?: string;
 }
 
 export interface SearchableSelectProps {
@@ -52,6 +54,13 @@ export interface SearchableSelectProps {
   searchable: boolean;
   onClick?: () => void;
   loading?: boolean;
+}
+
+export interface ImageFieldProps {
+  label: string;
+  name: string;
+  onChange: (value: any) => void;
+  required: boolean;
 }
 
 export interface RelOptions {
@@ -99,4 +108,11 @@ export interface ClientFormItem {
   status: boolean; // restricts values
   div_css: string;
   field_type: string;
+}
+
+export interface RichTextProps {
+  label: string;
+  value: string;
+  onChange: (e: ContentEditableEvent | string) => void;
+  required: boolean;
 }

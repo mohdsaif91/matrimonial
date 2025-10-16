@@ -43,8 +43,6 @@ function AddClientFormItem() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data);
-
       setFormData({ ...state.data });
     }
   }, []);
@@ -84,7 +82,6 @@ function AddClientFormItem() {
   const editMutation = useMutation({
     mutationFn: updateFormItem,
     onSuccess: (data) => {
-      console.log(data, " <>?");
       toast("Client form item Updated successfully !", {
         onClose: () => {
           queryClient.invalidateQueries({ queryKey: ["form-item-list"] });

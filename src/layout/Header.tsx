@@ -23,9 +23,6 @@ function Header({ className }: HeaderProps) {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      console.log(
-        menuRef.current && !menuRef.current.contains(e.target as Node)
-      );
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setLinkMenuOpen("");
         setinnerLinkMenuOpen("");
