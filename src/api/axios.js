@@ -4,9 +4,6 @@ import { BASE_URL } from "./constants";
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 api.interceptors.request.use((config) => {
@@ -20,6 +17,17 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
+    if (!err.response) {
+      if (!window.navigator.onLine) {
+        console.error("No internet connection detected.");
+        // ✅ Option 1: Show custom offline page
+        window.location.href = "/noInternet";
+      } else {
+        console.error("Network error, but internet seems fine:", err.message);
+      }
+      return Promise.reject(err);
+    }
+
     if (err.response?.status === 401) {
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");

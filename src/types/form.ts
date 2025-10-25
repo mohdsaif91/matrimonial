@@ -1,17 +1,18 @@
 import { Search } from "lucide-react";
+import React from "react";
 import { ContentEditableEvent } from "react-simple-wysiwyg";
 
 export interface ButtonProps {
-  text: string;
+  text: string | React.ReactNode;
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
-  type?: "button" | "submit" | "reset" | "clientFormBtn" | "none";
+  type?: string;
   loading?: boolean;
 }
 
 export interface textFeildProps {
-  label: string;
+  label?: string;
   name: string;
   type?: string;
   placeholder?: string;
@@ -23,9 +24,18 @@ export interface textFeildProps {
 
 export interface DateFeildProps {
   label: string;
-  value: string;
+  value: string | Date;
   onChange: (val: Date | string) => void;
   required: boolean;
+  dateFormat?: string;
+}
+
+export interface TimeFeildProps {
+  label: string;
+  value: string | Date;
+  onChange: (val: Date | string) => void;
+  required: boolean;
+  name: string;
 }
 export interface SelectFeildProps {
   label: string;
@@ -50,10 +60,12 @@ export interface SearchableSelectProps {
   options: RelOptions[];
   required?: boolean;
   value: string | number | boolean;
-  onChange: (value: string | number) => void;
+  onChange: (value: string | number | null) => void;
   searchable: boolean;
   onClick?: () => void;
   loading?: boolean;
+  placeholder?: string;
+  sendLabel?: boolean;
 }
 
 export interface ImageFieldProps {
@@ -61,6 +73,8 @@ export interface ImageFieldProps {
   name: string;
   onChange: (value: any) => void;
   required: boolean;
+  multiple?: boolean;
+  formatType?: string;
 }
 
 export interface RelOptions {
@@ -115,4 +129,9 @@ export interface RichTextProps {
   value: string;
   onChange: (e: ContentEditableEvent | string) => void;
   required: boolean;
+}
+
+export interface LabelValueProps {
+  label: string;
+  value: string | number;
 }

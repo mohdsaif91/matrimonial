@@ -9,6 +9,7 @@ import { headerLinks } from "./data/header";
 import LoadingPage from "./pages/Loading/Loading";
 import PrivateRoute from "./util/PrivateRoute";
 import ErrorPage from "./pages/ErrorPage";
+import NoInternetPage from "./pages/NoInternet";
 
 function App() {
   const routes = buildRoutes(headerLinks);
@@ -24,7 +25,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <Header className={``} />
+      {location.pathname !== "/noInternet" && <Header className={``} />}
       <div className={`flex-1 p-4 bg-[#F0F3F8]`}>
         <Suspense fallback={<LoadingPage />}>
           <Routes>
@@ -36,6 +37,11 @@ function App() {
               />
             ))}
             <Route key="error" path="/error" element={<ErrorPage />} />
+            <Route
+              key="error"
+              path="/noInternet"
+              element={<NoInternetPage />}
+            />
           </Routes>
         </Suspense>
       </div>

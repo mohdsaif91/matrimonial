@@ -6,6 +6,7 @@ export const ROUTE = {
     UPDATE: "v1/clients",
     POST: "v1/clients",
     DELETE: "v1/clients",
+    IMAGEPOST: "v1/client-documents",
   },
   ADD_FORM_ITEM: {
     GET: "v1/client-form-fields",
@@ -147,5 +148,17 @@ export const ROUTE = {
     GET: "v1/roles",
     UPDATE: "v1/roles",
     DELETE: "v1/roles",
+  },
+  TASK: {
+    ADD: "v1/tasks",
+    GET: "v1/tasks",
+    UPDATE: "v1/tasks",
+    DELETE: "v1/tasks",
+  },
+  LEAD: {
+    ADD: "v1/leads",
+    GET: "v1/leads",
+    UPDATE: "v1/leads",
+    DELETE: "v1/leads",
   },
 };

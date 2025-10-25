@@ -29,44 +29,57 @@ import {
   AddClientApi,
   AddClientImageApi,
   fetchSourcedFrom,
+  updateClient,
 } from "../../api/client";
 import LoadingPage from "../Loading/Loading";
-import { getLabelValue } from "../../util/ClientUtils";
+import { getFeildname, getLabelValue } from "../../util/ClientUtils";
 import { fetchClientFormModule } from "../../api/clientFormModule";
 import { staticClientFormTab } from "../../types/form";
 import TextArea from "../../component/form/TextArea";
 import { fetchCasteAPI } from "../../api/caste";
 import { fetchSubCasteAPI } from "../../api/subCaste";
 import { fetchManageUserAPI } from "../../api/manageUser";
-import { DateOfBirthField } from "../../component/form/DateField";
+import { DateTimePicker } from "../../component/form/DateField";
 import { fetchState } from "../../api/state";
 import { fetchVisaAPI } from "../../api/visa";
 import { ClientForm } from "../../types/module";
 import { fetchCity } from "../../api/city";
 import { fetchReligion } from "../../api/religion";
-import { FormSubmitItemProps } from "../../types/client";
+import {
+  FormSubmitItemProps,
+  FormSubmitProps,
+  ImageSubmitProps,
+} from "../../types/client";
 import { fetchPremiumCollege } from "../../api/premiumCollege";
 import { fetchQualificationAPI } from "../../api/qualification";
 import { fetchOccupationAPI } from "../../api/occupation";
 import { fetchCountry } from "../../api/country";
 import { ImageField } from "../../component/form/ImageField";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import CustomEditor from "../../component/form/RichText";
-import PhotoBioData from "./PhotoBioData";
+import PhotoBioData from "./Components/PhotoBioData";
+import { useLocation } from "react-router-dom";
+import TimePickerExample from "../../component/form/TimePicker";
 
 const MemoizedTextField = React.memo(TextField);
 const MemoizedDropDown = React.memo(DropDown);
 const MemoizedTextArea = React.memo(TextArea);
-const MemoizedDateField = React.memo(DateOfBirthField);
+const MemoizedDateField = React.memo(DateTimePicker);
 const MemoizedImageField = React.memo(ImageField);
 const MemoizedRichText = React.memo(CustomEditor);
+const MemoizedTimePicker = React.memo(TimePickerExample);
 
 const AddClient = () => {
   const [clientData, setClientData] = useState<ClientForm[]>([]);
-  const [activeTab, setActiveTab] = useState<number>(4);
+  const [activeTab, setActiveTab] = useState<number>(0);
   const [formValues, setFormValues] = useState<any>();
+  const [imageValues, setImageValues] = useState<ImageSubmitProps[]>([]);
+  const [activeImgBtn, setActiveImgBtn] = useState("");
+
+  const idRef = useRef<number | null>(null);
 
   const queryClient = useQueryClient();
+  const { state } = useLocation();
 
   const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
     useQuery({
@@ -89,6 +102,11 @@ const AddClient = () => {
       });
       setFormValues(initialValues);
     }
+    if (state && state.data) {
+      console.log(state.data.items, " Edit form  Items <>?");
+
+      setFormValues({ ...state.data.items });
+    }
   }, [clientFormModuleData, activeTab]);
 
   const {
@@ -102,7 +120,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -116,7 +134,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -130,7 +148,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -144,7 +162,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -158,7 +176,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -172,7 +190,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -186,7 +204,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -200,7 +218,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -214,7 +232,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
   // highest_qualification
 
@@ -229,7 +247,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -243,7 +261,7 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const {
@@ -257,16 +275,36 @@ const AddClient = () => {
     staleTime: 1000 * 60 * 60 * 3,
     gcTime: 1000 * 60 * 60 * 3,
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!(state && state.data),
   });
 
   const mutation = useMutation({
     mutationFn: AddClientApi,
     onSuccess: (data) => {
+      idRef.current = data.client_id;
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["clients"] });
-      toast(`Stage ${activeTab + 1} Added.`);
-      setActiveTab((prevState) => prevState + 1);
+      if (activeTab < handleClientFromModule.length) {
+        toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
+        setActiveTab((prevState) => prevState + 1);
+      }
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding client:", error);
+      alert(error.response?.data?.message || "Failed to add client");
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateClient,
+    onSuccess: (data) => {
+      idRef.current = data.client_id;
+      // invalidate or refresh client list queries
+      queryClient.invalidateQueries({ queryKey: ["clients"] });
+      if (activeTab < handleClientFromModule.length) {
+        toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
+        setActiveTab((prevState) => prevState + 1);
+      }
     },
     onError: (error: any) => {
       console.error("❌ Error adding client:", error);
@@ -278,13 +316,14 @@ const AddClient = () => {
     mutationFn: AddClientImageApi,
     onSuccess: (data) => {
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["clients"] });
-      toast(`Stage ${activeTab + 1} Added.`);
-      setActiveTab((prevState) => prevState + 1);
+      const message = clientFormModuleData.data[activeTab].name || "";
+      queryClient.invalidateQueries({ queryKey: ["clients-image"] });
+      toast(`Image Added Successfully!`);
+      // setActiveTab((prevState) => prevState + 1);
     },
     onError: (error: any) => {
-      console.error("❌ Error adding client:", error);
-      alert(error.response?.data?.message || "Failed to add client");
+      console.error("❌ Error adding client Document:", error);
+      alert(error.response?.data?.message || "Failed to add client Document");
     },
   });
 
@@ -292,16 +331,25 @@ const AddClient = () => {
     let arr: { label: string; value: string | number }[] = [];
     switch (fieldName) {
       case "sourced_from":
-        arr = getLabelValue(sourcedData ? sourcedData.data : []);
+        arr = getLabelValue(sourcedData ? sourcedData.data : [], true);
         break;
       case "profile_handled":
-        arr = getLabelValue(profileHandledData ? profileHandledData.data : []);
+        arr = getLabelValue(
+          profileHandledData ? profileHandledData.data : [],
+          true
+        );
         break;
       case "profile_created":
-        arr = getLabelValue(profileHandledData ? profileHandledData.data : []);
+        arr = getLabelValue(
+          profileHandledData ? profileHandledData.data : [],
+          true
+        );
         break;
       case "profile_visited":
-        arr = getLabelValue(profileHandledData ? profileHandledData.data : []);
+        arr = getLabelValue(
+          profileHandledData ? profileHandledData.data : [],
+          true
+        );
         break;
       case "client_type":
         arr = addClientFormClientType;
@@ -310,10 +358,10 @@ const AddClient = () => {
         arr = clientVerificationOptions;
         break;
       case "caste":
-        arr = getLabelValue(casteData ? casteData.data : []);
+        arr = getLabelValue(casteData ? casteData.data : [], true);
         break;
       case "sub_caste":
-        arr = getLabelValue(subCasteData ? subCasteData.data : []);
+        arr = getLabelValue(subCasteData ? subCasteData.data : [], true);
         break;
       case "complexion":
         arr = complexionOptions;
@@ -358,25 +406,31 @@ const AddClient = () => {
         break;
       case "native_state":
       case "residential_state":
-        arr = getLabelValue(stateData ? stateData.data : []);
+        arr = getLabelValue(stateData ? stateData.data : [], true);
         break;
       case "native_town":
       case "residential_city":
-        arr = getLabelValue(CityData ? CityData.data : []);
+        arr = getLabelValue(CityData ? CityData.data : [], true);
         break;
       case "visa":
-        arr = getLabelValue(visaData ? visaData.data : []);
+        arr = getLabelValue(visaData ? visaData.data : [], true);
         break;
       case "religion":
-        arr = getLabelValue(religionData ? religionData.data : []);
+        arr = getLabelValue(religionData ? religionData.data : [], true);
         break;
       case "premium_college":
-        arr = getLabelValue(premiumCollegeData ? premiumCollegeData.data : []);
+        arr = getLabelValue(
+          premiumCollegeData ? premiumCollegeData.data : [],
+          true
+        );
         break;
       case "fathers_qualification":
       case "highest_qualification":
       case "mothers_qualification":
-        arr = getLabelValue(qualificationData ? qualificationData.data : []);
+        arr = getLabelValue(
+          qualificationData ? qualificationData.data : [],
+          true
+        );
         break;
       case "personal_income":
         arr = personalIncomeOptions;
@@ -384,7 +438,7 @@ const AddClient = () => {
       case "occupation":
       case "fathers_occupation":
       case "mothers_occupation":
-        arr = getLabelValue(occupationData ? occupationData.data : []);
+        arr = getLabelValue(occupationData ? occupationData.data : [], true);
         break;
       case "family_type":
         arr = familyTypeOptions;
@@ -402,7 +456,7 @@ const AddClient = () => {
         arr = houseTypeOptions;
         break;
       case "residing_country":
-        arr = getLabelValue(countryData ? countryData.data : []);
+        arr = getLabelValue(countryData ? countryData.data : [], true);
         break;
       case "package_type":
         arr = packageTypeOptions;
@@ -521,45 +575,127 @@ const AddClient = () => {
   }
 
   const handleChange = (name: string, value: any) => {
-    const jsonObj = { ...formValues[name], value: value };
+    const jsonObj = { ...formValues[name], value: value, feildName: name };
     setFormValues((prev) => ({ ...prev, [name]: jsonObj }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const formData: FormSubmitItemProps[] = [];
-    Object.keys(formValues).map((item) => {
-      formData.push({
-        field_id: formValues[item].id,
-        value: formValues[item].value,
-      });
-    });
-    const finalObj = {
-      form_fields: formData,
-    };
-    if (clientFormModuleData.data[activeTab].name === "Photo and Bio-Data") {
-      imageMutation.mutate(finalObj);
+    if (state && state.data) {
+      if (clientFormModuleData.data[activeTab].name === "Photo and Bio-Data") {
+        toast(`Stage ${activeTab + 1} Added.`);
+        setActiveTab((prevState) => prevState + 1);
+      } else {
+        const formData: FormSubmitItemProps[] = [];
+        const moduleFormItems =
+          clientFormModuleData.data[activeTab].client_forms;
+        const updatedFormFeilds = moduleFormItems.map((formItems) => {
+          if (formValues[formItems.field_name]) {
+            return {
+              field_id: formItems.id,
+              value: formValues[formItems.field_name].value,
+            };
+          }
+        });
+        updateMutation.mutate({
+          form_fields: updatedFormFeilds,
+          client_id: state.data.id,
+        });
+      }
     } else {
-      mutation.mutate(finalObj);
+      const formData: FormSubmitItemProps[] = [];
+      Object.keys(formValues).map((item) => {
+        formData.push({
+          field_id: formValues[item].id,
+          value: formValues[item].value,
+        });
+      });
+      let finalObj:
+        | { form_fields: FormSubmitItemProps[]; client_id: number }
+        | { form_fields: FormSubmitItemProps[] };
+      if (
+        idRef.current != null &&
+        clientFormModuleData.data[activeTab].name !== "Photo and Bio-Data"
+      ) {
+        finalObj = {
+          form_fields: formData,
+          client_id: idRef.current,
+        };
+        mutation.mutate(finalObj as FormSubmitProps);
+      } else if (
+        clientFormModuleData.data[activeTab].name === "Photo and Bio-Data"
+      ) {
+        toast(`Stage ${activeTab + 1} Added.`);
+        setActiveTab((prevState) => prevState + 1);
+      } else {
+        finalObj = {
+          form_fields: formData,
+        };
+        mutation.mutate(finalObj as FormSubmitProps);
+      }
+    }
+  };
+
+  const getImageDataAndSubmit = (feildName: string) => {
+    const foundImageObject = imageValues.find((f) => f.type === feildName);
+    setActiveImgBtn(feildName);
+    const imgArr: any[] = [];
+    foundImageObject &&
+      Object.keys(foundImageObject.file).map((im) => {
+        imgArr.push(foundImageObject.file[im]);
+      });
+    const clientId = state && state.data ? state.data.id : idRef.current;
+    if (clientId) {
+      const formData = new FormData();
+      formData.append("client_id", clientId);
+      formData.append("type", getFeildname(feildName));
+      imgArr.forEach((file, index) => {
+        formData.append(`files[${index}]`, file);
+      });
+      imageMutation.mutate(formData);
+    } else {
+      toast(`Client ID not Provided`);
     }
   };
 
   const getFormItems = (item: ClientForm, index: number) => {
     switch (item.field_type) {
       case "text":
-        return (
-          <MemoizedTextField
-            key={item.field_name}
-            label={item.display_name}
-            name={item.field_name}
-            required={item.required === 1}
-            value={formValues[item.field_name].value || ""}
-            onChange={(e) => handleChange(item.field_name, e.target.value)}
-          />
-        );
+        if (item.field_name === "time_of_birth") {
+          return (
+            <MemoizedTimePicker
+              key={item.field_name}
+              label={item.display_name}
+              name={item.field_name}
+              required={item.required === 1}
+              value={
+                (formValues[item.field_name] &&
+                  formValues[item.field_name].value) ||
+                ""
+              }
+              onChange={(e) => handleChange(item.field_name, e)}
+            />
+          );
+        } else {
+          return (
+            <MemoizedTextField
+              key={item.field_name}
+              label={item.display_name}
+              name={item.field_name}
+              required={item.required === 1}
+              value={
+                (formValues[item.field_name] &&
+                  formValues[item.field_name].value) ||
+                ""
+              }
+              onChange={(e) => handleChange(item.field_name, e.target.value)}
+            />
+          );
+        }
       case "dropdown":
         return (
           <MemoizedDropDown
+            sendLabel={true}
             key={item.field_name}
             onClick={() => {
               fetchData(item.field_name);
@@ -570,7 +706,25 @@ const AddClient = () => {
             name={item.field_name}
             required={item.required === 1}
             options={getOptions(item.field_name)}
-            value={formValues[item.field_name].value || ""}
+            value={
+              state && state.data
+                ? !isNaN(
+                    Number(
+                      formValues[item.field_name]
+                        ? formValues[item.field_name].value
+                        : null
+                    )
+                  )
+                  ? formValues[item.field_name] &&
+                    formValues[item.field_name].value &&
+                    Number(
+                      formValues[item.field_name]
+                        ? formValues[item.field_name].value
+                        : null
+                    )
+                  : formValues[item.field_name].value
+                : formValues[item.field_name].value || ""
+            }
             onChange={(val) => handleChange(item.field_name, val)}
           />
         );
@@ -581,7 +735,11 @@ const AddClient = () => {
               label={item.display_name}
               name={item.field_name}
               required={item.required === 1}
-              value={formValues[item.field_name].value || ""}
+              value={
+                (formValues[item.field_name] &&
+                  formValues[item.field_name].value) ||
+                ""
+              }
               onChange={(val) => handleChange(item.field_name, val)}
             />
           </div>
@@ -591,27 +749,73 @@ const AddClient = () => {
           <MemoizedDateField
             key={item.field_name}
             label={item.display_name}
-            value={formValues[item.field_name].value || ""}
+            value={
+              (formValues[item.field_name] &&
+                formValues[item.field_name].value) ||
+              ""
+            }
             onChange={(val) => handleChange(item.field_name, val)}
             required={item.required === 1}
           />
         );
       case "image":
-        return (
-          <MemoizedImageField
-            label={item.display_name}
-            onChange={(val) => handleChange(item.field_name, val)}
-            name={item.field_name}
-            required={item.required === 1}
-          />
-        );
+        if (
+          clientFormModuleData.data[activeTab].name === "Photo and Bio-Data"
+        ) {
+          const format =
+            item.field_name === "bio_data"
+              ? ".pdf,.doc,.docx"
+              : ".jpg,.jpeg,.png,.gif";
+          console.log(item.field_name);
+
+          return (
+            <div className="">
+              <MemoizedImageField
+                multiple={true}
+                formatType={format}
+                label={item.display_name}
+                onChange={(val) => {
+                  const imagObj = { client_id: 0, type: "", file: {} };
+                  imagObj.client_id = idRef.current || 14;
+                  imagObj.type = item.field_name;
+                  imagObj.file = val;
+                  setImageValues([...imageValues, imagObj]);
+                }}
+                name={item.field_name}
+                required={item.required === 1}
+              />
+              <Button
+                type="button"
+                loading={
+                  imageMutation.isPending && activeImgBtn === item.field_name
+                }
+                className="mt-3 px-2 py-1  bg-[#161D27] text-[#fff] "
+                text={`+ ${item.display_name}`}
+                onClick={() => getImageDataAndSubmit(item.field_name)}
+              />
+            </div>
+          );
+        } else {
+          return (
+            <MemoizedImageField
+              label={item.display_name}
+              onChange={(val) => handleChange(item.field_name, val)}
+              name={item.field_name}
+              required={item.required === 1}
+            />
+          );
+        }
       case "richText":
         return (
           <MemoizedRichText
             label={item.display_name}
             onChange={(str) => handleChange(item.field_name, str)}
             required={item.required === 1}
-            value={formValues[item.field_name].value || ""}
+            value={
+              (formValues[item.field_name] &&
+                formValues[item.field_name].value) ||
+              ""
+            }
           />
         );
     }
@@ -623,38 +827,48 @@ const AddClient = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-md m-1">
+      <ToastContainer />
       <div className="flex p-4">
         {handleClientFromModule.map(
           (moduleItem: staticClientFormTab, moduleIndex: number) => (
             <Button
-              disabled={true}
+              // disabled={!state}
               type="clientFormBtn"
               className={`px-4 py-2 mr-2 text-sm font-medium text-white ${
                 activeTab === moduleIndex ? "bg-[#161D27]" : "bg-[#a71634]"
               } rounded-lg`}
               key={moduleItem.name}
               text={moduleItem.name}
+              onClick={() => {
+                if (state && state.data) {
+                  setActiveTab(moduleIndex);
+                }
+              }}
             />
           )
         )}
       </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-4 gap-3 p-6">
-        {/* {clientData.map(
+        {clientData.map(
           (formItem, index: number) =>
             formItem.status === "active" && getFormItems(formItem, index)
-        )} */}
-        {/* {clientFormModuleData.data[activeTab].name === "Photo and Bio-Data" && (
+        )}
+        {clientFormModuleData.data[activeTab].name === "Photo and Bio-Data" && (
           <div className="col-span-4">
-            <PhotoBioData />
+            <PhotoBioData client_id={state && state.data.id} />
           </div>
-        )} */}
+        )}
         <div className="flex-1 mt-4 cursor-pointer col-span-4">
           <Button
-            onClick={() => {}}
+            loading={mutation.isPending || updateMutation.isPending}
+            onClick={() => {
+              console.log("last BTN");
+            }}
             type="submit"
             className=""
-            text=""
-            // text={`Save ${clientFormModuleData.data[activeTab].name}`}
+            text={`${state && state.data ? "Update" : "Save"} ${
+              clientFormModuleData.data[activeTab].name
+            }`}
           />
         </div>
       </form>

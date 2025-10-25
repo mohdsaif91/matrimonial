@@ -8,10 +8,6 @@ import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/Table";
 import {
-  deleteMembershipType,
-  fetchMembershipType,
-} from "../../../api/membershipType";
-import {
   deleteTaskCategory,
   fetchTaskCategory,
 } from "../../../api/taskCategory";

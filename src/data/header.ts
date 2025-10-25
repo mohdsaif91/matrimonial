@@ -18,6 +18,14 @@ export const headerLinks = [
         text: "Client List",
         link: "/client-list",
         element: lazy(() => import("../pages/ManageClient/ClientList")),
+        children: [
+          {
+            id: "cl-2",
+            text: "edit Client",
+            link: "/editClient",
+            element: lazy(() => import("../pages/ManageClient/AddClient")),
+          },
+        ],
       },
       {
         id: "mc-2",
@@ -84,7 +92,25 @@ export const headerLinks = [
         id: "ml-1",
         text: "Manage Leads",
         link: "/manage-leads",
-        element: lazy(() => import("../pages/ManageLeads/ManageLeads")),
+        element: lazy(() => import("../pages/ManageLeads/Leads/LeadsList")),
+        children: [
+          {
+            id: "ml-3",
+            text: "Add Leads",
+            link: "/addLeads",
+            element: lazy(
+              () => import("../pages/ManageLeads/Leads/AddEditLeads")
+            ),
+          },
+          {
+            id: "ml-4",
+            text: "Edit Leads",
+            link: "/editLeads",
+            element: lazy(
+              () => import("../pages/ManageLeads/Leads/AddEditLeads")
+            ),
+          },
+        ],
       },
       {
         id: "ml-2",
@@ -111,6 +137,12 @@ export const headerLinks = [
         link: "/task-add",
         element: lazy(() => import("../pages/ManageTask/TaskAdd")),
       },
+      {
+        id: "mt-3",
+        text: "Edit Task",
+        link: "/task-edit",
+        element: lazy(() => import("../pages/ManageTask/TaskAdd")),
+      },
     ],
   },
 
@@ -125,18 +157,24 @@ export const headerLinks = [
         text: "Manage Users",
         link: "/manage-users",
         element: lazy(() => import("../pages/ManageUsers/Users/ManageUsers")),
-      },
-      {
-        id: "mu-4",
-        text: "Add Manage Users",
-        link: "/addManageUsers",
-        element: lazy(() => import("../pages/ManageUsers/Users/AddEditUsers")),
-      },
-      {
-        id: "mu-5",
-        text: "Edit Manage Users",
-        link: "/editManageUsers",
-        element: lazy(() => import("../pages/ManageUsers/Users/AddEditUsers")),
+        children: [
+          {
+            id: "mu-4",
+            text: "Add Manage Users",
+            link: "/addManageUsers",
+            element: lazy(
+              () => import("../pages/ManageUsers/Users/AddEditUsers")
+            ),
+          },
+          {
+            id: "mu-5",
+            text: "Edit Manage Users",
+            link: "/editManageUsers",
+            element: lazy(
+              () => import("../pages/ManageUsers/Users/AddEditUsers")
+            ),
+          },
+        ],
       },
       {
         id: "mu-2",
@@ -514,8 +552,18 @@ export const headerLinks = [
     text: "Admin Settings",
     link: "/admin-settings",
     children: [
-      { id: "as-1", text: "CRM Setting", link: "/crm-setting" },
-      { id: "as-2", text: "Website Setting", link: "/website-setting" },
+      {
+        id: "as-1",
+        text: "CRM Setting",
+        link: "/crm-setting",
+        element: lazy(() => import("../pages/AdminSettings/CRMSetting")),
+      },
+      {
+        id: "as-2",
+        text: "Website Setting",
+        link: "/website-setting",
+        element: lazy(() => import("../pages/AdminSettings/WebsiteSettings")),
+      },
       {
         id: "as-3",
         text: "Module",
@@ -573,8 +621,18 @@ export const headerLinks = [
           },
         ],
       },
-      { id: "as-4", text: "Email Template", link: "/email-template" },
-      { id: "as-5", text: "PDF Template", link: "/pdf-templte" },
+      {
+        id: "as-4",
+        text: "Email Template",
+        link: "/email-template",
+        element: lazy(() => import("../pages/AdminSettings/EmailTemplate")),
+      },
+      {
+        id: "as-5",
+        text: "PDF Template",
+        link: "/pdf-templte",
+        element: lazy(() => import("../pages/AdminSettings/PDFTemplate")),
+      },
       {
         id: "as-6",
         text: "Lead Status",
@@ -764,9 +822,24 @@ export const headerLinks = [
           },
         ],
       },
-      { id: "as-12", text: "Whatsapp Provider", link: "/whatsapp-provider" },
-      { id: "as-13", text: "Whatsapp Key", link: "/whatsapp-key" },
-      { id: "as-14", text: "Whatsapp Template", link: "/whatsapp-template" },
+      {
+        id: "as-12",
+        text: "Whatsapp Provider",
+        link: "/whatsapp-provider",
+        element: lazy(() => import("../pages/AdminSettings/WhatsappProvider")),
+      },
+      {
+        id: "as-13",
+        text: "Whatsapp Key",
+        link: "/whatsapp-key",
+        element: lazy(() => import("../pages/AdminSettings/WhatsappKey")),
+      },
+      {
+        id: "as-14",
+        text: "Whatsapp Template",
+        link: "/whatsapp-template",
+        element: lazy(() => import("../pages/AdminSettings/WhatsappTemplate")),
+      },
     ],
   },
 ];

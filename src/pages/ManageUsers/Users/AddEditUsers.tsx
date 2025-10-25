@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateCasteAPI } from "../../../api/caste";
 import { ManageUserProps } from "../../../types/manageUser";
 import { gendereOptions, roleOptions } from "../../../data/manageUser";
 import { addManageUserAPI, updateManageUserAPI } from "../../../api/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
+import { fetchRole } from "../../../api/roles";
+import { getLabelValue } from "../../../util/ClientUtils";
 
 const initialFormItem = {
   name: "",
@@ -30,15 +31,24 @@ function AddEditUsers() {
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState(true);
 
+  const { data: roleData, isLoading: leadLoading } = useQuery({
+    queryKey: ["role-list"],
+    queryFn: fetchRole,
+    retry: false,
+  });
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (state && state.data) {
+      console.log(state.data);
+
       setFormData({ ...state.data });
     }
   }, []);
+
+  console.log(roleData, " <>?");
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -133,7 +143,7 @@ function AddEditUsers() {
           searchable={false}
           label="Roles"
           name="module"
-          options={roleOptions}
+          options={getLabelValue(roleData ? roleData.data : [])}
           value={formData.role_id}
           onChange={(val) => handleChange("role_id", val)}
         />

@@ -69,6 +69,17 @@ export interface FormSubmitItemProps {
 }
 export interface FormSubmitProps {
   form_fields: FormSubmitItemProps[];
+  client_id: number;
+}
+export interface UpdateFormSubmitProps {
+  clientData: FormSubmitProps;
+  id: number;
+}
+
+export interface ImageSubmitProps {
+  client_id: number;
+  type: string | string[];
+  file: any;
 }
 
 export interface clientFiltersProps {
@@ -90,9 +101,17 @@ export interface FormFilterProps {
   toDate: Date | null;
 }
 
+export interface ClientDocumentsProps {
+  file_path: string;
+  file_type: string;
+  id: number;
+  uploaded_at: string;
+}
+
 export interface ClientData {
   client_id: number;
   modules: Module[];
+  client_documents: ClientDocumentsProps[];
 }
 
 export interface Module {
@@ -117,3 +136,19 @@ export type FieldType =
   | "datepicker"
   | "checkbox"
   | "radio";
+
+export interface ClientModuleField {
+  id: number;
+  client_module_id: number;
+  display_name: string;
+  field_name: string;
+  field_type: string; // e.g., "text", "image", "dropdown", etc.
+  validation: string; // could be "none", "email", "number", etc.
+  required: number; // 0 or 1
+  view_in_pdf: number; // 0 or 1
+  status: string; // e.g., "active", "inactive"
+  div_css: string;
+  options: string | null; // can contain JSON or comma-separated values
+  created_at: string; // ISO timestamp
+  updated_at: string; // ISO timestamp
+}

@@ -6,7 +6,7 @@ export const BackNavigationButton = ({ className }: { className: string }) => {
   return (
     <Button
       className={`${className} bg-[#161D27]`}
-      type="none"
+      type="button"
       text="Back"
       onClick={() => navigate(-1)}
     />

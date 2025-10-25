@@ -64,10 +64,12 @@ export function DropDown({
   name,
   options,
   required = false,
+  placeholder = "",
   value,
   onChange,
   searchable = true,
   onClick,
+  sendLabel = false,
   loading = false,
 }: SearchableSelectProps) {
   // const comValue = typeof value === "string" ? parseInt(value) : value;
@@ -78,9 +80,11 @@ export function DropDown({
   };
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-gray-700">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
+      {label && label !== "" && (
+        <label className="text-sm font-medium text-gray-700">
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+      )}
       <ReactSelect
         isLoading={loading}
         onFocus={onClick}
@@ -91,10 +95,11 @@ export function DropDown({
         name={name}
         required={required}
         value={getSelectedValue() || null}
-        placeholder={`Select ${label}`}
+        placeholder={`Select ${placeholder}`}
         isClearable
         onChange={(item) => {
-          onChange(item.value);
+          const value: string = sendLabel ? item?.label : item?.value;
+          onChange(item && value);
         }}
         options={options}
       />

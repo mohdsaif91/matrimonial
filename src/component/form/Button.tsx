@@ -4,7 +4,7 @@ import { ButtonProps } from "../../types/form";
 const Button = ({
   text,
   onClick,
-  type = "submit",
+  type = "button",
   className = "",
   loading = false,
 }: ButtonProps) => {
@@ -15,11 +15,15 @@ const Button = ({
     style = `cursor-pointer bg-[#465dff]  text-white px-6 py-2 rounded-lg hover:bg-[#3249c6] disabled:opacity-50 disabled:cursor-not-allowed ${className}`;
   } else if (type === "clientFormBtn") {
     style = `cursor-pointer text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed ${className}`;
-  } else if (type === "none") {
-    style = className;
+  } else if (type === "button") {
+    style = `${className} bg-[#161D27]  text-white px-6 py-2 rounded-lg hover:bg-[#3249c6] disabled:opacity-50 disabled:cursor-not-allowed`;
   }
   return (
-    <button className={`rounded-sm cursor-pointer ${style}`} onClick={onClick}>
+    <button
+      type={type}
+      className={`rounded-sm cursor-pointer ${style}`}
+      onClick={onClick}
+    >
       {loading ? <ButtonLoader /> : text}
     </button>
   );
