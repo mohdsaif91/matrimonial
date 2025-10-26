@@ -72,7 +72,6 @@ export function DropDown({
   sendLabel = false,
   loading = false,
 }: SearchableSelectProps) {
-  // const comValue = typeof value === "string" ? parseInt(value) : value;
   const getSelectedValue = () => {
     return options.find((option) => {
       return option.value === value;
@@ -80,7 +79,7 @@ export function DropDown({
   };
   return (
     <div className="flex flex-col gap-1">
-      {label && label !== "" && (
+      {sendLabel && label && label !== "" && (
         <label className="text-sm font-medium text-gray-700">
           {label} {required && <span className="text-red-500">*</span>}
         </label>

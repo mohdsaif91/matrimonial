@@ -161,4 +161,10 @@ export const ROUTE = {
     UPDATE: "v1/leads",
     DELETE: "v1/leads",
   },
+  CLIENT_RESPONSE: {
+    ADD: "v1/client-responses",
+    GET: "v1/client-responses",
+    UPDATE: "v1/client-responses",
+    DELETE: "v1/client-responses",
+  },
 };

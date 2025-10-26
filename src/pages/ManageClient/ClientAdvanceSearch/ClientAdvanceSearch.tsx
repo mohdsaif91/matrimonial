@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import ClientFilterForm from "../../component/ManageClient/ClientFilter";
-import { deleteClientList, fetchClientList } from "../../api/client";
-import LoadingPage from "../Loading/Loading";
+import ClientFilterForm from "../../../component/ManageClient/ClientFilter";
+import { deleteClientList, fetchClientList } from "../../../api/client";
+import LoadingPage from "../../Loading/Loading";
 import { ColumnDef } from "@tanstack/react-table";
-import Table from "../../component/Table";
-import Button from "../../component/form/Button";
+import Table from "../../../component/Table";
+import Button from "../../../component/form/Button";
 import {
   Pencil,
   Eye,
@@ -12,15 +12,14 @@ import {
   SquarePlus,
   List,
   ChevronDown,
-  ChevronUp,
 } from "lucide-react";
-import { ClientData } from "../../types/client";
-import Pagination from "../../component/Pagination";
+import { ClientData } from "../../../types/client";
+import Pagination from "../../../component/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import ProfileCard from "./Components/ProfileCard";
+import { AdvanceSearchFilter } from "./AdvanceSearchFilter";
 
 const initialPaginationData = {
   current_page: 1,
@@ -28,11 +27,10 @@ const initialPaginationData = {
   per_page: 30,
 };
 
-export default function ClientList() {
+export default function ClientAdvanceSearch() {
   const [paginationData, setPaginationData] = useState({
     ...initialPaginationData,
   });
-
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const {
@@ -88,33 +86,19 @@ export default function ClientList() {
     },
     {
       header: "Profile Sent",
-      cell: ({ row }) => {
-        const isExpanded = row.getIsExpanded();
-        return (
-          <div className="flex">
-            <span>{3}</span>
-            {isExpanded ? (
-              <ChevronUp
-                size={24}
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent row click conflict
-                  row.toggleExpanded();
-                }}
-              />
-            ) : (
-              <ChevronDown
-                size={24}
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent row click conflict
-                  row.toggleExpanded();
-                }}
-              />
-            )}
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <div className="flex">
+          <span>{3}</span>
+          <ChevronDown
+            size={24}
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation(); // prevent row click conflict
+              row.toggleExpanded();
+            }}
+          />
+        </div>
+      ),
     },
     {
       accessorKey: "name",
@@ -288,33 +272,14 @@ export default function ClientList() {
       }
     : initialPaginationData;
 
-  const expandedComponent = ({ data }: { data: any }) => {
-    return (
-      <div className="flex justify-start">
-        <ProfileCard
-          image={
-            data.original.client_documents?.find(
-              (doc: any) => doc.file_type === "main_photo"
-            )?.file_path || "https://via.placeholder.com/150"
-          }
-          name={data.original.items?.client_name?.value || "N/A"}
-          age={data.original.items?.age?.value || "-"}
-          dateTime={data.original.items?.created_at?.value || "N/A"}
-          onAttachProfile={() => console.log("Attach clicked", data.original)}
-          onAddResponse={() => {
-            console.log("Response clicked", data.original);
-            setOpenModal({ flag: true, data });
-          }}
-        />
-      </div>
-    );
-  };
-
   return (
     <div className="">
       <ToastContainer />
       <div className="">
-        <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" />
+        <AdvanceSearchFilter
+          onSubmit={(filter) => {}}
+          onReset={(filter) => {}}
+        />
       </div>
       <div className="mt-2 mb-2">
         <Table columns={columns} data={transformedClientList || []} />

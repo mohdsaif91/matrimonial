@@ -4,15 +4,21 @@ import {
   flexRender,
   getExpandedRowModel,
 } from "@tanstack/react-table";
-import { Fragment, useState } from "react";
+import { Fragment, JSX, useState } from "react";
 import ProfileCard from "../pages/ManageClient/Components/ProfileCard";
+import { useNavigate } from "react-router-dom";
+import ProfileCardExpandedRow from "../pages/ManageClient/ProfileCardExpandedRow";
 
 export default function Table({
   columns,
   data,
+  expandedRowChildren,
+  onAddResponse,
 }: {
   columns: any;
   data: any[];
+  expandedRowChildren?: JSX.Element;
+  onAddResponse?: () => void;
 }) {
   const [expanded, setExpanded] = useState({});
 
@@ -70,26 +76,13 @@ export default function Table({
                       colSpan={row.getVisibleCells().length}
                       className="bg-gray-50 px-6 py-4"
                     >
-                      <div className="flex justify-start">
-                        <ProfileCard
-                          image={
-                            row.original.client_documents?.find(
-                              (doc: any) => doc.file_type === "main_photo"
-                            )?.file_path || "https://via.placeholder.com/150"
-                          }
-                          name={row.original.items?.client_name?.value || "N/A"}
-                          age={row.original.items?.age?.value || "-"}
-                          dateTime={
-                            row.original.items?.created_at?.value || "N/A"
-                          }
-                          onAttachProfile={() =>
-                            console.log("Attach clicked", row.original)
-                          }
-                          onAddResponse={() =>
-                            console.log("Response clicked", row.original)
-                          }
-                        />
-                      </div>
+                      <ProfileCardExpandedRow
+                        data={row.original}
+                        age=""
+                        dateTime=""
+                        image=""
+                        name=""
+                      />
                     </td>
                   </tr>
                 )}

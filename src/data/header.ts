@@ -37,13 +37,40 @@ export const headerLinks = [
         id: "mc-3",
         text: "Advance Search",
         link: "/advance-search",
-        element: lazy(() => import("../pages/ManageClient/AdvanceSearch")),
+        element: lazy(
+          () =>
+            import(
+              "../pages/ManageClient/ClientAdvanceSearch/ClientAdvanceSearch"
+            )
+        ),
       },
       {
         id: "mc-4",
         text: "Client Response",
         link: "/client-response",
-        element: lazy(() => import("../pages/ManageClient/ClientResponse")),
+        element: lazy(
+          () => import("../pages/ManageClient/ClientResponse/ClientResponse")
+        ),
+        children: [
+          {
+            id: "cr-1",
+            text: "Add Client Response",
+            link: "/addClient-response",
+            element: lazy(
+              () =>
+                import("../pages/ManageClient/ClientResponse/AddClientResponse")
+            ),
+          },
+          {
+            id: "cr-2",
+            text: "Edit Client Response",
+            link: "/editClient-response",
+            element: lazy(
+              () =>
+                import("../pages/ManageClient/ClientResponse/AddClientResponse")
+            ),
+          },
+        ],
       },
       {
         id: "mc-5",
@@ -556,13 +583,37 @@ export const headerLinks = [
         id: "as-1",
         text: "CRM Setting",
         link: "/crm-setting",
-        element: lazy(() => import("../pages/AdminSettings/CRMSetting")),
+        element: lazy(
+          () => import("../pages/AdminSettings/CRMSetting/CRMSetting")
+        ),
+        children: [
+          {
+            id: "crm-1",
+            text: "Add CRM Setting",
+            link: "/addCRMSetting",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/CRMSetting/AddEditCrmSetting")
+            ),
+          },
+          {
+            id: "crm-2",
+            text: "Edit CRM Setting",
+            link: "/editCRMSetting",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/CRMSetting/AddEditCrmSetting")
+            ),
+          },
+        ],
       },
       {
         id: "as-2",
         text: "Website Setting",
         link: "/website-setting",
-        element: lazy(() => import("../pages/AdminSettings/WebsiteSettings")),
+        element: lazy(
+          () => import("../pages/AdminSettings/WebsiteSetting/WebsiteSettings")
+        ),
       },
       {
         id: "as-3",

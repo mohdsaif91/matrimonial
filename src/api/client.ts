@@ -20,8 +20,10 @@ export async function AddClientImageApi(imageObject: any) {
   return response.data;
 }
 
-export async function fetchClientList(pageNumber: number) {
-  const response = await api.get(`${ROUTE.CLIENTS.GET}?page=${pageNumber}`);
+export async function fetchClientList(pageNumber: number, pageCount: number) {
+  const response = await api.get(
+    `${ROUTE.CLIENTS.GET}?page=${pageNumber}&page_count=${pageCount}`
+  );
   return response.data;
 }
 

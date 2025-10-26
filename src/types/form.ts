@@ -20,6 +20,7 @@ export interface textFeildProps {
   value: string | number;
   onChange: (value: string | number) => void;
   extraText?: string;
+  showLabel?: boolean;
 }
 
 export interface DateFeildProps {
@@ -28,6 +29,8 @@ export interface DateFeildProps {
   onChange: (val: Date | string) => void;
   required: boolean;
   dateFormat?: string;
+  showLabel?: boolean;
+  showYear?: boolean;
 }
 
 export interface TimeFeildProps {

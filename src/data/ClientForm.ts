@@ -485,7 +485,7 @@ export const statusOptions = [
 
 export const statusOptionsCap = [
   { value: "Active", label: "Active" },
-  { value: "Inactive", label: "In Active" },
+  { value: "In Active", label: "In Active" },
 ];
 
 export const techLeadOptions = [
