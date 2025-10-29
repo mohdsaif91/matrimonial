@@ -9,7 +9,7 @@ import { Permission, PermissionFormData } from "../../../types/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { addRole, getPermissionData, updateRole } from "../../../api/roles";
 import Checkbox from "../../../component/form/Checkbox";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { statusOptions } from "../../../data/ClientForm";

@@ -13,6 +13,7 @@ import { fetchRole } from "../../../api/roles";
 import { getLabelValue } from "../../../util/ClientUtils";
 import { typeOptions } from "../../../data/adminSetting";
 import TextArea from "../../../component/form/TextArea";
+import CustomEditor from "../../../component/form/RichText";
 
 const initialFormItem = {
   slug_key: "",
@@ -21,12 +22,11 @@ const initialFormItem = {
   value: "",
 };
 
-function AddEditCrmSetting() {
+function AddEditWhatsAppProvider() {
   const [formData, setFormData] = useState<any>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [password, setPassword] = useState(true);
 
   const { data: roleData, isLoading: leadLoading } = useQuery({
     queryKey: ["crm-setting-list"],
@@ -56,15 +56,15 @@ function AddEditCrmSetting() {
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });
-      toast("Successfully added Managed user");
+      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
+      toast("Successfully added PDF Template");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding Managed user:", error);
-      toast(error.response?.data?.message || "Failed to add Managed user");
+      console.error("❌ Error adding PDF Template:", error);
+      toast(error.response?.data?.message || "Failed to add PDF Template");
     },
   });
 
@@ -73,16 +73,16 @@ function AddEditCrmSetting() {
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });
-      toast("Successfully Updated Managed user");
+      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
+      toast("Successfully Updated PDF Template");
       setFormData({ ...initialFormItem });
       navigate("/manage-users");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating Managed user:", error);
-      toast(error.response?.data?.message || "Failed to Update Managed user");
+      console.error("❌ Error updating PDF Template:", error);
+      toast(error.response?.data?.message || "Failed to Update PDF Template");
     },
   });
 
@@ -103,44 +103,41 @@ function AddEditCrmSetting() {
     >
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "ADD"} CRM Setting
+        {state && state.data ? "Edit" : "ADD"} PDF Template
       </h2>
-      <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 gap-y-5">
         <TextField
-          label="Slug Key"
-          name="slug_key"
+          label="Name"
+          name="name"
           value={formData.slug_key}
           onChange={(e) => handleChange("slug_key", e.target.value)}
           required
         />
         <TextField
-          label="Name"
-          name="name"
+          label="Base URL"
+          name="baseUrl"
           value={formData.name}
           onChange={(e) => handleChange("email", e.target.value)}
           required
         />
-        <DropDown
-          sendLabel={true}
-          searchable={false}
-          label="Type"
-          name="type"
-          options={typeOptions}
-          value={formData.type}
-          onChange={(val) => handleChange("type", val)}
+        <TextField
+          label="Base URL with file"
+          name="name"
+          value={formData.slug_key}
+          onChange={(e) => handleChange("slug_key", e.target.value)}
+          required
         />
-        <div className="col-span-4">
-          <TextArea
-            label="Value"
-            name="value"
-            onChange={(val) => handleChange("type", val)}
-            value={formData.value}
-          />
-        </div>
+        <DropDown
+          value={formData.value}
+          label="Status"
+          name="status"
+          onChange={() => {}}
+          options={statusOptions}
+        />
       </div>
       <div className="flex">
         <Button
-          text={`${state && state.data ? "Update" : "Save"} Manage User`}
+          text={`${state && state.data ? "Update" : "Save"} Whats App Provider`}
           type="submit"
           loading={isLoading}
           className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
@@ -151,4 +148,4 @@ function AddEditCrmSetting() {
   );
 }
 
-export default AddEditCrmSetting;
+export default AddEditWhatsAppProvider;

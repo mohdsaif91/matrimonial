@@ -3,18 +3,18 @@ import api from "./axios";
 import { ROUTE } from "./route";
 
 export async function addMembershipPlan(data: LeadStatusProps) {
-  const response = await api.post(ROUTE.MEMBERSHIP_STATUS.ADD, { ...data });
+  const response = await api.post(ROUTE.MEMBERSHIP_PLAN.ADD, { ...data });
   return response.data;
 }
 
 export async function fetchMembershipPlan() {
-  const response = await api.get(ROUTE.MEMBERSHIP_STATUS.GET);
+  const response = await api.get(ROUTE.MEMBERSHIP_PLAN.GET);
   return response.data;
 }
 
 export async function updateMembershipPlan(data: LeadStatusProps) {
   const { status, id, name } = data;
-  const response = await api.put(`${ROUTE.MEMBERSHIP_STATUS.UPDATE}/${id}`, {
+  const response = await api.put(`${ROUTE.MEMBERSHIP_PLAN.UPDATE}/${id}`, {
     status,
     name,
   });
@@ -22,6 +22,6 @@ export async function updateMembershipPlan(data: LeadStatusProps) {
 }
 
 export async function deleteMembershipPlan(id: number) {
-  const response = await api.delete(`${ROUTE.MEMBERSHIP_STATUS.DELETE}/${id}`);
+  const response = await api.delete(`${ROUTE.MEMBERSHIP_PLAN.DELETE}/${id}`);
   return response.data;
 }

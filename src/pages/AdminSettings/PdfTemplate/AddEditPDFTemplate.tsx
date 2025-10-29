@@ -1,83 +1,88 @@
 import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { gendereOptions } from "../../../data/manageUser";
+import { addManageUserAPI, updateManageUserAPI } from "../../../api/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { LeadStatusProps } from "../../../types/leadStatus";
-import { addLeadStatus, updateLeadStatus } from "../../../api/leadStatus";
-import {
-  addMembershipPlan,
-  updateMembershipPlan,
-} from "../../../api/membershipPlan";
-import {
-  addMembershipStatus,
-  updateMembershipStatus,
-} from "../../../api/membershipStatus";
+import { fetchRole } from "../../../api/roles";
+import { getLabelValue } from "../../../util/ClientUtils";
+import { typeOptions } from "../../../data/adminSetting";
+import TextArea from "../../../component/form/TextArea";
+import CustomEditor from "../../../component/form/RichText";
 
 const initialFormItem = {
+  slug_key: "",
   name: "",
-  status: "",
-  id: 0,
+  type: "",
+  value: "",
 };
 
-export default function AddEditMembershipStatus() {
-  const [formData, setFormData] = useState<LeadStatusProps>({
+function AddEditPDFTemplate() {
+  const [formData, setFormData] = useState<any>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  const { data: roleData, isLoading: leadLoading } = useQuery({
+    queryKey: ["crm-setting-list"],
+    queryFn: fetchRole,
+    retry: false,
+  });
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (state && state.data) {
+      console.log(state.data);
+
       setFormData({ ...state.data });
     }
   }, []);
+
+  console.log(roleData, " <>?");
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const mutation = useMutation({
-    mutationFn: addMembershipStatus,
+    mutationFn: addManageUserAPI,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["membership-status-list"] });
-      toast("Successfully added Membership Status");
+      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
+      toast("Successfully added PDF Template");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding Membership Status:", error);
-      toast(error.response?.data?.message || "Failed to add Membership Status");
+      console.error("❌ Error adding PDF Template:", error);
+      toast(error.response?.data?.message || "Failed to add PDF Template");
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateMembershipStatus,
+    mutationFn: updateManageUserAPI,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["membership-status-list"] });
-      toast("Successfully Updated Membership Status");
+      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
+      toast("Successfully Updated PDF Template");
       setFormData({ ...initialFormItem });
-      navigate("/membership-Status");
+      navigate("/manage-users");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating Membership Status:", error);
-      toast(
-        error.response?.data?.message || "Failed to Update Membership Status"
-      );
+      console.error("❌ Error updating PDF Template:", error);
+      toast(error.response?.data?.message || "Failed to Update PDF Template");
     },
   });
 
@@ -98,30 +103,34 @@ export default function AddEditMembershipStatus() {
     >
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "Add"} Membership Status
+        {state && state.data ? "Edit" : "ADD"} PDF Template
       </h2>
-      <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 gap-y-5">
         <TextField
-          label="Name"
-          name="name"
-          value={formData.name}
-          onChange={(e) => handleChange("name", e.target.value)}
+          label="Slug Key"
+          name="slug_key"
+          value={formData.slug_key}
+          onChange={(e) => handleChange("slug_key", e.target.value)}
           required
         />
-        <DropDown
-          sendLabel={true}
-          searchable={false}
-          label="Status"
-          name="status"
-          options={statusOptions}
-          value={formData.status}
-          onChange={(val) => handleChange("status", val)}
+        <TextField
+          label="Title"
+          name="title"
+          value={formData.name}
+          onChange={(e) => handleChange("email", e.target.value)}
           required
+        />
+        <TextArea
+          label="value"
+          name="value"
+          onChange={() => {}}
+          required={false}
+          value=""
         />
       </div>
       <div className="flex">
         <Button
-          text={`${state && state.data ? "Update" : "Save"} Membership Status`}
+          text={`${state && state.data ? "Update" : "Save"} PDF Template`}
           type="submit"
           loading={isLoading}
           className="mt-6 px-6 py-2 bg-[#465dff] text-white rounded-xl hover:bg-blue-600 flex align-middle"
@@ -131,3 +140,5 @@ export default function AddEditMembershipStatus() {
     </form>
   );
 }
+
+export default AddEditPDFTemplate;

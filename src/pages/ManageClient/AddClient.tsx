@@ -284,9 +284,11 @@ const AddClient = () => {
       idRef.current = data.client_id;
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["clients"] });
-      if (activeTab < handleClientFromModule.length) {
+      if (activeTab + 1 < handleClientFromModule.length) {
         toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
         setActiveTab((prevState) => prevState + 1);
+      } else {
+        toast(`Saving Client Data Completed.`);
       }
     },
     onError: (error: any) => {
@@ -301,9 +303,11 @@ const AddClient = () => {
       idRef.current = data.client_id;
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["clients"] });
-      if (activeTab < handleClientFromModule.length) {
+      if (activeTab + 1 < handleClientFromModule.length) {
         toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
         setActiveTab((prevState) => prevState + 1);
+      } else {
+        toast(`Saving Client Data Completed.`);
       }
     },
     onError: (error: any) => {
@@ -621,6 +625,12 @@ const AddClient = () => {
           form_fields: formData,
           client_id: idRef.current,
         };
+        console.log(activeTab, "<", handleClientFromModule.length);
+
+        if (activeTab < handleClientFromModule.length) {
+          toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
+          setActiveTab((prevState) => prevState + 1);
+        }
         mutation.mutate(finalObj as FormSubmitProps);
       } else if (
         clientFormModuleData.data[activeTab].name === "Photo and Bio-Data"
@@ -631,6 +641,8 @@ const AddClient = () => {
         finalObj = {
           form_fields: formData,
         };
+
+        console.log(activeTab + 1 < handleClientFromModule.length);
         mutation.mutate(finalObj as FormSubmitProps);
       }
     }

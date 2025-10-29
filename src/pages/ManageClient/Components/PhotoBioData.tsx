@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ModuleProps } from "../../../types/module";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deletePhotoAndBio, fetchPhotoAndBio } from "../../../api/photoAndBio";
 import { Trash } from "lucide-react";

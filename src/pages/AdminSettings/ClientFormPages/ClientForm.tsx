@@ -3,7 +3,7 @@ import Button from "../../../component/form/Button";
 import { useNavigate } from "react-router-dom";
 import { ColumnDef } from "@tanstack/react-table";
 import { ClientFormItem, staticClientFormTab } from "../../../types/form";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import { Pencil, Trash } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";

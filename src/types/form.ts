@@ -64,11 +64,12 @@ export interface SearchableSelectProps {
   required?: boolean;
   value: string | number | boolean;
   onChange: (value: string | number | null) => void;
-  searchable: boolean;
+  searchable?: boolean;
   onClick?: () => void;
   loading?: boolean;
   placeholder?: string;
   sendLabel?: boolean;
+  showLabel?: boolean;
 }
 
 export interface ImageFieldProps {

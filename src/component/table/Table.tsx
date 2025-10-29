@@ -5,9 +5,7 @@ import {
   getExpandedRowModel,
 } from "@tanstack/react-table";
 import { Fragment, JSX, useState } from "react";
-import ProfileCard from "../pages/ManageClient/Components/ProfileCard";
-import { useNavigate } from "react-router-dom";
-import ProfileCardExpandedRow from "../pages/ManageClient/ProfileCardExpandedRow";
+import ProfileCardExpandedRow from "../../pages/ManageClient/ProfileCardExpandedRow";
 
 export default function Table({
   columns,

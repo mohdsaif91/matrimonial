@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import { deleteManageUserAPI } from "../../../api/manageUser";
 import { deleteLead, fetchLead } from "../../../api/leads";
 import { LeadsProps } from "../../../types/leads";
@@ -111,7 +111,9 @@ export default function LeadsList() {
       const assigneToDataItem = assigneToData.data.find(
         (f) => f.id === assigneTo
       );
-      return assigneToDataItem.name;
+      console.log(assigneToDataItem, " <>?<>? ", assigneTo);
+
+      return (assigneToDataItem && assigneToDataItem.name) || "";
     }
     return assigneTostr;
   };
@@ -184,7 +186,7 @@ export default function LeadsList() {
       header: "Assign To/Created By",
       cell: ({ row }) => {
         const { assign_to } = row.original;
-        return <div>{`${getAsssigneTo(assign_to)} | ${1}`}</div>;
+        return <div>{`${getAsssigneTo(assign_to || 0)} | ${1}`}</div>;
       },
     },
     {
@@ -247,9 +249,9 @@ export default function LeadsList() {
       </div>
       <div>
         <LeadFilterForm
-          city={getLabelValue(CityData.data) || []}
-          state={getLabelValue(stateData.data) || []}
-          country={getLabelValue(countryData.data) || []}
+          city={getLabelValue(CityData.data || [])}
+          state={getLabelValue(stateData.data || [])}
+          country={getLabelValue(countryData.data || [])}
           onChange={() => {}}
           filters={{}}
           onReset={() => setFilter({ ...initialFilterData })}

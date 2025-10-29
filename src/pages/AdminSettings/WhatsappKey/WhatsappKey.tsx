@@ -7,12 +7,12 @@ import LoadingPage from "../../Loading/Loading";
 import Button from "../../../component/form/Button";
 import Table from "../../../component/table/Table";
 
-export default function WebsiteSettings() {
+export default function WhatsappKey() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data: taskData, isLoading } = useQuery({
-    queryKey: ["website-setting-list"],
+    queryKey: ["whatsapp-provider-list"],
     // queryFn: fetchTask,
     retry: false,
   });
@@ -20,13 +20,13 @@ export default function WebsiteSettings() {
   const deleteMutation = useMutation({
     // mutationFn: deleteTask,
     onSuccess: () => {
-      toast("Successfully deleted Website setting");
-      queryClient.invalidateQueries({ queryKey: ["website-setting-list"] });
+      toast("Successfully deleted Whats App Provider");
+      queryClient.invalidateQueries({ queryKey: ["whatsapp-provider-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Website setting:", error);
+      console.error("❌ Error in deleting Whats App Provider:", error);
       toast(
-        error.response?.data?.message || "Failed to delete Website setting"
+        error.response?.data?.message || "Failed to delete Whats App Provider"
       );
     },
   });
@@ -39,15 +39,31 @@ export default function WebsiteSettings() {
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: "Whatsapp Provider",
     },
     {
       accessorKey: "title",
-      header: "Key",
+      header: "Name",
     },
     {
       accessorKey: "role_for",
-      header: "Value",
+      header: "Token",
+    },
+    {
+      accessorKey: "role_for",
+      header: "Phone Number",
+    },
+    {
+      accessorKey: "title",
+      header: "Assigned Type",
+    },
+    {
+      accessorKey: "role_for",
+      header: "Assigned ID",
+    },
+    {
+      accessorKey: "role_for",
+      header: "Config",
     },
     {
       accessorKey: "role_for",
@@ -60,7 +76,7 @@ export default function WebsiteSettings() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/task-edit", { state: { data: row.original } });
+              navigate("/addEditTemplate", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -84,14 +100,13 @@ export default function WebsiteSettings() {
   }
 
   const handledTaskData = taskData ? taskData.data : [];
-  console.log(handledTaskData, " <>?");
 
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
       <Button
-        text="+ Add Website Setting"
-        onClick={() => navigate("/addWebsiteSetting")}
+        text="+ Add Whats App Key"
+        onClick={() => navigate("/addWhatsAppKey")}
       />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={handledTaskData} />

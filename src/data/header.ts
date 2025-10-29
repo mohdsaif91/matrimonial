@@ -614,6 +614,30 @@ export const headerLinks = [
         element: lazy(
           () => import("../pages/AdminSettings/WebsiteSetting/WebsiteSettings")
         ),
+        children: [
+          {
+            id: "ws-1",
+            text: "Add Website Setting",
+            link: "/addWebsiteSetting",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/WebsiteSetting/AddEditWebsiteSetting"
+                )
+            ),
+          },
+          {
+            id: "ws-2",
+            text: "Edit Website Setting",
+            link: "/editWebsiteSetting",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/WebsiteSetting/AddEditWebsiteSetting"
+                )
+            ),
+          },
+        ],
       },
       {
         id: "as-3",
@@ -676,13 +700,61 @@ export const headerLinks = [
         id: "as-4",
         text: "Email Template",
         link: "/email-template",
-        element: lazy(() => import("../pages/AdminSettings/EmailTemplate")),
+        element: lazy(
+          () => import("../pages/AdminSettings/EmailTemplate/EmailTemplate")
+        ),
+        children: [
+          {
+            id: "et-1",
+            text: "Add Email Template",
+            link: "/addEmailTemplate",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/EmailTemplate/AddEditEmailTemplate"
+                )
+            ),
+          },
+          {
+            id: "et-2",
+            text: "Edit Email Template",
+            link: "/editEmailTemplate",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/EmailTemplate/AddEditEmailTemplate"
+                )
+            ),
+          },
+        ],
       },
       {
         id: "as-5",
         text: "PDF Template",
         link: "/pdf-templte",
-        element: lazy(() => import("../pages/AdminSettings/PDFTemplate")),
+        element: lazy(
+          () => import("../pages/AdminSettings/PdfTemplate/PDFTemplate")
+        ),
+        children: [
+          {
+            id: "pt-1",
+            text: "Add PDF Template",
+            link: "/addPDFTemplate",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/PdfTemplate/AddEditPDFTemplate")
+            ),
+          },
+          {
+            id: "pt-2",
+            text: "Edit PDf Template",
+            link: "/editPDFTemplate",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/PdfTemplate/AddEditPDFTemplate")
+            ),
+          },
+        ],
       },
       {
         id: "as-6",
@@ -782,7 +854,7 @@ export const headerLinks = [
         text: "Membership Type",
         link: "/membership-type",
         element: lazy(
-          () => import("../pages/AdminSettings/TaskCategory/TaskCategory")
+          () => import("../pages/AdminSettings/MembershipType/MembershipType")
         ),
         children: [
           {
@@ -877,13 +949,62 @@ export const headerLinks = [
         id: "as-12",
         text: "Whatsapp Provider",
         link: "/whatsapp-provider",
-        element: lazy(() => import("../pages/AdminSettings/WhatsappProvider")),
+        element: lazy(
+          () =>
+            import("../pages/AdminSettings/WhatsAppProvider/WhatsappProvider")
+        ),
+        children: [
+          {
+            id: "wp-1",
+            text: "Add WhatsApp Provider",
+            link: "/addWhatsAppProvider",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/WhatsAppProvider/AddEditWhatsAppProvider"
+                )
+            ),
+          },
+          {
+            id: "wp-2",
+            text: "Edit WhatsApp Provider",
+            link: "/editWhatsAppProvider",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/WhatsAppProvider/AddEditWhatsAppProvider"
+                )
+            ),
+          },
+        ],
       },
       {
         id: "as-13",
         text: "Whatsapp Key",
         link: "/whatsapp-key",
-        element: lazy(() => import("../pages/AdminSettings/WhatsappKey")),
+        element: lazy(
+          () => import("../pages/AdminSettings/WhatsappKey/WhatsappKey")
+        ),
+        children: [
+          {
+            id: "wk-1",
+            text: "Add WhatsApp Key",
+            link: "/addWhatsAppKey",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/WhatsappKey/AddEditWhatsAppKey")
+            ),
+          },
+          {
+            id: "wk-2",
+            text: "Edit WhatsApp Key",
+            link: "/editWhatsAppKey",
+            element: lazy(
+              () =>
+                import("../pages/AdminSettings/WhatsappKey/AddEditWhatsAppKey")
+            ),
+          },
+        ],
       },
       {
         id: "as-14",

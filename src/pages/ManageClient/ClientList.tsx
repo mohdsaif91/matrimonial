@@ -3,7 +3,7 @@ import ClientFilterForm from "../../component/ManageClient/ClientFilter";
 import { deleteClientList, fetchClientList } from "../../api/client";
 import LoadingPage from "../Loading/Loading";
 import { ColumnDef } from "@tanstack/react-table";
-import Table from "../../component/Table";
+import Table from "../../component/table/Table";
 import Button from "../../component/form/Button";
 import {
   Pencil,
@@ -13,6 +13,7 @@ import {
   List,
   ChevronDown,
   ChevronUp,
+  Info,
 } from "lucide-react";
 import { ClientData } from "../../types/client";
 import Pagination from "../../component/Pagination";
@@ -21,6 +22,7 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProfileCard from "./Components/ProfileCard";
+import TableInfoPopup from "../../component/table/TableInfoPopup";
 
 const initialPaginationData = {
   current_page: 1,
@@ -32,6 +34,7 @@ export default function ClientList() {
   const [paginationData, setPaginationData] = useState({
     ...initialPaginationData,
   });
+  const [modalOpen, setModalOpen] = useState(false);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -317,6 +320,17 @@ export default function ClientList() {
         <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" />
       </div>
       <div className="mt-2 mb-2">
+        <div className="flex justify-end">
+          <Info
+            fill="red"
+            className="cursor-pointer"
+            onClick={() => setModalOpen(true)}
+          />
+          <TableInfoPopup
+            isOpen={modalOpen}
+            onClose={() => setModalOpen(false)}
+          />
+        </div>
         <Table columns={columns} data={transformedClientList || []} />
         <Pagination
           onPageChange={() => {}}

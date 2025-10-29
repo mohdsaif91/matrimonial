@@ -8,3 +8,14 @@ export const typeOptions = [
     value: "file",
   },
 ];
+
+export const websiteTypeOptions = [
+  {
+    label: "Website",
+    value: "website",
+  },
+  {
+    label: "Seo",
+    value: "seo",
+  },
+];

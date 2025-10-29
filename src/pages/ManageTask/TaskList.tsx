@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../Loading/Loading";
 import Button from "../../component/form/Button";
-import Table from "../../component/Table";
+import Table from "../../component/table/Table";
 import { deleteTask, fetchTask } from "../../api/task";
 
 export default function TaskList() {

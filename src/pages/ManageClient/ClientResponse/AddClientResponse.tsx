@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useLocation } from "react-router-dom";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import TextArea from "../../../component/form/TextArea";
 import Button from "../../../component/form/Button";

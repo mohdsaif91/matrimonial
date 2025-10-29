@@ -28,7 +28,7 @@ export function DateTimePicker({
           showYearPicker={showYear}
           className="rounded-xl px-3 py-2 bg-[#F0F3F8] outline-[#465dff] w-full"
           selected={dateValue}
-          onChange={(date) => date && onChange(date)}
+          onChange={(daXzte) => date && onChange(date)}
           showYearDropdown
           scrollableYearDropdown
           yearDropdownItemNumber={50}

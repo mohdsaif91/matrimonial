@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import { deleteCountry } from "../../../api/country";
 import { deleteState, fetchState } from "../../../api/state";
 

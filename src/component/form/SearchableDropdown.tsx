@@ -61,6 +61,7 @@ const customStyles = {
 
 export function DropDown({
   label,
+  showLabel = true,
   name,
   options,
   required = false,
@@ -79,7 +80,7 @@ export function DropDown({
   };
   return (
     <div className="flex flex-col gap-1">
-      {sendLabel && label && label !== "" && (
+      {showLabel && label && label !== "" && (
         <label className="text-sm font-medium text-gray-700">
           {label} {required && <span className="text-red-500">*</span>}
         </label>

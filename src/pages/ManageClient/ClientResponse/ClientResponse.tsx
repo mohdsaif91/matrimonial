@@ -5,7 +5,7 @@ import { fetchClientResponse } from "../../../api/clientResponse";
 import { ColumnDef } from "@tanstack/react-table";
 import { toast, ToastContainer } from "react-toastify";
 import ClientResponseFilter from "./ClientResponseFilter";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import Pagination from "../../../component/Pagination";
 import LoadingPage from "../../Loading/Loading";
 

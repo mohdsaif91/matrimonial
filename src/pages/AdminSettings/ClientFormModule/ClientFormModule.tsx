@@ -1,6 +1,6 @@
 import Button from "../../../component/form/Button";
 import { useNavigate } from "react-router-dom";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import { Pencil, Trash } from "lucide-react";
 import { ModuleProps } from "../../../types/module";
 import { ColumnDef } from "@tanstack/react-table";

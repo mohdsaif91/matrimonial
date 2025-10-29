@@ -3,7 +3,7 @@ import ClientFilterForm from "../../../component/ManageClient/ClientFilter";
 import { deleteClientList, fetchClientList } from "../../../api/client";
 import LoadingPage from "../../Loading/Loading";
 import { ColumnDef } from "@tanstack/react-table";
-import Table from "../../../component/Table";
+import Table from "../../../component/table/Table";
 import Button from "../../../component/form/Button";
 import {
   Pencil,
