@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import bgImage from "../assets/bg_image.webp";
 import ousplLogo from "../assets/ouspl_logo.png";
 import { loginApi } from "../api/auth";
-import { useMutation } from "@tanstack/react-query";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: loginApi,
@@ -18,6 +21,8 @@ function LoginPage() {
       const token = data?.token || data?.access_token || data?.data?.token;
 
       if (token) {
+        queryClient.setQueryData(["authUser"], data.data.user);
+        sessionStorage.setItem("authUser", JSON.stringify(data.data.user));
         localStorage.setItem("access_token", token);
         navigate("/dashboard");
       } else {

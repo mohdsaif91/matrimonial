@@ -10,6 +10,7 @@ import Table from "../../../component/table/Table";
 import Pagination from "../../../component/Pagination";
 import LoadingPage from "../../Loading/Loading";
 import { fetchShortList } from "../../../api/shortList";
+import { Eye } from "lucide-react";
 
 const initialPaginationData = {
   current_page: 1,
@@ -46,13 +47,17 @@ export default function ManageShortlist() {
       header: "Phone",
     },
     {
-      accessorKey: "name",
+      accessorKey: "shortlist_count",
       header: "Pending for Approval",
     },
     {
       id: "actions",
       header: "Action",
-      cell: ({ row }) => <div className="flex flex-col gap-2"></div>,
+      cell: ({ row }) => (
+        <div className="flex flex-col gap-2 cursor-pointer">
+          <Eye />
+        </div>
+      ),
     },
   ];
   // deleteClientList
@@ -75,7 +80,9 @@ export default function ManageShortlist() {
 
   console.log(clientShortListData, " <>?<>?");
 
-  const transformedClientList = [];
+  const transformedClientList = clientShortListData
+    ? clientShortListData.data
+    : [];
 
   const handledPaginationData = initialPaginationData;
   return (

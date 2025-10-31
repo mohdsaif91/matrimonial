@@ -1,11 +1,13 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { HeaderProps, MenuItem } from "../types/header";
+import { useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight } from "lucide-react";
+
+import { AuthContext } from "../context/AuthContext";
 import ProfileComponent from "../component/ProfileComponent";
 import { headerLinks } from "../data/header";
+import { HeaderProps, MenuItem } from "../types/header";
 import ousplLogo from "../assets/one_unit_sol.png";
 
 function Header({ className }: HeaderProps) {
@@ -20,6 +22,10 @@ function Header({ className }: HeaderProps) {
 
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+  const authUser = queryClient.getQueryData(["authUser"]);
+  console.log(authUser, " <>?");
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -188,7 +194,7 @@ function Header({ className }: HeaderProps) {
         <ProfileComponent
           dropdownOpen={dropdownOpen}
           setDropdownOpen={setDropdownOpen}
-          user={user}
+          user={authUser}
           handleLogout={handleLogout}
           dropdownRef={dropdownRef}
         />

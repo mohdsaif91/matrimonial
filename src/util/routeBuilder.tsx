@@ -32,7 +32,6 @@ export const buildRoutes = (links: HeaderLink[]) => {
               path: innerChild.link,
               element: <ChildComponent />,
             });
-            //
             if (innerChild.children && innerChild.children.length > 0) {
               innerChild.children.forEach((innerChildInner: HeaderLink) => {
                 const ChildComponent =
@@ -45,7 +44,6 @@ export const buildRoutes = (links: HeaderLink[]) => {
                 });
               });
             }
-            //
           });
         }
       });

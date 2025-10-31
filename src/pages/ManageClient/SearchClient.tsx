@@ -23,6 +23,7 @@ import Button from "../../component/form/Button";
 import TableInfoPopup from "../../component/table/TableInfoPopup";
 import Checkbox from "../../component/form/Checkbox";
 import { addShortList } from "../../api/shortList";
+import { User } from "../../types/header";
 
 const initialPaginationData = {
   current_page: 1,
@@ -42,14 +43,14 @@ export default function SearchClient() {
   const queryClient = useQueryClient();
   const { state } = useLocation();
 
-  useEffect(() => {
-    console.log(state.data, " <>? UseEffect <>?");
+  const authUser = queryClient.getQueryData<User>(["authUser"]) ?? null;
 
+  useEffect(() => {
     if (state && state.profileData !== selectClientDetails) {
       setSelectedClientDetails({ ...state.profileData });
     }
   }, [state]);
-  console.log(selectClientDetails, " <>? MAin");
+
   const {
     data: clientListData,
     error: clientListError,
@@ -348,7 +349,9 @@ export default function SearchClient() {
                 if (clientId && clientId !== "") {
                   const shortListObj = {
                     client_id: clientId,
-                    shortlisted_by: 1,
+                    shortlisted_by:
+                      (authUser && authUser.id) ||
+                      JSON.parse(sessionStorage.getItem("authUser")).id,
                     shortlisted_client_ids: selectedClient,
                   };
                   mutation.mutate(shortListObj);

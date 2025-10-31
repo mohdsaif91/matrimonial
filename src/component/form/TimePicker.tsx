@@ -2,6 +2,7 @@ import DatePicker from "react-datepicker";
 import { TimeFeildProps } from "../../types/form";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { parseTimeStringToDate } from "../../util/ClientUtils";
 
 export default function TimePickerExample({
   label,
@@ -10,6 +11,7 @@ export default function TimePickerExample({
   value = new Date(),
   name,
 }: TimeFeildProps) {
+  // const timeValue = parseTimeStringToDate(value);
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm font-medium text-gray-700">

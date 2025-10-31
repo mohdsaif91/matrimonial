@@ -11,6 +11,7 @@ function ProfileDropdown({
   handleLogout,
 }: ProfileDropdownProps) {
   const searchInput = useRef<HTMLInputElement | null>(null);
+
   return (
     <div className="hidden md:flex relative items-center space-x-3">
       <div className="relative w-[180px]">

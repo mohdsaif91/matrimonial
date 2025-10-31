@@ -12,7 +12,10 @@ export function DateTimePicker({
   showYear = false,
 }: DateFeildProps) {
   const dateValue =
-    typeof value === "string" && value ? new Date(value) : value || null;
+    typeof value === "string" && value ? new Date(value) : value;
+
+  console.log(dateValue, " <>? ", label);
+
   return (
     <div className="flex flex-col gap-1">
       {showLabel && (
@@ -29,8 +32,10 @@ export function DateTimePicker({
           className={`rounded-xl px-3 py-2 bg-[#F0F3F8] outline-[#465dff] w-full ${
             showLabel ? "" : "placeholder:text-[#000]"
           }`}
-          selected={dateValue}
-          onChange={(daXzte) => date && onChange(date)}
+          selected={
+            dateValue instanceof Date && !isNaN(dateValue) ? dateValue : null
+          }
+          onChange={(date) => date && onChange(date)}
           showYearDropdown
           scrollableYearDropdown
           yearDropdownItemNumber={50}
