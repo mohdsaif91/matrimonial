@@ -87,7 +87,8 @@ export const headerLinks = [
             text: "Shortlist Profile",
             link: "/shortlist-profile",
             element: lazy(
-              () => import("../pages/ManageShortlist/ShortlistProfiles")
+              () =>
+                import("../pages/ManageClient/ManageShortlist/ManageShortlist")
             ),
           },
           {
@@ -95,7 +96,10 @@ export const headerLinks = [
             text: "Approve Shortlist",
             link: "/approve-shortlist",
             element: lazy(
-              () => import("../pages/ManageShortlist/ApprovedShortlist")
+              () =>
+                import(
+                  "../pages/ManageClient/ManageShortlist/ApprovedShortlist"
+                )
             ),
           },
           {
@@ -103,10 +107,17 @@ export const headerLinks = [
             text: "Reject Shortlist",
             link: "/reject-shortlist",
             element: lazy(
-              () => import("../pages/ManageShortlist/RejectShortlist")
+              () =>
+                import("../pages/ManageClient/ManageShortlist/RejectShortlist")
             ),
           },
         ],
+      },
+      {
+        id: "mc-7",
+        text: "Search Profile",
+        link: "/search-profile",
+        element: lazy(() => import("../pages/ManageClient/SearchClient")),
       },
     ],
   },

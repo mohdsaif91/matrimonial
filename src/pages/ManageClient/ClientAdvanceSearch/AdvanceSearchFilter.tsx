@@ -100,6 +100,7 @@ export const AdvanceSearchFilter = ({
     >
       {/* Row 1 */}
       <TextField
+        showLabel={false}
         label=""
         placeholder="Profile Id"
         name="profile_id"
@@ -107,6 +108,7 @@ export const AdvanceSearchFilter = ({
         onChange={(e) => handleChange("profile_id", e.target.value)}
       />
       <TextField
+        showLabel={false}
         label=""
         placeholder="Client Name"
         name="client_name"
@@ -114,6 +116,7 @@ export const AdvanceSearchFilter = ({
         onChange={(e) => handleChange("client_name", e.target.value)}
       />
       <TextField
+        showLabel={false}
         label=""
         placeholder="Client Mobile"
         name="client_mobile"
@@ -121,6 +124,7 @@ export const AdvanceSearchFilter = ({
         onChange={(e) => handleChange("client_mobile", e.target.value)}
       />
       <TextField
+        showLabel={false}
         label=""
         placeholder="Client Email"
         name="client_email"
@@ -130,6 +134,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 2 */}
       <DropDown
+        showLabel={false}
         placeholder="Gender"
         sendLabel={false}
         searchable={false}
@@ -140,6 +145,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("gender", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Marital Status"
         sendLabel={false}
         searchable={false}
@@ -150,6 +156,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("marital_status", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Religion"
         sendLabel={false}
         searchable={false}
@@ -160,6 +167,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("religion", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Caste"
         sendLabel={false}
         searchable={false}
@@ -172,6 +180,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 3 */}
       <DropDown
+        showLabel={false}
         placeholder="Occupation"
         sendLabel={false}
         searchable={false}
@@ -182,6 +191,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("occupation", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Highest Qualification"
         sendLabel={false}
         searchable={false}
@@ -192,6 +202,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("highest_qualification", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Profile Visited"
         sendLabel={false}
         searchable={false}
@@ -202,6 +213,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("profile_visited", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Sourced From"
         sendLabel={false}
         searchable={false}
@@ -214,6 +226,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 4 */}
       <DropDown
+        showLabel={false}
         placeholder="Open for divorce"
         sendLabel={false}
         searchable={false}
@@ -224,6 +237,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("open_for_divorce", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Residing Country"
         sendLabel={false}
         searchable={false}
@@ -234,6 +248,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("residing_country", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Residential State"
         sendLabel={false}
         searchable={false}
@@ -244,6 +259,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("residential_state", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Residential City"
         sendLabel={false}
         searchable={false}
@@ -256,6 +272,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 5 */}
       <DropDown
+        showLabel={false}
         placeholder="House Status"
         sendLabel={false}
         searchable={false}
@@ -266,6 +283,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("house_status", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Membership Profile Status"
         sendLabel={false}
         searchable={false}
@@ -276,6 +294,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("membership_profile_status", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="NRI Status"
         sendLabel={false}
         searchable={false}
@@ -286,6 +305,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("nri_status", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Astrologically"
         sendLabel={false}
         searchable={false}
@@ -298,6 +318,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 6 */}
       <DropDown
+        showLabel={false}
         placeholder="Eating Habits"
         sendLabel={false}
         searchable={false}
@@ -308,6 +329,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("eating_habits", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Smoking Habits"
         sendLabel={false}
         searchable={false}
@@ -318,6 +340,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("smoking_habits", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Personality"
         sendLabel={false}
         searchable={false}
@@ -328,6 +351,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("personality", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Complexion"
         sendLabel={false}
         searchable={false}
@@ -340,6 +364,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 7 */}
       <DropDown
+        showLabel={false}
         placeholder="Willing to go Abroad"
         sendLabel={false}
         searchable={false}
@@ -350,6 +375,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("willing_to_go_abroad", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Premium College"
         sendLabel={false}
         searchable={false}
@@ -360,6 +386,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("premium_college", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Height From"
         sendLabel={false}
         searchable={false}
@@ -370,6 +397,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("height_from", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Height To"
         sendLabel={false}
         searchable={false}
@@ -404,6 +432,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("to_birth_year", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Personal Income From"
         sendLabel={false}
         searchable={false}
@@ -414,6 +443,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("personal_income_from", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Annual Family Income"
         sendLabel={false}
         searchable={false}
@@ -426,6 +456,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 9 */}
       <DropDown
+        showLabel={false}
         placeholder="From Marriage Budget"
         sendLabel={false}
         searchable={false}
@@ -436,6 +467,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("from_marriage_budget", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="To Marriage Budget"
         sendLabel={false}
         searchable={false}
@@ -446,6 +478,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("to_marriage_budget", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Profile Handled"
         sendLabel={false}
         searchable={false}
@@ -456,6 +489,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("profile_handled", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Profile Created"
         sendLabel={false}
         searchable={false}
@@ -483,6 +517,7 @@ export const AdvanceSearchFilter = ({
         onChange={(e) => handleChange("to_registration_date", e.target.value)}
       />
       <DropDown
+        showLabel={false}
         placeholder=""
         sendLabel={false}
         searchable={false}
@@ -493,6 +528,7 @@ export const AdvanceSearchFilter = ({
         onChange={(val) => handleChange("active", val)}
       />
       <DropDown
+        showLabel={false}
         placeholder="Client Type"
         sendLabel={false}
         searchable={false}
@@ -505,6 +541,7 @@ export const AdvanceSearchFilter = ({
 
       {/* Row 11 */}
       <DropDown
+        showLabel={false}
         placeholder="Disability"
         sendLabel={false}
         searchable={false}

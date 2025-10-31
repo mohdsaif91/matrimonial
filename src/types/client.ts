@@ -110,6 +110,7 @@ export interface ClientDocumentsProps {
 
 export interface ClientData {
   client_id: number;
+  id?: number;
   modules: Module[];
   client_documents: ClientDocumentsProps[];
 }

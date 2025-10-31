@@ -167,4 +167,10 @@ export const ROUTE = {
     UPDATE: "v1/client-responses",
     DELETE: "v1/client-responses",
   },
+  SHORT_LIST: {
+    ADD: "v1/shortlists",
+    GET: "v1/shortlists",
+    UPDATE: "v1/shortlists",
+    DELETE: "v1/shortlists",
+  },
 };

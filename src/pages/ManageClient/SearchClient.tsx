@@ -1,10 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import ClientFilterForm from "../../component/ManageClient/ClientFilter";
-import { deleteClientList, fetchClientList } from "../../api/client";
-import LoadingPage from "../Loading/Loading";
-import { ColumnDef } from "@tanstack/react-table";
-import Table from "../../component/table/Table";
-import Button from "../../component/form/Button";
 import {
   Pencil,
   Eye,
@@ -12,17 +6,23 @@ import {
   SquarePlus,
   List,
   ChevronDown,
-  ChevronUp,
   Info,
 } from "lucide-react";
-import { ClientData } from "../../types/client";
-import Pagination from "../../component/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import ProfileCard from "./Components/ProfileCard";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { AdvanceSearchFilter } from "./ClientAdvanceSearch/AdvanceSearchFilter";
+import { ColumnDef } from "@tanstack/react-table";
+import { ClientData } from "../../types/client";
+import { fetchClientList } from "../../api/client";
+import LoadingPage from "../Loading/Loading";
+import Table from "../../component/table/Table";
+import Pagination from "../../component/Pagination";
+import Button from "../../component/form/Button";
 import TableInfoPopup from "../../component/table/TableInfoPopup";
+import Checkbox from "../../component/form/Checkbox";
+import { addShortList } from "../../api/shortList";
 
 const initialPaginationData = {
   current_page: 1,
@@ -30,14 +30,26 @@ const initialPaginationData = {
   per_page: 30,
 };
 
-export default function ClientList() {
+export default function SearchClient() {
   const [paginationData, setPaginationData] = useState({
     ...initialPaginationData,
   });
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedClient, setSelectClient] = useState<any[]>([]);
+  const [selectClientDetails, setSelectedClientDetails] = useState(null);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { state } = useLocation();
+
+  useEffect(() => {
+    console.log(state.data, " <>? UseEffect <>?");
+
+    if (state && state.profileData !== selectClientDetails) {
+      setSelectedClientDetails({ ...state.profileData });
+    }
+  }, [state]);
+  console.log(selectClientDetails, " <>? MAin");
   const {
     data: clientListData,
     error: clientListError,
@@ -55,16 +67,53 @@ export default function ClientList() {
     retry: false,
   });
 
+  const mutation = useMutation({
+    mutationFn: addShortList,
+    onSuccess: (data) => {
+      // invalidate or refresh client list queries
+      queryClient.invalidateQueries({ queryKey: ["clients-short-list"] });
+      toast(`Successfully Short listed client`);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding Short list client:", error);
+      alert(error.response?.data?.message || "Failed to add Short list client");
+    },
+  });
+
   const columns: ColumnDef<ClientData>[] = [
     {
+      header: "Shortlist Select",
+      cell: ({ row }) => {
+        const { id } = row.original;
+        return (
+          <Checkbox
+            checked={selectedClient.includes(id)}
+            onChange={(checked) => {
+              if (checked) {
+                selectedClient.push(id);
+                setSelectClient([...selectedClient]);
+              } else {
+                const removedClientID = selectedClient.filter(
+                  (f) => f != clientListData
+                );
+                setSelectClient([...removedClientID]);
+              }
+            }}
+            id=""
+            required={false}
+            label=""
+          />
+        );
+      },
+    },
+    {
       accessorKey: "status",
-      header: "Profile Photo	",
+      header: "Profile Photo",
       cell: ({ row }) => {
         const { client_documents } = row.original;
         const mainPhoto = client_documents.find(
           (f) => f.file_type === "main_photo"
         );
-        console.log(mainPhoto, " <>?");
         return (
           <img
             alt="miain_photo"
@@ -78,7 +127,6 @@ export default function ClientList() {
       accessorKey: "name",
       header: "Name | Profile ID | Lead ID | DOB",
       cell: ({ row }) => {
-        console.log(row.original);
         const { items } = row.original;
         const leadValue = items.lead_id?.value;
         return (
@@ -91,36 +139,22 @@ export default function ClientList() {
     },
     {
       header: "Profile Sent",
-      cell: ({ row }) => {
-        const isExpanded = row.getIsExpanded();
-        return (
-          <div className="flex">
-            <span>{3}</span>
-            {isExpanded ? (
-              <ChevronUp
-                size={24}
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent row click conflict
-                  row.toggleExpanded();
-                }}
-              />
-            ) : (
-              <ChevronDown
-                size={24}
-                className="cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation(); // prevent row click conflict
-                  row.toggleExpanded();
-                }}
-              />
-            )}
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <div className="flex">
+          <span>{3}</span>
+          <ChevronDown
+            size={24}
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation(); // prevent row click conflict
+              row.toggleExpanded();
+            }}
+          />
+        </div>
+      ),
     },
     {
-      accessorKey: "handledBy",
+      accessorKey: "handleBy",
       header: "Handle By | Sex | Height",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -137,7 +171,7 @@ export default function ClientList() {
       },
     },
     {
-      accessorKey: "astroligically",
+      accessorKey: "Astrologically",
       header: "Astrologically | Caste | Gotra | Marital Status",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -155,7 +189,7 @@ export default function ClientList() {
       },
     },
     {
-      accessorKey: "education",
+      accessorKey: "Education",
       header: "Education | Occupation | Personal Income | Annual Income",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -171,7 +205,7 @@ export default function ClientList() {
       },
     },
     {
-      accessorKey: "clientModile",
+      accessorKey: "clientMobile",
       header: "Client Mobile | Client Email",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -227,14 +261,7 @@ export default function ClientList() {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex flex-col gap-2">
-          <Button
-            text="Search Profile"
-            onClick={() =>
-              navigate("/search-profile", {
-                state: { profileData: row.original },
-              })
-            }
-          />
+          <Button text="Send Profile" />
           <div className="flex flex-row justify-between">
             <Eye size={16} className="cursor-pointer text-gray-600" />
             <Pencil
@@ -259,19 +286,6 @@ export default function ClientList() {
       ),
     },
   ];
-  // deleteClientList
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteClientList,
-    onSuccess: () => {
-      toast("Successfully deleted Clients");
-      queryClient.invalidateQueries({ queryKey: ["client-list"] });
-    },
-    onError: (error: any) => {
-      console.error("❌ Error in deleting Clients:", error);
-      toast(error.response?.data?.message || "Failed to delete Clients");
-    },
-  });
 
   if (clientListLoading) {
     return <LoadingPage />;
@@ -298,45 +312,62 @@ export default function ClientList() {
       }
     : initialPaginationData;
 
-  const expandedComponent = ({ data }: { data: any }) => {
-    return (
-      <div className="flex justify-start">
-        <ProfileCard
-          image={
-            data.original.client_documents?.find(
-              (doc: any) => doc.file_type === "main_photo"
-            )?.file_path || "https://via.placeholder.com/150"
-          }
-          name={data.original.items?.client_name?.value || "N/A"}
-          age={data.original.items?.age?.value || "-"}
-          dateTime={data.original.items?.created_at?.value || "N/A"}
-          onAttachProfile={() => console.log("Attach clicked", data.original)}
-          onAddResponse={() => {
-            console.log("Response clicked", data.original);
-            setOpenModal({ flag: true, data });
-          }}
-        />
-      </div>
-    );
-  };
+  const clientName = selectClientDetails
+    ? selectClientDetails?.items?.client_name?.value
+    : "";
+  const clientId = selectClientDetails ? selectClientDetails?.id : "";
 
+  const partnerPrefrence = selectClientDetails
+    ? selectClientDetails.items.partner_preferences.value
+    : "";
   return (
     <div className="">
       <ToastContainer />
+      {selectClientDetails && (
+        <div className="p-2">
+          <p>
+            Advance Search Match for (Client Name: {clientName} ({clientId}))
+          </p>
+          <p>Partner Preferences : {partnerPrefrence}</p>
+        </div>
+      )}
       <div className="">
-        <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" />
+        <AdvanceSearchFilter
+          onSubmit={(filter) => {}}
+          onReset={(filter) => {}}
+        />
       </div>
-      <div className="mt-2 mb-2">
-        <div className="flex justify-end p-4 bg-[#fff]">
-          <Info
-            fill="red"
-            className="cursor-pointer"
-            onClick={() => setModalOpen(true)}
-          />
-          <TableInfoPopup
-            isOpen={modalOpen}
-            onClose={() => setModalOpen(false)}
-          />
+      <div className="mt-2 mb-2 bg-[#fff]">
+        <div className="flex justify-between p-4">
+          <div>
+            <Button
+              loading={mutation.isPending}
+              text="Shortlist"
+              className="mr-2"
+              onClick={() => {
+                if (clientId && clientId !== "") {
+                  const shortListObj = {
+                    client_id: clientId,
+                    shortlisted_by: 1,
+                    shortlisted_client_ids: selectedClient,
+                  };
+                  mutation.mutate(shortListObj);
+                }
+              }}
+            />
+            Short list client selected-{selectedClient.length}
+          </div>
+          <div className="flex justify-end">
+            <Info
+              fill="red"
+              className="cursor-pointer"
+              onClick={() => setModalOpen(true)}
+            />
+            <TableInfoPopup
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+            />
+          </div>
         </div>
         <Table columns={columns} data={transformedClientList || []} />
         <Pagination

@@ -26,7 +26,9 @@ export function DateTimePicker({
           dateFormat={dateFormat}
           required={required}
           showYearPicker={showYear}
-          className="rounded-xl px-3 py-2 bg-[#F0F3F8] outline-[#465dff] w-full"
+          className={`rounded-xl px-3 py-2 bg-[#F0F3F8] outline-[#465dff] w-full ${
+            showLabel ? "" : "placeholder:text-[#000]"
+          }`}
           selected={dateValue}
           onChange={(daXzte) => date && onChange(date)}
           showYearDropdown
