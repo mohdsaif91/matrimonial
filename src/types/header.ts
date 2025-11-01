@@ -4,13 +4,14 @@ export interface MenuItem {
   id: number | string;
   text: string;
   link?: string;
+  show: boolean;
   children?: MenuItem[];
 }
 
 export interface HeaderLink extends MenuItem {
   id: number;
   text: string;
-  hide: boolean;
+  show: boolean;
   link?: string;
   element: JSX.Element;
   children: HeaderLink[];

@@ -7,7 +7,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 import ProfileComponent from "../component/ProfileComponent";
 import { headerLinks } from "../data/header";
-import { HeaderProps, MenuItem } from "../types/header";
+import { HeaderLink, HeaderProps, MenuItem } from "../types/header";
 import ousplLogo from "../assets/one_unit_sol.png";
 
 function Header({ className }: HeaderProps) {
@@ -60,18 +60,23 @@ function Header({ className }: HeaderProps) {
             ref={menuRef}
             className="flex flex-col md:flex-row md:space-x-4 space-y-6 md:space-y-0 text-white text-lg md:text-base p-4 md:p-0 gap-3 z-[99]"
           >
-            {headerLinks.map((headerItem: MenuItem) => (
+            {headerLinks.map((headerItem) => (
               <li
-                key={headerItem.id}
+                key={headerItem && headerItem.id}
                 className="relative group lg:mr-1 md:mr-0"
               >
-                {headerItem.children && headerItem.children.length > 0 ? (
+                {headerItem &&
+                headerItem.children &&
+                headerItem &&
+                headerItem.children.length > 0 ? (
                   <>
                     <button
                       className="cursor-pointer py-2 md:py-0 md:text-[14.4px] lg:text-[15px] group flex items-center gap-1"
-                      onClick={() => setLinkMenuOpen(headerItem.text)}
+                      onClick={() =>
+                        setLinkMenuOpen(headerItem && headerItem.text)
+                      }
                     >
-                      {headerItem.text}
+                      {headerItem && headerItem.text}
                       <ChevronDown size={18} />
                     </button>
                     <ul
@@ -79,68 +84,77 @@ function Header({ className }: HeaderProps) {
                         linkMenuOpen === headerItem.text ? "block" : "hidden"
                       }`}
                     >
-                      {headerItem.children.map((child) => {
-                        return child.children && !child.link ? (
-                          <li key={child.id} className="relative">
-                            <button
-                              className="cursor-pointer px-4 py-2 flex items-center hover:bg-gray-100 text-sm w-full justify-between"
-                              onClick={() => setinnerLinkMenuOpen(child.text)}
-                            >
-                              <div>{child.text}</div>
-                              <div>
-                                <ChevronRight className="ml-1" size={18} />
-                              </div>
-                            </button>
-                            <ul
-                              className={`absolute left-full top-0 bg-white text-black shadow-lg rounded w-max z-[99] ${
-                                innerLinkMenuOpen === child.text
-                                  ? "block"
-                                  : "hidden"
-                              }`}
-                            >
-                              {child.children.map((innerChildItem) => (
-                                <li key={innerChildItem.id}>
-                                  <Link
-                                    to={innerChildItem.link}
-                                    className="px-4 py-2 flex items-center hover:bg-gray-100 text-sm"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setLinkMenuOpen("");
-                                      setinnerLinkMenuOpen("");
-                                      setMenuOpen(false);
-                                    }}
-                                  >
-                                    {innerChildItem.text}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </li>
-                        ) : (
-                          <li key={child.id}>
-                            <Link
-                              to={child.link}
-                              className="px-4 py-2 flex items-center hover:bg-gray-100 text-sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setLinkMenuOpen("");
-                                setMenuOpen(false);
-                              }}
-                            >
-                              {child.text}
-                            </Link>
-                          </li>
-                        );
-                      })}
+                      {headerItem &&
+                        headerItem.children.map((child) => {
+                          return child.children && !child.link ? (
+                            <li key={child.id} className="relative">
+                              <button
+                                className="cursor-pointer px-4 py-2 flex items-center hover:bg-gray-100 text-sm w-full justify-between"
+                                onClick={() => setinnerLinkMenuOpen(child.text)}
+                              >
+                                <div>{child.text}</div>
+                                <div>
+                                  <ChevronRight className="ml-1" size={18} />
+                                </div>
+                              </button>
+                              <ul
+                                className={`absolute left-full top-0 bg-white text-black shadow-lg rounded w-max z-[99] ${
+                                  innerLinkMenuOpen === child.text
+                                    ? "block"
+                                    : "hidden"
+                                }`}
+                              >
+                                {child.children.map((innerChildItem) => {
+                                  console.log(innerChildItem.show, " <>?");
+
+                                  if (innerChildItem.show) {
+                                    return (
+                                      <li key={innerChildItem.id}>
+                                        <Link
+                                          to={innerChildItem.link || "#"}
+                                          className="px-4 py-2 flex items-center hover:bg-gray-100 text-sm"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setLinkMenuOpen("");
+                                            setinnerLinkMenuOpen("");
+                                            setMenuOpen(false);
+                                          }}
+                                        >
+                                          {innerChildItem.text}
+                                        </Link>
+                                      </li>
+                                    );
+                                  } else {
+                                    console.log(innerChildItem, " <>? False");
+                                  }
+                                })}
+                              </ul>
+                            </li>
+                          ) : (
+                            <li key={child.id}>
+                              <Link
+                                to={child.link || "#"}
+                                className="px-4 py-2 flex items-center hover:bg-gray-100 text-sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setLinkMenuOpen("");
+                                  setMenuOpen(false);
+                                }}
+                              >
+                                {child.text}
+                              </Link>
+                            </li>
+                          );
+                        })}
                     </ul>
                   </>
                 ) : (
                   <Link
-                    to={headerItem.link}
+                    to={(headerItem && headerItem.link) || "#"}
                     className="block py-2 md:py-0 text-[14.4px]"
                     onClick={() => setMenuOpen(false)}
                   >
-                    {headerItem.text}
+                    {headerItem && headerItem.text}
                   </Link>
                 )}
               </li>

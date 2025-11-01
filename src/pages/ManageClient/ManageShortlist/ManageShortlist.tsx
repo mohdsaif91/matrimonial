@@ -1,16 +1,15 @@
-import React from "react";
-import ManageShortlistFilters from "./ManageShortlistFilters";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { ClientResponseProps } from "../../../types/clientResponse";
-import { fetchClientResponse } from "../../../api/clientResponse";
 import { ColumnDef } from "@tanstack/react-table";
 import { toast, ToastContainer } from "react-toastify";
+import { Eye } from "lucide-react";
+
+import ManageShortlistFilters from "./ManageShortlistFilters";
 import Table from "../../../component/table/Table";
 import Pagination from "../../../component/Pagination";
 import LoadingPage from "../../Loading/Loading";
 import { fetchShortList } from "../../../api/shortList";
-import { Eye } from "lucide-react";
+import { ClientDetailsResponseProps } from "../../../types/clientResponse";
 
 const initialPaginationData = {
   current_page: 1,
@@ -26,7 +25,7 @@ export default function ManageShortlist() {
     error: clientShortListError,
     isLoading: clientShortListLoading,
   } = useQuery({
-    queryKey: ["clients-short-list", "pending"], // include page number
+    queryKey: ["clients-short-list", "all"], // include page number
     queryFn: ({ queryKey }) => {
       const [, status] = queryKey;
       return fetchShortList(status);
@@ -34,34 +33,55 @@ export default function ManageShortlist() {
     retry: false,
   });
 
-  const columns: ColumnDef<ClientResponseProps>[] = [
+  const columns: ColumnDef<ClientDetailsResponseProps>[] = [
     {
       accessorKey: "status",
       header: "Profile Id",
+      cell: ({ row }) => {
+        console.log(row.original);
+        return <div>{row.original.client_id}</div>;
+      },
     },
     {
       accessorKey: "name",
       header: "Client Name",
+      cell: ({ row }) => {
+        console.log(row.original);
+        return <div>{row.original.form_data.client_name}</div>;
+      },
     },
     {
       header: "Phone",
+      cell: ({ row }) => {
+        console.log(row.original);
+        return <div>{row.original.form_data.mobile_number}</div>;
+      },
     },
     {
       accessorKey: "shortlist_count",
       header: "Pending for Approval",
+      cell: ({ getValue }) => {
+        return <div className="ml-3">{getValue()}</div>;
+      },
     },
     {
       id: "actions",
       header: "Action",
       cell: ({ row }) => (
         <div className="flex flex-col gap-2 cursor-pointer">
-          <Eye />
+          <Eye
+            onClick={() =>
+              navigate("/pendingApproveShortlist", {
+                state: {
+                  shortlistData: row.original,
+                },
+              })
+            }
+          />
         </div>
       ),
     },
   ];
-  // deleteClientList
-
   const deleteMutation = useMutation({
     // mutationFn: deleteClientList,
     onSuccess: () => {
@@ -77,8 +97,6 @@ export default function ManageShortlist() {
   if (clientShortListLoading) {
     return <LoadingPage />;
   }
-
-  console.log(clientShortListData, " <>?<>?");
 
   const transformedClientList = clientShortListData
     ? clientShortListData.data

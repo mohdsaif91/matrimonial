@@ -12,6 +12,14 @@ export async function fetchShortList(status: string) {
   return response.data;
 }
 
+export async function getPendingRequestByClientId(clientId: any) {
+  const response = await api.get(`${ROUTE.SHORT_LIST.GET}/client/${clientId}`);
+  return response.data;
+}
+
+export async function approveShortlist() {}
+export async function rejectShortlist() {}
+
 export async function updateShortList(data: ShortListProps) {
   //   const { name, status, country_id, id } = data;
   //   const response = await api.put(`${ROUTE.SHORT_LIST.UPDATE}/${id}`, {
