@@ -137,18 +137,18 @@ export default function PendingApprovalShortlist() {
     },
   ];
 
-  const mutation = useMutation({
-    mutationFn: addShortList,
-    onSuccess: (data) => {
-      // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["clients-short-list"] });
-      toast(`Successfully Short listed client`);
-    },
-    onError: (error: any) => {
-      console.error("❌ Error adding Short list client:", error);
-      alert(error.response?.data?.message || "Failed to add Short list client");
-    },
-  });
+  //   const mutation = useMutation({
+  //     mutationFn: addShortList,
+  //     onSuccess: (data) => {
+  //       // invalidate or refresh client list queries
+  //       queryClient.invalidateQueries({ queryKey: ["clients-short-list"] });
+  //       toast(`Successfully Short listed client`);
+  //     },
+  //     onError: (error: any) => {
+  //       console.error("❌ Error adding Short list client:", error);
+  //       alert(error.response?.data?.message || "Failed to add Short list client");
+  //     },
+  //   });
 
   if (acceptRejecttLoading) {
     return <LoadingPage />;
