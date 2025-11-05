@@ -10,7 +10,7 @@ import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import {
   addClientFormModule,
   updateClientFormModule,
-} from "../../../api/clientFormModule";
+} from "../../../service/clientFormModule";
 import { ClientModuleProps } from "../../../types/clientModule";
 
 const initialFormItem = {

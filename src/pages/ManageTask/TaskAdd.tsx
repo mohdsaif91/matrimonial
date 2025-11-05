@@ -4,17 +4,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast, ToastContainer } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TaskProps } from "../../types/task";
-import { addTask, updateTask } from "../../api/task";
+import { addTask, updateTask } from "../../service/task";
 import TextArea from "../../component/form/TextArea";
 import LoadingPage from "../Loading/Loading";
-import { fetchTaskCategory } from "../../api/taskCategory";
+import { fetchTaskCategory } from "../../service/taskCategory";
 import { DropDown } from "../../component/form/SearchableDropdown";
 import { DateTimePicker } from "../../component/form/DateField";
 import { taskPriorityOptions } from "../../data/task";
 import Button from "../../component/form/Button";
 import { BackNavigationButton } from "../../component/BackNavigationButton";
 import { getLabelValue } from "../../util/ClientUtils";
-import { fetchManageUserAPI } from "../../api/manageUser";
+import { fetchManageUserAPI } from "../../service/manageUser";
 import moment from "moment";
 
 const initialTaskFormData = {

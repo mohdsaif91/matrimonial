@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addFormItem, updateFormItem } from "../../../api/clientForm";
+import { addFormItem, updateFormItem } from "../../../service/clientForm";
 import { ClientFormItem } from "../../../types/form";
 import {
   formItemOptions,
@@ -14,7 +14,7 @@ import {
 import { UpdateModuleProps } from "../../../types/module";
 import { toast, ToastContainer } from "react-toastify";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { fetchClientFormModule } from "../../../api/clientFormModule";
+import { fetchClientFormModule } from "../../../service/clientFormModule";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import Checkbox from "../../../component/form/Checkbox";

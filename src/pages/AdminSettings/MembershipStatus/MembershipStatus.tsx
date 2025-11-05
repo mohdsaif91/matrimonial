@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   deleteMembershipStatus,
   fetchMembershipStatus,
-} from "../../../api/membershipStatus";
+} from "../../../service/membershipStatus";
 
 export default function MembershipStatus() {
   const navigate = useNavigate();

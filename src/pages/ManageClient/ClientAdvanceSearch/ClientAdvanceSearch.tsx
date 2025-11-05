@@ -13,14 +13,14 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-import { fetchClientByFilters, fetchClientList } from "../../../api/client";
+import { fetchClientByFilters, fetchClientList } from "../../../service/client";
 import LoadingPage from "../../Loading/Loading";
 import Table from "../../../component/table/Table";
 import Button from "../../../component/form/Button";
 import { ClientData } from "../../../types/client";
 import Pagination from "../../../component/Pagination";
 import { AdvanceSearchFilter } from "./AdvanceSearchFilter";
-import { fetchClientFormModule } from "../../../api/clientFormModule";
+import { fetchClientFormModule } from "../../../service/clientFormModule";
 
 const initialPaginationData = {
   current_page: 1,

@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../Loading/Loading";
 import Button from "../../component/form/Button";
 import Table from "../../component/table/Table";
-import { deleteTask, fetchTask } from "../../api/task";
+import { deleteTask, fetchTask } from "../../service/task";
 
 export default function TaskList() {
   const navigate = useNavigate();

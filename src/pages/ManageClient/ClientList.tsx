@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import ClientFilterForm from "../../component/ManageClient/ClientFilter";
-import { deleteClientList, fetchClientList } from "../../api/client";
+import { deleteClientList, fetchClientList } from "../../service/client";
 import LoadingPage from "../Loading/Loading";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "../../component/table/Table";

@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   approveShortlist,
   getPendingRequestByClientId,
-} from "../../../api/shortList";
+} from "../../../service/shortList";
 import LoadingPage from "../../Loading/Loading";
 import {
   ClientDetailsResponseProps,

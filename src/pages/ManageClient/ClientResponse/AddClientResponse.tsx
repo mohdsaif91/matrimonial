@@ -7,7 +7,7 @@ import TextArea from "../../../component/form/TextArea";
 import Button from "../../../component/form/Button";
 import { ClientResponseProps } from "../../../types/clientResponse";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddCleintResponse } from "../../../api/clientResponse";
+import { AddCleintResponse } from "../../../service/clientResponse";
 import { toast, ToastContainer } from "react-toastify";
 import { responseOptions } from "../../../data/clientResponse";
 

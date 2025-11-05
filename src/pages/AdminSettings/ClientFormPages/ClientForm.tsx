@@ -10,8 +10,8 @@ import LoadingPage from "../../Loading/Loading";
 import {
   fetchClientFormModule,
   fetchClientModuleById,
-} from "../../../api/clientFormModule";
-import { deleteFormItem } from "../../../api/clientForm";
+} from "../../../service/clientFormModule";
+import { deleteFormItem } from "../../../service/clientForm";
 import { toast } from "react-toastify";
 
 const ClientForm = () => {

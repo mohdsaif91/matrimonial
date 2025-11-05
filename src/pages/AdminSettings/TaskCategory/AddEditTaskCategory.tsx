@@ -11,8 +11,11 @@ import { LeadStatusProps } from "../../../types/leadStatus";
 import {
   addMembershipType,
   updateMembershipType,
-} from "../../../api/membershipType";
-import { addTaskCategory, updateTaskCategory } from "../../../api/taskCategory";
+} from "../../../service/membershipType";
+import {
+  addTaskCategory,
+  updateTaskCategory,
+} from "../../../service/taskCategory";
 
 const initialFormItem = {
   name: "",

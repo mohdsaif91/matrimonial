@@ -2,7 +2,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ModuleProps } from "../../../types/module";
 import Table from "../../../component/table/Table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deletePhotoAndBio, fetchPhotoAndBio } from "../../../api/photoAndBio";
+import {
+  deletePhotoAndBio,
+  fetchPhotoAndBio,
+} from "../../../service/photoAndBio";
 import { Trash } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";

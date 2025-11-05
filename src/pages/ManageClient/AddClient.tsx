@@ -30,30 +30,30 @@ import {
   AddClientImageApi,
   fetchSourcedFrom,
   updateClient,
-} from "../../api/client";
+} from "../../service/client";
 import LoadingPage from "../Loading/Loading";
 import { getFeildname, getLabelValue } from "../../util/ClientUtils";
-import { fetchClientFormModule } from "../../api/clientFormModule";
+import { fetchClientFormModule } from "../../service/clientFormModule";
 import { staticClientFormTab } from "../../types/form";
 import TextArea from "../../component/form/TextArea";
-import { fetchCasteAPI } from "../../api/caste";
-import { fetchSubCasteAPI } from "../../api/subCaste";
-import { fetchManageUserAPI } from "../../api/manageUser";
+import { fetchCasteAPI } from "../../service/caste";
+import { fetchSubCasteAPI } from "../../service/subCaste";
+import { fetchManageUserAPI } from "../../service/manageUser";
 import { DateTimePicker } from "../../component/form/DateField";
-import { fetchState } from "../../api/state";
-import { fetchVisaAPI } from "../../api/visa";
+import { fetchState } from "../../service/state";
+import { fetchVisaAPI } from "../../service/visa";
 import { ClientForm } from "../../types/module";
-import { fetchCity } from "../../api/city";
-import { fetchReligion } from "../../api/religion";
+import { fetchCity } from "../../service/city";
+import { fetchReligion } from "../../service/religion";
 import {
   FormSubmitItemProps,
   FormSubmitProps,
   ImageSubmitProps,
 } from "../../types/client";
-import { fetchPremiumCollege } from "../../api/premiumCollege";
-import { fetchQualificationAPI } from "../../api/qualification";
-import { fetchOccupationAPI } from "../../api/occupation";
-import { fetchCountry } from "../../api/country";
+import { fetchPremiumCollege } from "../../service/premiumCollege";
+import { fetchQualificationAPI } from "../../service/qualification";
+import { fetchOccupationAPI } from "../../service/occupation";
+import { fetchCountry } from "../../service/country";
 import { ImageField } from "../../component/form/ImageField";
 import { toast, ToastContainer } from "react-toastify";
 import CustomEditor from "../../component/form/RichText";

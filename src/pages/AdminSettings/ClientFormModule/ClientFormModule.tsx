@@ -10,7 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import {
   deleteClientFormModule,
   fetchClientFormModule,
-} from "../../../api/clientFormModule";
+} from "../../../service/clientFormModule";
 
 const ClientFormModule = () => {
   const navigate = useNavigate();

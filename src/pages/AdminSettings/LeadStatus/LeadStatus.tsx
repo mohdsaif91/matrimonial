@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/table/Table";
-import { deleteLeadStatus, fetchLeadStatus } from "../../../api/leadStatus";
+import { deleteLeadStatus, fetchLeadStatus } from "../../../service/leadStatus";
 
 export default function LeadStatus() {
   const navigate = useNavigate();

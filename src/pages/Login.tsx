@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import bgImage from "../assets/bg_image.webp";
 import ousplLogo from "../assets/ouspl_logo.png";
-import { loginApi } from "../api/auth";
+import { loginApi } from "../service/auth";
 
 function LoginPage() {
   const [email, setEmail] = useState("");

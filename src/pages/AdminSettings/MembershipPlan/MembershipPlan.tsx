@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   deleteMembershipPlan,
   fetchMembershipPlan,
-} from "../../../api/membershipPlan";
+} from "../../../service/membershipPlan";
 
 export default function MembershipPlan() {
   const navigate = useNavigate();

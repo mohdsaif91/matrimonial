@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   deleteMembershipType,
   fetchMembershipType,
-} from "../../../api/membershipType";
+} from "../../../service/membershipType";
 
 export default function MembershipType() {
   const navigate = useNavigate();

@@ -15,14 +15,14 @@ import { useEffect, useState } from "react";
 import { AdvanceSearchFilter } from "./ClientAdvanceSearch/AdvanceSearchFilter";
 import { ColumnDef } from "@tanstack/react-table";
 import { ClientData } from "../../types/client";
-import { fetchClientList } from "../../api/client";
+import { fetchClientList } from "../../service/client";
 import LoadingPage from "../Loading/Loading";
 import Table from "../../component/table/Table";
 import Pagination from "../../component/Pagination";
 import Button from "../../component/form/Button";
 import TableInfoPopup from "../../component/table/TableInfoPopup";
 import Checkbox from "../../component/form/Checkbox";
-import { addShortList } from "../../api/shortList";
+import { addShortList } from "../../service/shortList";
 import { User } from "../../types/header";
 
 const initialPaginationData = {

@@ -7,9 +7,9 @@ import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { addIncome, updateIncome } from "../../../api/income";
+import { addIncome, updateIncome } from "../../../service/income";
 import { LeadStatusProps } from "../../../types/leadStatus";
-import { addLeadStatus, updateLeadStatus } from "../../../api/leadStatus";
+import { addLeadStatus, updateLeadStatus } from "../../../service/leadStatus";
 
 const initialFormItem = {
   name: "",

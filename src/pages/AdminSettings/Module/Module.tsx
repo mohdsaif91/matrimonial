@@ -6,7 +6,7 @@ import { Pencil, Trash } from "lucide-react";
 import { ModuleProps } from "../../../types/module";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteModuleAPI, fetchModule } from "../../../api/module";
+import { deleteModuleAPI, fetchModule } from "../../../service/module";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 

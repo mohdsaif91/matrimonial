@@ -8,7 +8,7 @@ import ManageShortlistFilters from "./ManageShortlistFilters";
 import Table from "../../../component/table/Table";
 import Pagination from "../../../component/Pagination";
 import LoadingPage from "../../Loading/Loading";
-import { fetchShortList } from "../../../api/shortList";
+import { fetchShortList } from "../../../service/shortList";
 import { ClientDetailsResponseProps } from "../../../types/clientResponse";
 
 const initialPaginationData = {

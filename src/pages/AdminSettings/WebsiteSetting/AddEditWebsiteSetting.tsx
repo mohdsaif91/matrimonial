@@ -7,9 +7,12 @@ import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { gendereOptions } from "../../../data/manageUser";
-import { addManageUserAPI, updateManageUserAPI } from "../../../api/manageUser";
+import {
+  addManageUserAPI,
+  updateManageUserAPI,
+} from "../../../service/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { fetchRole } from "../../../api/roles";
+import { fetchRole } from "../../../service/roles";
 import { getLabelValue } from "../../../util/ClientUtils";
 import { typeOptions, websiteTypeOptions } from "../../../data/adminSetting";
 import TextArea from "../../../component/form/TextArea";

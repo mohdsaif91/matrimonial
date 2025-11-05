@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { ClientResponseProps } from "../../../types/clientResponse";
-import { fetchClientResponse } from "../../../api/clientResponse";
+import { fetchClientResponse } from "../../../service/clientResponse";
 import { ColumnDef } from "@tanstack/react-table";
 import { toast, ToastContainer } from "react-toastify";
 import ClientResponseFilter from "./ClientResponseFilter";

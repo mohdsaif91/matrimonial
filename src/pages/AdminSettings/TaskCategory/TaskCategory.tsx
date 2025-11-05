@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   deleteTaskCategory,
   fetchTaskCategory,
-} from "../../../api/taskCategory";
+} from "../../../service/taskCategory";
 
 export default function TaskCategory() {
   const navigate = useNavigate();

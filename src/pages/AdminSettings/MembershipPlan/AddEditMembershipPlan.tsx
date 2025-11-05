@@ -8,11 +8,11 @@ import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { LeadStatusProps } from "../../../types/leadStatus";
-import { addLeadStatus, updateLeadStatus } from "../../../api/leadStatus";
+import { addLeadStatus, updateLeadStatus } from "../../../service/leadStatus";
 import {
   addMembershipPlan,
   updateMembershipPlan,
-} from "../../../api/membershipPlan";
+} from "../../../service/membershipPlan";
 
 const initialFormItem = {
   name: "",

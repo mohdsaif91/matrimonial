@@ -4,9 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addManageUserAPI, updateManageUserAPI } from "../../../api/manageUser";
+import {
+  addManageUserAPI,
+  updateManageUserAPI,
+} from "../../../service/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { fetchRole } from "../../../api/roles";
+import { fetchRole } from "../../../service/roles";
 import TextArea from "../../../component/form/TextArea";
 
 const initialFormItem = {
