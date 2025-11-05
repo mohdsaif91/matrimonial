@@ -1,7 +1,6 @@
-import { s } from "framer-motion/client";
-import { ClientFormItem } from "../types/form";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { ClientFormItem } from "../types/form.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addFormItem(formItem: ClientFormItem) {
   const response = await api.post(ROUTE.ADD_FORM_ITEM.POST, { ...formItem });

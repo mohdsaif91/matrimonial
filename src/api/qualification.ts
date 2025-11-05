@@ -1,6 +1,6 @@
-import { QualificationProps } from "../types/qualification";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { QualificationProps } from "../types/qualification.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addQualificationAPI(relData: QualificationProps) {
   const response = await api.post(ROUTE.QUALIFICATION.ADD, { ...relData });

@@ -1,6 +1,6 @@
-import { Login } from "../types/auth";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { Login } from "../types/auth.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function loginApi(credentials: Login) {
   const formData = new FormData();

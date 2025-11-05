@@ -1,6 +1,6 @@
-import { ClientModuleProps } from "../types/clientModule";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { ClientModuleProps } from "../types/clientModule.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addClientFormModule(relData: ClientModuleProps) {
   const response = await api.post(ROUTE.CLIENT_MODULE.ADD, { ...relData });

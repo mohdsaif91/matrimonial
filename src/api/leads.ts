@@ -1,6 +1,6 @@
-import { LeadsProps } from "../types/leads";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { LeadsProps } from "../types/leads.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addLead(data: LeadsProps) {
   const response = await api.post(ROUTE.LEAD.ADD, { ...data });

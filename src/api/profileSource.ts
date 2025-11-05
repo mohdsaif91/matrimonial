@@ -1,6 +1,6 @@
-import { ProfileSourceProps } from "../types/profileSource";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { ProfileSourceProps } from "../types/profileSource.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addProfileSource(relData: ProfileSourceProps) {
   const response = await api.post(ROUTE.PROFILE_SOURCE.ADD, { ...relData });

@@ -1,12 +1,6 @@
-import {
-  Client,
-  ClientModuleField,
-  FormSubmitProps,
-  ImageSubmitProps,
-  UpdateFormSubmitProps,
-} from "../types/client";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { FormSubmitProps } from "../types/client.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function AddClientApi(clientData: FormSubmitProps) {
   const response = await api.post(ROUTE.CLIENTS.POST, clientData);

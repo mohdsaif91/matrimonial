@@ -1,5 +1,5 @@
-import api from "./axios";
-import { ROUTE } from "./route";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export const fetchPhotoAndBio = async (id: string) => {
   const response = await api.get(`${ROUTE.CLIENTS.IMAGEPOST}/${id}`);

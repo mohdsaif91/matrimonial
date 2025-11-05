@@ -1,7 +1,6 @@
-import { LeadStatusProps } from "../types/leadStatus";
-import { TaskProps } from "../types/task";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { TaskProps } from "../types/task.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addTask(data: TaskProps) {
   const response = await api.post(ROUTE.TASK.ADD, { ...data });

@@ -1,9 +1,11 @@
-import { FormSubmitProps } from "../types/client";
-import { ClientResponseProps } from "../types/clientResponse";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { FormSubmitProps } from "../types/client.js";
+import { ClientDetailsResponseProps } from "../types/clientResponse.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
-export async function AddCleintResponse(clientResData: ClientResponseProps) {
+export async function AddCleintResponse(
+  clientResData: ClientDetailsResponseProps
+) {
   const response = await api.post(ROUTE.CLIENT_RESPONSE.ADD, clientResData);
   return response.data;
 }

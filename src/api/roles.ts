@@ -1,6 +1,6 @@
-import { RoleProps } from "../types/roles";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { RoleProps } from "../types/roles.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export const getPermissionData = async () => {
   const response = await api.get(ROUTE.PERMISSION.GET);

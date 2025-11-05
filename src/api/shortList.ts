@@ -1,6 +1,6 @@
-import { ShortListProps } from "../types/shortList";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { ShortListProps } from "../types/shortList.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addShortList(relData: ShortListProps) {
   const response = await api.post(ROUTE.SHORT_LIST.ADD, { ...relData });

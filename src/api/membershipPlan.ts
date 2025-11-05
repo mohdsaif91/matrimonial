@@ -1,6 +1,6 @@
-import { LeadStatusProps } from "../types/leadStatus";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { LeadStatusProps } from "../types/leadStatus.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addMembershipPlan(data: LeadStatusProps) {
   const response = await api.post(ROUTE.MEMBERSHIP_PLAN.ADD, { ...data });

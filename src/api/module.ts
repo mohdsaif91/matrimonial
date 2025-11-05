@@ -1,6 +1,6 @@
-import { ModuleProps, UpdateModuleProps } from "../types/module";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { ModuleProps, UpdateModuleProps } from "../types/module.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addModuleAPI(module: ModuleProps) {
   const response = await api.post(ROUTE.MODULE.ADD, { ...module });

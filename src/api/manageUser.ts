@@ -1,6 +1,6 @@
-import { ManageUserProps } from "../types/manageUser";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { ManageUserProps } from "../types/manageUser.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addManageUserAPI(relData: ManageUserProps) {
   const response = await api.post(ROUTE.MANAGE_USER.ADD, { ...relData });

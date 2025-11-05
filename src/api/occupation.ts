@@ -1,7 +1,6 @@
-import { OccupationProps } from "../types/occupation";
-import { QualificationProps } from "../types/qualification";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { OccupationProps } from "../types/occupation.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addOccupationAPI(relData: OccupationProps) {
   const response = await api.post(ROUTE.OCCUPATION.ADD, { ...relData });

@@ -1,6 +1,6 @@
-import { IncomeProps } from "../types/income";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { IncomeProps } from "../types/income.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addIncome(data: IncomeProps) {
   const response = await api.post(ROUTE.INCOME.ADD, { ...data });

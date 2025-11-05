@@ -1,6 +1,6 @@
-import { CountryProps } from "../types/country";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { CountryProps } from "../types/country.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addCity(relData: CountryProps) {
   const response = await api.post(ROUTE.CITY.ADD, { ...relData });

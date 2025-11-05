@@ -1,6 +1,6 @@
-import { ReligionProps } from "../types/religion";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { ReligionProps } from "../types/religion.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addSubCasteAPI(relData: ReligionProps) {
   const response = await api.post(ROUTE.SUB_CASTE.ADD, { ...relData });
