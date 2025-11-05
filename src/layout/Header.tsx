@@ -25,7 +25,6 @@ function Header({ className }: HeaderProps) {
 
   const queryClient = useQueryClient();
   const authUser = queryClient.getQueryData(["authUser"]);
-  console.log(authUser, " <>?");
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -105,8 +104,6 @@ function Header({ className }: HeaderProps) {
                                 }`}
                               >
                                 {child.children.map((innerChildItem) => {
-                                  console.log(innerChildItem.show, " <>?");
-
                                   if (innerChildItem.show) {
                                     return (
                                       <li key={innerChildItem.id}>

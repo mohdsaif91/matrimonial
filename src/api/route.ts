@@ -7,6 +7,7 @@ export const ROUTE = {
     POST: "v1/clients",
     DELETE: "v1/clients",
     IMAGEPOST: "v1/client-documents",
+    SEARCH: "v1/search",
   },
   ADD_FORM_ITEM: {
     GET: "v1/client-form-fields",
@@ -172,5 +173,6 @@ export const ROUTE = {
     GET: "v1/shortlists",
     UPDATE: "v1/shortlists",
     DELETE: "v1/shortlists",
+    APPROVE_REJECT: "v1/shortlists/client",
   },
 };

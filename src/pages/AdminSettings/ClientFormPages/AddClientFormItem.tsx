@@ -13,11 +13,11 @@ import {
 } from "../../../data/ClientForm";
 import { UpdateModuleProps } from "../../../types/module";
 import { toast, ToastContainer } from "react-toastify";
-import ButtonLoader from "../../Loading/ButtonLoader";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { fetchClientFormModule } from "../../../api/clientFormModule";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
+import Checkbox from "../../../component/form/Checkbox";
 
 const initialFormItem = {
   client_module_id: 0,
@@ -29,6 +29,7 @@ const initialFormItem = {
   status: false,
   div_css: "",
   field_type: "text",
+  show_in_advance_search: false,
 };
 
 function AddClientFormItem() {
@@ -36,9 +37,9 @@ function AddClientFormItem() {
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
+
   const { state } = useLocation();
   const navigate = useNavigate();
-
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -47,15 +48,9 @@ function AddClientFormItem() {
     }
   }, []);
 
-  const {
-    data: moduleData,
-    isLoading: moduleLoading,
-    refetch: clientModuleRefetch,
-  } = useQuery({
+  const { data: moduleData, isLoading: moduleLoading } = useQuery({
     queryKey: ["client-form-module-list"],
     queryFn: fetchClientFormModule,
-    refetchOnWindowFocus: false,
-    enabled: false,
   });
 
   const handleChange = (name: string, value: string) => {
@@ -146,8 +141,6 @@ function AddClientFormItem() {
         />
         <DropDown
           searchable={false}
-          onClick={() => clientModuleRefetch()}
-          loading={moduleLoading}
           label="Module"
           required
           name="module"
@@ -201,6 +194,12 @@ function AddClientFormItem() {
           name="divCss"
           value={formData.div_css}
           onChange={(e) => handleChange("div_css", e.target.value)}
+        />
+        <Checkbox
+          label="Advance Search Filter"
+          checked={formData.show_in_advance_search}
+          onChange={(val) => handleChange("show_in_advance_search", val)}
+          id={"search_in_advance_search"}
         />
       </div>
 

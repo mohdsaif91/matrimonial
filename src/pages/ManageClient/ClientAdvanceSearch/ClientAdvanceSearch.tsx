@@ -1,10 +1,9 @@
+import { toast, ToastContainer } from "react-toastify";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import ClientFilterForm from "../../../component/ManageClient/ClientFilter";
-import { deleteClientList, fetchClientList } from "../../../api/client";
-import LoadingPage from "../../Loading/Loading";
 import { ColumnDef } from "@tanstack/react-table";
-import Table from "../../../component/table/Table";
-import Button from "../../../component/form/Button";
 import {
   Pencil,
   Eye,
@@ -13,13 +12,15 @@ import {
   List,
   ChevronDown,
 } from "lucide-react";
+
+import { fetchClientByFilters, fetchClientList } from "../../../api/client";
+import LoadingPage from "../../Loading/Loading";
+import Table from "../../../component/table/Table";
+import Button from "../../../component/form/Button";
 import { ClientData } from "../../../types/client";
 import Pagination from "../../../component/Pagination";
-import { toast, ToastContainer } from "react-toastify";
-import moment from "moment";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { AdvanceSearchFilter } from "./AdvanceSearchFilter";
+import { fetchClientFormModule } from "../../../api/clientFormModule";
 
 const initialPaginationData = {
   current_page: 1,
@@ -28,11 +29,15 @@ const initialPaginationData = {
 };
 
 export default function ClientAdvanceSearch() {
+  const [filterData, setFilterData] = useState<any[] | null>(null);
   const [paginationData, setPaginationData] = useState({
     ...initialPaginationData,
   });
+  const [filters, setFilters] = useState<any>({});
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const {
     data: clientListData,
     error: clientListError,
@@ -48,6 +53,28 @@ export default function ClientAdvanceSearch() {
       return fetchClientList(pageNumber as number, perPage as number);
     },
     retry: false,
+    enabled: !filterData,
+  });
+
+  const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
+    useQuery({
+      queryKey: ["client-form-module-list"],
+      queryFn: fetchClientFormModule,
+      retry: false,
+      enabled: !filterData,
+    });
+
+  const mutation = useMutation({
+    mutationFn: fetchClientByFilters,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["client-list"] });
+      toast("Successfully fetched client by filter");
+      setFilterData(data.data);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding Form Item:", error);
+      toast(error.response?.data?.message || "Failed to add Form Item");
+    },
   });
 
   const columns: ColumnDef<ClientData>[] = [
@@ -59,7 +86,6 @@ export default function ClientAdvanceSearch() {
         const mainPhoto = client_documents.find(
           (f) => f.file_type === "main_photo"
         );
-        console.log(mainPhoto, " <>?");
         return (
           <img
             alt="miain_photo"
@@ -73,7 +99,6 @@ export default function ClientAdvanceSearch() {
       accessorKey: "name",
       header: "Name | Profile ID | Lead ID | DOB",
       cell: ({ row }) => {
-        console.log(row.original);
         const { items } = row.original;
         const leadValue = items.lead_id?.value;
         return (
@@ -233,36 +258,39 @@ export default function ClientAdvanceSearch() {
       ),
     },
   ];
-  // deleteClientList
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteClientList,
-    onSuccess: () => {
-      toast("Successfully deleted Clients");
-      queryClient.invalidateQueries({ queryKey: ["client-list"] });
-    },
-    onError: (error: any) => {
-      console.error("❌ Error in deleting Clients:", error);
-      toast(error.response?.data?.message || "Failed to delete Clients");
-    },
-  });
-
-  if (clientListLoading) {
+  if (clientListLoading || mutation.isPending || clientFromModuleLoading) {
     return <LoadingPage />;
   }
 
-  const transformedClientList =
-    clientListData &&
-    Array.isArray(clientListData.data) &&
-    clientListData.data.map((m: ClientData) => ({
-      id: m.client_id,
-      items: Object.fromEntries(
-        m.modules.flatMap((mm) =>
-          mm.fields.map((field) => [field.field_name, field])
-        )
-      ),
-      client_documents: m.client_documents,
-    }));
+  const handleChange = (updateFilter: any) => {
+    setFilters({ ...updateFilter });
+  };
+
+  console.log(filterData, " <>?<>?");
+
+  const transformedClientList = !filterData
+    ? clientListData &&
+      Array.isArray(clientListData.data) &&
+      clientListData.data.map((m: ClientData) => ({
+        id: m.client_id,
+        items: Object.fromEntries(
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
+        ),
+        client_documents: m.client_documents,
+      }))
+    : Array.isArray(filterData) &&
+      filterData.map((m: ClientData) => ({
+        id: m.client_id,
+        items: Object.fromEntries(
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
+        ),
+        client_documents: m.client_documents,
+      }));
 
   const handledPaginationData = clientListData
     ? {
@@ -272,13 +300,18 @@ export default function ClientAdvanceSearch() {
       }
     : initialPaginationData;
 
+  console.log(filters, " <>? MAIN FILGTER");
+
   return (
     <div className="">
       <ToastContainer />
       <div className="">
         <AdvanceSearchFilter
-          onSubmit={(filter) => {}}
-          onReset={(filter) => {}}
+          filters={filters}
+          onSubmit={(filter) => mutation.mutate({ search_fields: filter })}
+          onReset={() => setFilterData(null)}
+          clientFormModuleData={clientFormModuleData}
+          handleChangeMethod={handleChange}
         />
       </div>
       <div className="mt-2 mb-2">

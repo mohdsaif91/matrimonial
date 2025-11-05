@@ -17,7 +17,15 @@ export async function getPendingRequestByClientId(clientId: any) {
   return response.data;
 }
 
-export async function approveShortlist() {}
+export async function approveShortlist(obj: {
+  status: string;
+  shortlist_id: string;
+}) {
+  const response = await api.put(`${ROUTE.SHORT_LIST.APPROVE_REJECT}`, {
+    ...obj,
+  });
+  return response.data;
+}
 export async function rejectShortlist() {}
 
 export async function updateShortList(data: ShortListProps) {

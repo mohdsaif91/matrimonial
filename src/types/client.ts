@@ -155,6 +155,9 @@ export interface ClientModuleField {
 }
 
 export interface AdvanceSearchProps {
-  onSubmit: () => void;
+  onSubmit: (arr: any[]) => void;
   onReset: () => void;
+  clientFormModuleData: any[];
+  handleChangeMethod: (arr: any) => void;
+  filters: any;
 }

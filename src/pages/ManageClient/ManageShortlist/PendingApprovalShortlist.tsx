@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import moment from "moment";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import { Check, X } from "lucide-react";
+import { toast } from "react-toastify";
+
+import Table from "../../../component/table/Table";
+import {
+  approveShortlist,
+  getPendingRequestByClientId,
+} from "../../../api/shortList";
+import LoadingPage from "../../Loading/Loading";
 import {
   ClientDetailsResponseProps,
   ShortlistItemProps,
 } from "../../../types/clientResponse";
-import Table from "../../../component/table/Table";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getPendingRequestByClientId } from "../../../api/shortList";
-import { ColumnDef } from "@tanstack/react-table";
-import { Check, X } from "lucide-react";
-import LoadingPage from "../../Loading/Loading";
-import moment from "moment";
-import Button from "../../../component/form/Button";
 
 const initialClientData = {
   client_id: null,
@@ -23,13 +27,13 @@ export default function PendingApprovalShortlist() {
     useState<ClientDetailsResponseProps>(initialClientData);
 
   const { state } = useLocation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (state && state.shortlistData) {
       setClientData({ ...state.shortlistData });
     }
   }, [state]);
-  console.log(clientData);
 
   const {
     data: acceptRejecttData,
@@ -54,15 +58,17 @@ export default function PendingApprovalShortlist() {
       },
     },
     {
-      accessorKey: "status",
       header: "Client Name",
-      //   cell: ({ row }) => {
-      //     console.log(row.original);
-      //     return <div>{row.original.client_id}</div>;
-      //   },
+      cell: ({ row }) => {
+        const { form_values } = row.original;
+        return (
+          <div>
+            {form_values.client_name} ({form_values.client_id})
+          </div>
+        );
+      },
     },
     {
-      accessorKey: "name",
       header: "Profile",
       cell: ({ row }) => {
         const { form_values } = row.original;
@@ -80,7 +86,6 @@ export default function PendingApprovalShortlist() {
       },
     },
     {
-      accessorKey: "shortlist_count",
       header: "Height",
       cell: ({ row }) => {
         const { form_values } = row.original;
@@ -88,7 +93,6 @@ export default function PendingApprovalShortlist() {
       },
     },
     {
-      accessorKey: "shortlist_count",
       header: "Handle By",
       cell: ({ row }) => {
         const { form_values } = row.original;
@@ -96,7 +100,6 @@ export default function PendingApprovalShortlist() {
       },
     },
     {
-      accessorKey: "shortlist_count",
       header: "Preferences",
       cell: ({ row }) => {
         const { form_values } = row.original;
@@ -104,7 +107,6 @@ export default function PendingApprovalShortlist() {
       },
     },
     {
-      accessorKey: "shortlist_count",
       header: "Residence",
       cell: ({ row }) => {
         const { form_values } = row.original;
@@ -114,11 +116,17 @@ export default function PendingApprovalShortlist() {
       },
     },
     {
-      accessorKey: "shortlist_count",
       header: "Shortlisted by",
       cell: ({ row }) => {
-        const { form_values } = row.original;
-        return <div className="ml-3">{form_values.profile_handled}</div>;
+        console.log(acceptRejecttData[0], " <>?");
+
+        return (
+          <div className="ml-3 capitalize">
+            {acceptRejecttData &&
+              Array.isArray(acceptRejecttData.data) &&
+              acceptRejecttData.data[0].shortlisted_by_user_name}
+          </div>
+        );
       },
     },
     {
@@ -126,29 +134,40 @@ export default function PendingApprovalShortlist() {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex flex-row gap-2 cursor-pointer">
-          <div>
-            <Check onClick={() => {}} />
+          <div className="bg-green-600 p-2 rounded-[4px]">
+            <Check
+              onClick={() => {
+                const appObj = {
+                  shortlist_id: row.original?.shortlisted_client_id,
+                  status: "approved",
+                };
+                mutation.mutate({ ...appObj });
+                console.log(appObj, " <>?");
+              }}
+              color="#fff"
+            />
           </div>
-          <div>
-            <X onClick={() => {}} />
+          <div className="bg-red-600 p-2 rounded-[4px]">
+            <X onClick={() => {}} color="#fff" />
           </div>
         </div>
       ),
     },
   ];
 
-  //   const mutation = useMutation({
-  //     mutationFn: addShortList,
-  //     onSuccess: (data) => {
-  //       // invalidate or refresh client list queries
-  //       queryClient.invalidateQueries({ queryKey: ["clients-short-list"] });
-  //       toast(`Successfully Short listed client`);
-  //     },
-  //     onError: (error: any) => {
-  //       console.error("❌ Error adding Short list client:", error);
-  //       alert(error.response?.data?.message || "Failed to add Short list client");
-  //     },
-  //   });
+  const mutation = useMutation({
+    mutationFn: approveShortlist,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["clients-approve-reject-list"],
+      });
+      toast(`Successfully updated status`);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding updated status:", error);
+      alert(error.response?.data?.message || "Failed to add updated status");
+    },
+  });
 
   if (acceptRejecttLoading) {
     return <LoadingPage />;
@@ -157,7 +176,6 @@ export default function PendingApprovalShortlist() {
   const handledAcceptRejectData = acceptRejecttData
     ? acceptRejecttData.data[0].shortlisted_clients
     : [];
-  console.log(handledAcceptRejectData, " <>?");
 
   return (
     <div>

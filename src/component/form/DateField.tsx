@@ -14,8 +14,6 @@ export function DateTimePicker({
   const dateValue =
     typeof value === "string" && value ? new Date(value) : value;
 
-  console.log(dateValue, " <>? ", label);
-
   return (
     <div className="flex flex-col gap-1">
       {showLabel && (

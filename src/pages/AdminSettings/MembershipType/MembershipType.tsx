@@ -8,10 +8,6 @@ import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/table/Table";
 import {
-  deleteMembershipStatus,
-  fetchMembershipStatus,
-} from "../../../api/membershipStatus";
-import {
   deleteMembershipType,
   fetchMembershipType,
 } from "../../../api/membershipType";
@@ -100,6 +96,8 @@ export default function MembershipType() {
     return <LoadingPage />;
   }
 
+  const handleMembershipData = data ? data.data : [];
+
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
@@ -108,7 +106,7 @@ export default function MembershipType() {
         onClick={() => navigate("/addMembershipType")}
       />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={data.data || []} />
+        <Table columns={columns} data={handleMembershipData} />
       </div>
     </div>
   );

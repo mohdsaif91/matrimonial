@@ -96,7 +96,7 @@ export function DropDown({
         name={name}
         required={required}
         value={getSelectedValue() || null}
-        placeholder={`Select ${placeholder}`}
+        placeholder={`Select ${label}`}
         isClearable
         onChange={(item) => {
           const value: string = sendLabel ? item?.label : item?.value;

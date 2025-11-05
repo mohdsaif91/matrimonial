@@ -27,6 +27,11 @@ export async function fetchClientList(pageNumber: number, pageCount: number) {
   return response.data;
 }
 
+export async function fetchClientByFilters(filter: any) {
+  const response = await api.post(`${ROUTE.CLIENTS.SEARCH}`, { ...filter });
+  return response.data;
+}
+
 export async function deleteClientList(id: number) {
   const response = await api.delete(`${ROUTE.CLIENTS.DELETE}/${id}`);
   return response.data;

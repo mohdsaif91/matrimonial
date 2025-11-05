@@ -9,13 +9,13 @@ import { DrawerProvider } from "./context/DrawerContext.js";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <DrawerProvider>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </DrawerProvider>
-  </StrictMode>
+  // <StrictMode>
+  <DrawerProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </BrowserRouter>
+  </DrawerProvider>
+  // </StrictMode>
 );

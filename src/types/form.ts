@@ -39,6 +39,7 @@ export interface TimeFeildProps {
   onChange: (val: Date | string) => void;
   required: boolean;
   name: string;
+  showLabel: boolean;
 }
 export interface SelectFeildProps {
   label: string;
@@ -79,6 +80,7 @@ export interface ImageFieldProps {
   required: boolean;
   multiple?: boolean;
   formatType?: string;
+  showLabel?: boolean;
 }
 
 export interface RelOptions {
@@ -126,6 +128,7 @@ export interface ClientFormItem {
   status: boolean; // restricts values
   div_css: string;
   field_type: string;
+  show_in_advance_search: boolean;
 }
 
 export interface RichTextProps {
