@@ -3,24 +3,24 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast, ToastContainer } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateTask } from "../../../api/task";
+import { updateTask } from "../../../service/task";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import Button from "../../../component/form/Button";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { getLabelValue } from "../../../util/ClientUtils";
-import { fetchManageUserAPI } from "../../../api/manageUser";
+import { fetchManageUserAPI } from "../../../service/manageUser";
 import { LeadsProps } from "../../../types/leads";
 import { TextField } from "../../../component/form/TextField";
-import { fetchCountry } from "../../../api/country";
-import { fetchState } from "../../../api/state";
-import { fetchCity } from "../../../api/city";
+import { fetchCountry } from "../../../service/country";
+import { fetchState } from "../../../service/state";
+import { fetchCity } from "../../../service/city";
 import {
   leadStatus,
   lookingForOptions,
   personalIncomeOptions,
 } from "../../../data/ClientForm";
-import { addLead } from "../../../api/leads";
-import { fetchProfileSource } from "../../../api/profileSource";
+import { addLead } from "../../../service/leads";
+import { fetchProfileSource } from "../../../service/profileSource";
 
 const initialLeadData = {
   lead_name: "",

@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   deleteManageUserAPI,
   fetchManageUserAPI,
-} from "../../../api/manageUser";
+} from "../../../service/manageUser";
 
 export default function ManageUsers() {
   const navigate = useNavigate();

@@ -4,15 +4,19 @@ import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptions, statusOptionsCap } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
-import { fetchReligion } from "../../../api/religion";
+import { fetchReligion } from "../../../service/religion";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addCasteAPI, updateCasteAPI } from "../../../api/caste";
+import { addCasteAPI, updateCasteAPI } from "../../../service/caste";
 import { CountryProps } from "../../../types/country";
-import { addCountry, fetchCountry, updateCountry } from "../../../api/country";
+import {
+  addCountry,
+  fetchCountry,
+  updateCountry,
+} from "../../../service/country";
 import { CityProps } from "../../../types/city";
-import { addCity, updateCity } from "../../../api/city";
-import { fetchState } from "../../../api/state";
+import { addCity, updateCity } from "../../../service/city";
+import { fetchState } from "../../../service/state";
 import LoadingPage from "../../Loading/Loading";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 

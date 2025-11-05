@@ -7,8 +7,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/table/Table";
-import { deleteCountry } from "../../../api/country";
-import { deleteState, fetchState } from "../../../api/state";
+import { deleteCountry } from "../../../service/country";
+import { deleteState, fetchState } from "../../../service/state";
 
 const City = () => {
   const navigate = useNavigate();

@@ -6,10 +6,14 @@ import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addCountry, fetchCountry, updateCountry } from "../../../api/country";
+import {
+  addCountry,
+  fetchCountry,
+  updateCountry,
+} from "../../../service/country";
 import { StateProps } from "../../../types/state";
 import LoadingPage from "../../Loading/Loading";
-import { addState, updateState } from "../../../api/state";
+import { addState, updateState } from "../../../service/state";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {

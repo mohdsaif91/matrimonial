@@ -14,9 +14,9 @@ import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import {
   addProfileSource,
   updateProfileSource,
-} from "../../../api/profileSource";
+} from "../../../service/profileSource";
 import { IncomeProps } from "../../../types/income";
-import { addIncome, updateIncome } from "../../../api/income";
+import { addIncome, updateIncome } from "../../../service/income";
 
 const initialFormItem = {
   amount: 0,

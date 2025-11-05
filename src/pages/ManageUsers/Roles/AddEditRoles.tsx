@@ -7,7 +7,7 @@ import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Permission, PermissionFormData } from "../../../types/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { addRole, getPermissionData, updateRole } from "../../../api/roles";
+import { addRole, getPermissionData, updateRole } from "../../../service/roles";
 import Checkbox from "../../../component/form/Checkbox";
 import Table from "../../../component/table/Table";
 import { TextField } from "../../../component/form/TextField";

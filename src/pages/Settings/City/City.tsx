@@ -6,8 +6,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/table/Table";
-import { deleteCountry } from "../../../api/country";
-import { fetchCity } from "../../../api/city";
+import { deleteCountry } from "../../../service/country";
+import { fetchCity } from "../../../service/city";
 import { CityProps } from "../../../types/city";
 
 const City = () => {

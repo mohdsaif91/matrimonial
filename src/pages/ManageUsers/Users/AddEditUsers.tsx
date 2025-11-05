@@ -8,9 +8,12 @@ import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ManageUserProps } from "../../../types/manageUser";
 import { gendereOptions, roleOptions } from "../../../data/manageUser";
-import { addManageUserAPI, updateManageUserAPI } from "../../../api/manageUser";
+import {
+  addManageUserAPI,
+  updateManageUserAPI,
+} from "../../../service/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { fetchRole } from "../../../api/roles";
+import { fetchRole } from "../../../service/roles";
 import { getLabelValue } from "../../../util/ClientUtils";
 
 const initialFormItem = {

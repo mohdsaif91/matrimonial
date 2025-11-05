@@ -11,7 +11,7 @@ import { ProfileSourceProps } from "../../../types/profileSource";
 import {
   addProfileSource,
   updateProfileSource,
-} from "../../../api/profileSource";
+} from "../../../service/profileSource";
 
 const initialFormItem = {
   name: "",

@@ -6,17 +6,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/table/Table";
-import { deleteManageUserAPI } from "../../../api/manageUser";
-import { deleteLead, fetchLead } from "../../../api/leads";
+import { deleteManageUserAPI } from "../../../service/manageUser";
+import { deleteLead, fetchLead } from "../../../service/leads";
 import { LeadsProps } from "../../../types/leads";
-import { fetchCity } from "../../../api/city";
-import { fetchProfileSource } from "../../../api/profileSource";
+import { fetchCity } from "../../../service/city";
+import { fetchProfileSource } from "../../../service/profileSource";
 import LeadFilterForm from "./LeadsFilter";
 import Checkbox from "../../../component/form/Checkbox";
 import { useState } from "react";
 import { getLabelValue } from "../../../util/ClientUtils";
-import { fetchState } from "../../../api/state";
-import { fetchCountry } from "../../../api/country";
+import { fetchState } from "../../../service/state";
+import { fetchCountry } from "../../../service/country";
 
 const initialFilterData = {
   lead_name: "",

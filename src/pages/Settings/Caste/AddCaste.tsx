@@ -6,10 +6,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import { statusOptions } from "../../../data/ClientForm";
-import { fetchReligion } from "../../../api/religion";
+import { fetchReligion } from "../../../service/religion";
 import Button from "../../../component/form/Button";
 import { CasteProps } from "../../../types/caste";
-import { addCasteAPI, updateCasteAPI } from "../../../api/caste";
+import { addCasteAPI, updateCasteAPI } from "../../../service/caste";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {

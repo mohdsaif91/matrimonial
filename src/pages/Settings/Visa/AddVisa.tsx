@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { VisaProps } from "../../../types/visa";
-import { addVisaAPI, updateVisaAPI } from "../../../api/visa";
+import { addVisaAPI, updateVisaAPI } from "../../../service/visa";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {

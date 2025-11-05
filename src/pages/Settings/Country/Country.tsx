@@ -7,9 +7,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingPage from "../../Loading/Loading";
 import { toast, ToastContainer } from "react-toastify";
 import Table from "../../../component/table/Table";
-import { deleteReligionAPI, fetchReligion } from "../../../api/religion";
-import { deleteCasteAPI, fetchCasteAPI } from "../../../api/caste";
-import { deleteCountry, fetchCountry } from "../../../api/country";
+import { deleteReligionAPI, fetchReligion } from "../../../service/religion";
+import { deleteCasteAPI, fetchCasteAPI } from "../../../service/caste";
+import { deleteCountry, fetchCountry } from "../../../service/country";
 
 const Caste = () => {
   const navigate = useNavigate();

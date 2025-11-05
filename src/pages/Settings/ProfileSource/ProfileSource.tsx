@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   deleteProfileSource,
   fetchProfileSource,
-} from "../../../api/profileSource";
+} from "../../../service/profileSource";
 import { TextField } from "../../../component/form/TextField";
 import { useState } from "react";
 import { DropDown } from "../../../component/form/SearchableDropdown";

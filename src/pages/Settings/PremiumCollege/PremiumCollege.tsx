@@ -10,7 +10,7 @@ import Table from "../../../component/table/Table";
 import {
   deletePremiumCollege,
   fetchPremiumCollege,
-} from "../../../api/premiumCollege";
+} from "../../../service/premiumCollege";
 
 const PremiumCollege = () => {
   const navigate = useNavigate();

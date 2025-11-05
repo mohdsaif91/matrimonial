@@ -11,7 +11,7 @@ import {
   addOccupationAPI,
   fetchOccupationAPI,
   updateOccupationAPI,
-} from "../../../api/occupation";
+} from "../../../service/occupation";
 import LoadingPage from "../../Loading/Loading";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 

@@ -10,7 +10,7 @@ import { QualificationProps } from "../../../types/qualification";
 import {
   addQualificationAPI,
   updateQualificationAPI,
-} from "../../../api/qualification";
+} from "../../../service/qualification";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {

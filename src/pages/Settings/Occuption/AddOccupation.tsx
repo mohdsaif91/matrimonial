@@ -6,10 +6,13 @@ import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateQualificationAPI } from "../../../api/qualification";
-import { addVisaAPI } from "../../../api/visa";
+import { updateQualificationAPI } from "../../../service/qualification";
+import { addVisaAPI } from "../../../service/visa";
 import { OccupationProps } from "../../../types/occupation";
-import { addOccupationAPI, updateOccupationAPI } from "../../../api/occupation";
+import {
+  addOccupationAPI,
+  updateOccupationAPI,
+} from "../../../service/occupation";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {

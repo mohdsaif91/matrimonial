@@ -10,8 +10,8 @@ import Table from "../../../component/table/Table";
 import {
   deleteManageUserAPI,
   fetchManageUserAPI,
-} from "../../../api/manageUser";
-import { deleteRole, fetchRole } from "../../../api/roles";
+} from "../../../service/manageUser";
+import { deleteRole, fetchRole } from "../../../service/roles";
 
 export default function Roles() {
   const navigate = useNavigate();

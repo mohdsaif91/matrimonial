@@ -4,12 +4,12 @@ import { DropDown } from "../../../component/form/SearchableDropdown";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
-import { fetchReligion } from "../../../api/religion";
+import { fetchReligion } from "../../../service/religion";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SubCasteProps } from "../../../types/caste";
-import { fetchCasteAPI, updateCasteAPI } from "../../../api/caste";
-import { addSubCasteAPI } from "../../../api/subCaste";
+import { fetchCasteAPI, updateCasteAPI } from "../../../service/caste";
+import { addSubCasteAPI } from "../../../service/subCaste";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {

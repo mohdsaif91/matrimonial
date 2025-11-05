@@ -6,12 +6,12 @@ import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { addCountry, updateCountry } from "../../../api/country";
+import { addCountry, updateCountry } from "../../../service/country";
 import { PremiumCollegeProps } from "../../../types/premiumCollege";
 import {
   addPremiumCollege,
   updatePremiumCollege,
-} from "../../../api/premiumCollege";
+} from "../../../service/premiumCollege";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 
 const initialFormItem = {
