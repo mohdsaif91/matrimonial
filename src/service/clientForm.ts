@@ -30,6 +30,7 @@ export async function updateFormItem(data: ClientFormItem) {
     view_in_pdf,
     id,
     show_in_advance_search,
+    show_in_common,
   } = data;
   const response = await api.put(`${ROUTE.ADD_FORM_ITEM.UPDATE}/${id}`, {
     status,
@@ -42,6 +43,7 @@ export async function updateFormItem(data: ClientFormItem) {
     validation,
     view_in_pdf,
     show_in_advance_search,
+    show_in_common,
   });
   return response.data;
 }

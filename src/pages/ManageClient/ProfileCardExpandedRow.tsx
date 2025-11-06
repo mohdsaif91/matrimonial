@@ -43,73 +43,84 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
     }
   };
 
+  const handledShortProfile = data ? data.shared_profiles : [];
+
   return (
-    <div className="flex flex-col items-center bg-green-100 p-4 rounded-2xl shadow-md border border-green-200 w-[220px]">
-      {/* Image */}
-      <img
-        src={image}
-        alt={name}
-        className="rounded-xl w-[150px] h-[150px] object-cover mb-2"
-      />
+    <React.Fragment>
+      {handledShortProfile.map((item) => (
+        <div className="flex flex-col items-center bg-green-100 p-4 rounded-2xl shadow-md border border-green-200 w-[220px]">
+          {/* Image */}
+          <img
+            src={
+              item.documents.find((f) => f.file_type === "main_photo")
+                .file_path || image
+            }
+            alt={name}
+            className="rounded-xl w-[150px] h-[150px] object-cover mb-2"
+          />
 
-      {/* Name & Details */}
-      <h3 className="text-gray-800 font-semibold text-lg">{name}</h3>
-      <p className="text-gray-600 text-sm">{age}</p>
-      <p className="text-gray-500 text-sm">{dateTime}</p>
+          {/* Name & Details */}
+          <h3 className="text-gray-800 font-semibold text-lg">
+            {item?.items?.client_name?.value || ""}
+          </h3>
+          <p className="text-gray-600 text-sm">{age}</p>
+          <p className="text-gray-500 text-sm">{dateTime}</p>
 
-      {/* Plus Icon */}
-      <div className="my-2 text-gray-700">
-        <Plus
-          size={20}
-          onClick={() =>
-            setOpenModal({
-              flag: true,
-              data,
-              component: "addTask",
-              title: "Attach Profile",
-            })
-          }
-          className="mx-auto cursor-pointer"
-        />
-      </div>
+          {/* Plus Icon */}
+          <div className="my-2 text-gray-700">
+            <Plus
+              size={20}
+              onClick={() =>
+                setOpenModal({
+                  flag: true,
+                  data,
+                  component: "addTask",
+                  title: "Attach Profile",
+                })
+              }
+              className="mx-auto cursor-pointer"
+            />
+          </div>
 
-      {/* Buttons */}
-      <Button
-        text="Attach Profile"
-        className="bg-[#161D27] text-white w-full mb-2"
-        onClick={() =>
-          setOpenModal({
-            flag: true,
-            data,
-            component: "attachProfile",
-            title: "Attach Profile",
-          })
-        }
-      />
-      <Button
-        text="Add Response"
-        className="bg-[#C22B36] text-white w-full"
-        onClick={() =>
-          setOpenModal({
-            flag: true,
-            data,
-            component: "addResponse",
-            title: "Add Response",
-          })
-        }
-      />
+          {/* Buttons */}
+          <Button
+            text="Attach Profile"
+            className="bg-[#161D27] text-white w-full mb-2"
+            onClick={() =>
+              setOpenModal({
+                flag: true,
+                data,
+                component: "attachProfile",
+                title: "Attach Profile",
+              })
+            }
+          />
+          <Button
+            text="Add Response"
+            className="bg-[#C22B36] text-white w-full"
+            onClick={() =>
+              setOpenModal({
+                flag: true,
+                data,
+                component: "addResponse",
+                title: "Add Response",
+              })
+            }
+          />
 
-      <div className="mt-3 text-blue-600">
-        <Check size={20} className="mx-auto" />
-      </div>
-      <ModalPopup
-        title={openModal.title}
-        isOpen={openModal.flag}
-        children={getComponent(openModal.component)}
-        onClose={() => setOpenModal({ ...initialModalData })}
-        width="520px"
-      />
-    </div>
+          <div className="mt-3 text-blue-600">
+            <Check size={20} className="mx-auto" />
+          </div>
+          <ModalPopup
+            title={openModal.title}
+            isOpen={openModal.flag}
+            children={getComponent(openModal.component)}
+            onClose={() => setOpenModal({ ...initialModalData })}
+            width="520px"
+          />
+        </div>
+      ))}
+    </React.Fragment>
   );
 };
 

@@ -30,6 +30,7 @@ const initialFormItem = {
   div_css: "",
   field_type: "text",
   show_in_advance_search: false,
+  show_in_common: false,
 };
 
 function AddClientFormItem() {
@@ -44,6 +45,8 @@ function AddClientFormItem() {
 
   useEffect(() => {
     if (state && state.data) {
+      console.log(state.data, " <>?");
+
       setFormData({ ...state.data });
     }
   }, []);
@@ -200,6 +203,12 @@ function AddClientFormItem() {
           checked={formData.show_in_advance_search}
           onChange={(val) => handleChange("show_in_advance_search", val)}
           id={"search_in_advance_search"}
+        />
+        <Checkbox
+          label="Common Search Filter"
+          checked={formData.show_in_common}
+          onChange={(val) => handleChange("show_in_common", val)}
+          id={"search_in_common"}
         />
       </div>
 

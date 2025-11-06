@@ -93,9 +93,16 @@ export default function ClientList() {
       header: "Profile Sent",
       cell: ({ row }) => {
         const isExpanded = row.getIsExpanded();
+        console.log(row.original, " <>? MAIN");
+
+        const handledShortProfilecount = Array.isArray(
+          row.original.shared_profiles
+        )
+          ? row.original.shared_profiles.length
+          : 0;
         return (
           <div className="flex">
-            <span>{3}</span>
+            <span>{handledShortProfilecount}</span>
             {isExpanded ? (
               <ChevronUp
                 size={24}
@@ -287,6 +294,7 @@ export default function ClientList() {
           mm.fields.map((field) => [field.field_name, field])
         )
       ),
+      shared_profiles: m.shared_profiles,
       client_documents: m.client_documents,
     }));
 

@@ -1,4 +1,4 @@
-import { FormSubmitProps } from "../types/client.js";
+import { FormSubmitProps, SendProfileProps } from "../types/client.js";
 import api from "./axios.js";
 import { ROUTE } from "./route.js";
 
@@ -40,6 +40,13 @@ export async function updateClient(data: FormSubmitProps) {
   const { client_id, form_fields } = data;
   const response = await api.put(`${ROUTE.CLIENTS.UPDATE}/${client_id}`, {
     form_fields: { ...form_fields },
+  });
+  return response.data;
+}
+
+export async function sendProfile(data: SendProfileProps) {
+  const response = await api.post(`${ROUTE.CLIENTS.SHARE_PROFILE}`, {
+    ...data,
   });
   return response.data;
 }

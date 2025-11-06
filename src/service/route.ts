@@ -8,6 +8,7 @@ export const ROUTE = {
     DELETE: "v1/clients",
     IMAGEPOST: "v1/client-documents",
     SEARCH: "v1/search",
+    SHARE_PROFILE: "v1/share-profile",
   },
   ADD_FORM_ITEM: {
     GET: "v1/client-form-fields",

@@ -1,7 +1,7 @@
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -34,6 +34,7 @@ export default function ClientAdvanceSearch() {
     ...initialPaginationData,
   });
   const [filters, setFilters] = useState<any>({});
+  const [formValues, setFormValues] = useState<any[]>([]);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -63,6 +64,29 @@ export default function ClientAdvanceSearch() {
       retry: false,
       enabled: !filterData,
     });
+
+  useEffect(() => {
+    if (
+      Object.keys(filters).length === 0 &&
+      clientFormModuleData &&
+      clientFormModuleData?.data?.length
+    ) {
+      const advanceSearchFeilds: any[] = [];
+      clientFormModuleData?.data.filter((item) => {
+        item.client_forms.filter((innerItem) => {
+          if (innerItem.show_in_advance_search === 1) {
+            advanceSearchFeilds.push(innerItem);
+            filters[innerItem.id] = {
+              value: innerItem.value || "",
+              field_id: innerItem.id,
+            };
+          }
+        });
+      });
+      setFormValues(advanceSearchFeilds);
+      // moduleRef.current = clientFormModuleData?.data;
+    }
+  }, [clientFormModuleData]);
 
   const mutation = useMutation({
     mutationFn: fetchClientByFilters,
@@ -126,7 +150,7 @@ export default function ClientAdvanceSearch() {
       ),
     },
     {
-      accessorKey: "name",
+      accessorKey: "handleBy",
       header: "Handle By | Sex | Height",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -143,7 +167,7 @@ export default function ClientAdvanceSearch() {
       },
     },
     {
-      accessorKey: "name",
+      accessorKey: "Astrologically",
       header: "Astrologically | Caste | Gotra | Marital Status",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -161,7 +185,7 @@ export default function ClientAdvanceSearch() {
       },
     },
     {
-      accessorKey: "name",
+      accessorKey: "Education",
       header: "Education | Occupation | Personal Income | Annual Income",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -177,7 +201,7 @@ export default function ClientAdvanceSearch() {
       },
     },
     {
-      accessorKey: "name",
+      accessorKey: "Client Mobile",
       header: "Client Mobile | Client Email",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -193,7 +217,7 @@ export default function ClientAdvanceSearch() {
       },
     },
     {
-      accessorKey: "name",
+      accessorKey: "Budget",
       header: "Budget",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -215,7 +239,7 @@ export default function ClientAdvanceSearch() {
       },
     },
     {
-      accessorKey: "name",
+      accessorKey: "Country",
       header: "Country | City",
       cell: ({ row }) => {
         const { items } = row.original;
@@ -267,8 +291,6 @@ export default function ClientAdvanceSearch() {
     setFilters({ ...updateFilter });
   };
 
-  console.log(filterData, " <>?<>?");
-
   const transformedClientList = !filterData
     ? clientListData &&
       Array.isArray(clientListData.data) &&
@@ -309,9 +331,10 @@ export default function ClientAdvanceSearch() {
         <AdvanceSearchFilter
           filters={filters}
           onSubmit={(filter) => mutation.mutate({ search_fields: filter })}
-          onReset={() => setFilterData(null)}
+          onReset={() => setFilters({})}
           clientFormModuleData={clientFormModuleData}
           handleChangeMethod={handleChange}
+          formValues={formValues}
         />
       </div>
       <div className="mt-2 mb-2">

@@ -129,6 +129,7 @@ export interface ClientFormItem {
   div_css: string;
   field_type: string;
   show_in_advance_search: boolean;
+  show_in_common: boolean;
 }
 
 export interface RichTextProps {

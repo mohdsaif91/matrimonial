@@ -14,8 +14,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AdvanceSearchFilter } from "./ClientAdvanceSearch/AdvanceSearchFilter";
 import { ColumnDef } from "@tanstack/react-table";
-import { ClientData } from "../../types/client";
-import { fetchClientList } from "../../service/client";
+import { ClientData, ClientDataProps } from "../../types/client";
+import {
+  fetchClientByFilters,
+  fetchClientList,
+  sendProfile,
+} from "../../service/client";
 import LoadingPage from "../Loading/Loading";
 import Table from "../../component/table/Table";
 import Pagination from "../../component/Pagination";
@@ -24,6 +28,7 @@ import TableInfoPopup from "../../component/table/TableInfoPopup";
 import Checkbox from "../../component/form/Checkbox";
 import { addShortList } from "../../service/shortList";
 import { User } from "../../types/header";
+import { fetchClientFormModule } from "../../service/clientFormModule";
 
 const initialPaginationData = {
   current_page: 1,
@@ -37,7 +42,11 @@ export default function SearchClient() {
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedClient, setSelectClient] = useState<any[]>([]);
-  const [selectClientDetails, setSelectedClientDetails] = useState(null);
+  const [selectClientDetails, setSelectedClientDetails] =
+    useState<ClientDataProps>(null);
+  const [filters, setFilters] = useState<any>({});
+  const [formValues, setFormValues] = useState<any[]>([]);
+  const [filterData, setFilterData] = useState<any[] | null>(null);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -50,6 +59,13 @@ export default function SearchClient() {
       setSelectedClientDetails({ ...state.profileData });
     }
   }, [state]);
+
+  const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
+    useQuery({
+      queryKey: ["client-form-module-list"],
+      queryFn: fetchClientFormModule,
+      retry: false,
+    });
 
   const {
     data: clientListData,
@@ -68,6 +84,32 @@ export default function SearchClient() {
     retry: false,
   });
 
+  useEffect(() => {
+    if (
+      Object.keys(filters).length === 0 &&
+      clientFormModuleData &&
+      clientFormModuleData?.data?.length
+    ) {
+      const advanceSearchFeilds: any[] = [];
+      clientFormModuleData?.data.filter((item) => {
+        item.client_forms.filter((innerItem) => {
+          console.log(innerItem.show_in_common, " <>?");
+
+          if (innerItem.show_in_common === 1) {
+            advanceSearchFeilds.push(innerItem);
+            filters[innerItem.id] = {
+              value: innerItem.value || "",
+              field_id: innerItem.id,
+            };
+          }
+        });
+      });
+      setFormValues(advanceSearchFeilds);
+      // moduleRef.current = clientFormModuleData?.data;
+    }
+  }, [clientFormModuleData]);
+  console.log("inside UseEffect <>? ", formValues);
+
   const mutation = useMutation({
     mutationFn: addShortList,
     onSuccess: (data) => {
@@ -78,6 +120,31 @@ export default function SearchClient() {
     onError: (error: any) => {
       console.error("❌ Error adding Short list client:", error);
       alert(error.response?.data?.message || "Failed to add Short list client");
+    },
+  });
+
+  const fetchMutation = useMutation({
+    mutationFn: fetchClientByFilters,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["client-list"] });
+      toast("Successfully fetched client by filter");
+      setFilterData(data.data);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding Form Item:", error);
+      toast(error.response?.data?.message || "Failed to add Form Item");
+    },
+  });
+
+  const senProfileMutation = useMutation({
+    mutationFn: sendProfile,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["client-Profile"] });
+      toast("Successfully sent profile");
+      setFilterData(data.data);
+    },
+    onError: (error: any) => {
+      toast(error.response?.data?.message || "Failed to sent profile");
     },
   });
 
@@ -262,7 +329,16 @@ export default function SearchClient() {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex flex-col gap-2">
-          <Button text="Send Profile" />
+          <Button
+            text="Send Profile"
+            onClick={() => {
+              const sendProfileObj = {
+                from_client_id: selectClientDetails && selectClientDetails.id,
+                to_client_id: row.original.id,
+              };
+              senProfileMutation.mutate(sendProfileObj);
+            }}
+          />
           <div className="flex flex-row justify-between">
             <Eye size={16} className="cursor-pointer text-gray-600" />
             <Pencil
@@ -292,18 +368,32 @@ export default function SearchClient() {
     return <LoadingPage />;
   }
 
-  const transformedClientList =
-    clientListData &&
-    Array.isArray(clientListData.data) &&
-    clientListData.data.map((m: ClientData) => ({
-      id: m.client_id,
-      items: Object.fromEntries(
-        m.modules.flatMap((mm) =>
-          mm.fields.map((field) => [field.field_name, field])
-        )
-      ),
-      client_documents: m.client_documents,
-    }));
+  const transformedClientList = !filterData
+    ? clientListData &&
+      Array.isArray(clientListData.data) &&
+      clientListData.data.map((m: ClientData) => ({
+        id: m.client_id,
+        items: Object.fromEntries(
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
+        ),
+        client_documents: m.client_documents,
+      }))
+    : Array.isArray(filterData) &&
+      filterData.map((m: ClientData) => ({
+        id: m.client_id,
+        items: Object.fromEntries(
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
+        ),
+        client_documents: m.client_documents,
+      }));
+
+  const handleChange = (updateFilter: any) => {
+    setFilters({ ...updateFilter });
+  };
 
   const handledPaginationData = clientListData
     ? {
@@ -334,6 +424,10 @@ export default function SearchClient() {
       )}
       <div className="">
         <AdvanceSearchFilter
+          filters={filters}
+          formValues={formValues}
+          clientFormModuleData={clientFormModuleData}
+          handleChangeMethod={handleChange}
           onSubmit={(filter) => {}}
           onReset={(filter) => {}}
         />

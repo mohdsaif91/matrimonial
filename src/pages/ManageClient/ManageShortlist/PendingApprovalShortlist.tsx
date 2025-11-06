@@ -61,9 +61,11 @@ export default function PendingApprovalShortlist() {
       header: "Client Name",
       cell: ({ row }) => {
         const { form_values } = row.original;
+        console.log(row.original, " <>?");
+
         return (
           <div>
-            {form_values.client_name} ({form_values.client_id})
+            {form_values.client_name} ({row.original.shortlisted_client_id})
           </div>
         );
       },
@@ -71,9 +73,18 @@ export default function PendingApprovalShortlist() {
     {
       header: "Profile",
       cell: ({ row }) => {
-        const { form_values } = row.original;
-        console.log(form_values);
-        return <div>{form_values.client_name}</div>;
+        const { client_documents } = row.original;
+        const mainProfilePhoto = client_documents.find(
+          (f) => f.type === "main_photo"
+        );
+        // console.log(form_values);
+        return (
+          <img
+            className="h-[120px] w-[150px]"
+            src={mainProfilePhoto.file_path}
+            alt="profile-photo"
+          />
+        );
       },
     },
     {

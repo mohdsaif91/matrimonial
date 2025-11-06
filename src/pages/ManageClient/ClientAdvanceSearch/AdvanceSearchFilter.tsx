@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import {
@@ -21,15 +21,13 @@ import {
   personalityOptions,
   smokingHabitsOptions,
   statusOption,
-  statusOptionsCap,
   yesNoOptions,
 } from "../../../data/ClientForm";
 import { AdvanceSearchProps } from "../../../types/client";
 import Button from "../../../component/form/Button";
-import { getLabelValue, yesNoArr } from "../../../util/ClientUtils";
+import { getLabelValue } from "../../../util/ClientUtils";
 import { DateTimePicker } from "../../../component/form/DateField";
 import { useQuery } from "@tanstack/react-query";
-import { fetchClientFormModule } from "../../../service/clientFormModule";
 import { fetchSourcedFrom } from "../../../service/client";
 import { fetchManageUserAPI } from "../../../service/manageUser";
 import { fetchCasteAPI } from "../../../service/caste";
@@ -64,15 +62,10 @@ interface OptionType {
 export const AdvanceSearchFilter = ({
   onSubmit,
   onReset,
-  clientFormModuleData = [],
   handleChangeMethod,
   filters,
+  formValues = [],
 }: AdvanceSearchProps) => {
-  // const [filters, setFilters] = useState<any>({});
-  const [formValues, setFormValues] = useState<any[]>([]);
-
-  const moduleRef = useRef(null);
-
   const {
     data: sourcedData,
     error: sourcedError,
@@ -230,29 +223,31 @@ export const AdvanceSearchFilter = ({
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (
-      clientFormModuleData &&
-      clientFormModuleData?.data?.length &&
-      moduleRef.current !== clientFormModuleData?.data
-    ) {
-      // const forms = clientFormModuleData.data[activeTab].client_forms;
-      const advanceSearchFeilds: any[] = [];
-      clientFormModuleData?.data.filter((item) => {
-        item.client_forms.filter((innerItem) => {
-          if (innerItem.show_in_advance_search === 1) {
-            advanceSearchFeilds.push(innerItem);
-            filters[innerItem.id] = {
-              value: innerItem.value || "",
-              field_id: innerItem.id,
-            };
-          }
-        });
-      });
-      setFormValues(advanceSearchFeilds);
-      moduleRef.current = clientFormModuleData?.data;
-    }
-  }, [clientFormModuleData]);
+  // useEffect(() => {
+  //   if (
+  //     Object.keys(filters).length === 0 &&
+  //     clientFormModuleData &&
+  //     clientFormModuleData?.data?.length
+  //   ) {
+  //     console.log("CALLED AGAIUN <>?");
+
+  //     // const forms = clientFormModuleData.data[activeTab].client_forms;
+  //     const advanceSearchFeilds: any[] = [];
+  //     clientFormModuleData?.data.filter((item) => {
+  //       item.client_forms.filter((innerItem) => {
+  //         if (innerItem.show_in_advance_search === 1) {
+  //           advanceSearchFeilds.push(innerItem);
+  //           filters[innerItem.id] = {
+  //             value: innerItem.value || "",
+  //             field_id: innerItem.id,
+  //           };
+  //         }
+  //       });
+  //     });
+  //     setFormValues(advanceSearchFeilds);
+  //     moduleRef.current = clientFormModuleData?.data;
+  //   }
+  // }, [clientFormModuleData]);
 
   const getOptions = (fieldName: string) => {
     let arr: { label: string; value: string | number }[] = [];

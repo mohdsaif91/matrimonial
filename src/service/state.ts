@@ -1,6 +1,6 @@
-import { StateProps } from "../types/state";
-import api from "./axios";
-import { ROUTE } from "./route";
+import { StateProps } from "../types/state.js";
+import api from "./axios.js";
+import { ROUTE } from "./route.js";
 
 export async function addState(relData: StateProps) {
   const response = await api.post(ROUTE.STATE.ADD, { ...relData });

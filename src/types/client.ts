@@ -113,6 +113,7 @@ export interface ClientData {
   id?: number;
   modules: Module[];
   client_documents: ClientDocumentsProps[];
+  shared_profiles: SharedProfile[];
 }
 
 export interface Module {
@@ -160,4 +161,42 @@ export interface AdvanceSearchProps {
   clientFormModuleData: any[];
   handleChangeMethod: (arr: any) => void;
   filters: any;
+  formValues: any;
+}
+
+export interface SendProfileProps {
+  from_client_id: number | string;
+  to_client_id: number | string;
+}
+
+export interface ClientField {
+  field_id: number;
+  field_name: string;
+  display_name: string;
+  value: string | number | boolean | null;
+  field_type: "text" | "dropdown" | "textArea" | "datepicker" | "richText";
+  required: boolean;
+}
+
+export interface ClientItems {
+  [key: string]: ClientField; // Dynamic keys for all form fields
+}
+
+export interface ClientDataProps {
+  id: number;
+  items: ClientItems;
+}
+
+export interface SharedProfile {
+  shared_profile_id: number;
+  shared_with_user_id: number | null;
+  shared_at: string; // ISO datetime string
+  documents: SharedDocument[];
+}
+
+export interface SharedDocument {
+  id: number;
+  file_path: string;
+  file_type: "main_photo" | "profile_photo" | "bio_data"; // restrict to known values
+  uploaded_at: string; // ISO datetime string
 }
