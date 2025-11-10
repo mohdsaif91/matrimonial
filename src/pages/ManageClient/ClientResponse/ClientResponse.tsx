@@ -8,6 +8,7 @@ import ClientResponseFilter from "./ClientResponseFilter";
 import Table from "../../../component/table/Table";
 import Pagination from "../../../component/Pagination";
 import LoadingPage from "../../Loading/Loading";
+import { Eye } from "lucide-react";
 
 const initialPaginationData = {
   current_page: 1,
@@ -30,54 +31,74 @@ export default function ClientResponse() {
 
   const columns: ColumnDef<ClientResponseProps>[] = [
     {
-      accessorKey: "status",
-      header: "Profile Photo	",
-    },
-    {
-      accessorKey: "name",
-      header: "Name | Profile ID | Lead ID | DOB",
-    },
-    {
-      header: "Profile Sent",
-    },
-    {
-      accessorKey: "name",
-      header: "Handle By | Sex | Height",
-    },
-    {
-      accessorKey: "name",
-      header: "Astrologically | Caste | Gotra | Marital Status",
-    },
-    {
-      accessorKey: "name",
-      header: "Education | Occupation | Personal Income | Annual Income",
-    },
-    {
-      accessorKey: "name",
-      header: "Client Mobile | Client Email",
-    },
-    {
-      accessorKey: "name",
-      header: "Budget",
-    },
-    {
-      accessorKey: "name",
-      header: "Country | City",
+      header: "Cleint Name	",
       cell: ({ row }) => {
-        const { items } = row.original;
-        const countryeValue = items.residing_country?.value;
-        const cityValue = items.residential_city?.value;
+        const mainPhoto = row.original.client_documents?.find(
+          (f) => f.type === "main_photo"
+        );
         return (
           <div className="">
-            {countryeValue} | {cityValue}
+            <img
+              className="h-[160px] w-[160px]"
+              src={mainPhoto && mainPhoto.file_path}
+              alt="client-main-photo"
+            />
+            <div className="">Name</div>
           </div>
         );
       },
     },
     {
+      accessorKey: "Profile Name",
+      header: "Profile Name",
+      cell: ({ row }) => {
+        const mainPhoto = row.original.profile_documents?.find(
+          (f) => f.type === "main_photo"
+        );
+        return (
+          <div className="">
+            <img
+              className="h-[160px] w-[160px]"
+              src={mainPhoto && mainPhoto.file_path}
+              alt="profile-main-photo"
+            />
+            <div className="">Name</div>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "response_status",
+      header: "Response",
+    },
+    {
+      accessorKey: "client_remark",
+      header: "Client Remark",
+    },
+    {
+      accessorKey: "staff_remark",
+      header: "Staff Remark",
+    },
+    {
+      accessorKey: "added_by",
+      header: "Added By",
+    },
+    {
+      accessorKey: "added_by_user_type",
+      header: "Profile Handled By",
+    },
+    {
+      accessorKey: "created_at",
+      header: "Date",
+    },
+    {
       id: "actions",
       header: "Action",
-      cell: ({ row }) => <div className="flex flex-col gap-2"></div>,
+      cell: ({ row }) => (
+        <div className="flex flex-col gap-2">
+          <Eye />
+        </div>
+      ),
     },
   ];
   // deleteClientList
@@ -98,7 +119,9 @@ export default function ClientResponse() {
     return <LoadingPage />;
   }
 
-  const transformedClientList = [];
+  const transformedClientList = clientResponseData
+    ? clientResponseData.data
+    : [];
 
   const handledPaginationData = initialPaginationData;
 

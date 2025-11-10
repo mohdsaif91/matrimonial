@@ -28,12 +28,11 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
   data,
 }) => {
   const [openModal, setOpenModal] = useState(initialModalData);
-  console.log(data, " INPRofile COmponent");
 
   const getComponent = (type: string) => {
     switch (type) {
       case "addResponse":
-        return <ResponseRemarkTable />;
+        return <ResponseRemarkTable data={openModal.data} />;
       case "addTask":
         return <TaskAdd />;
       case "attachProfile":
@@ -46,7 +45,7 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
   const handledShortProfile = data ? data.shared_profiles : [];
 
   return (
-    <React.Fragment>
+    <div className="flex flex-wrap flex-row gap-4">
       {handledShortProfile.map((item) => (
         <div className="flex flex-col items-center bg-green-100 p-4 rounded-2xl shadow-md border border-green-200 w-[220px]">
           {/* Image */}
@@ -101,7 +100,7 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
             onClick={() =>
               setOpenModal({
                 flag: true,
-                data,
+                data: item,
                 component: "addResponse",
                 title: "Add Response",
               })
@@ -112,6 +111,7 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
             <Check size={20} className="mx-auto" />
           </div>
           <ModalPopup
+            data={openModal.data}
             title={openModal.title}
             isOpen={openModal.flag}
             children={getComponent(openModal.component)}
@@ -120,7 +120,7 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
           />
         </div>
       ))}
-    </React.Fragment>
+    </div>
   );
 };
 

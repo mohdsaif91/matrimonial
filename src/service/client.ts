@@ -21,6 +21,13 @@ export async function fetchClientList(pageNumber: number, pageCount: number) {
   return response.data;
 }
 
+export async function fetchOppClientList(client_id: string | number) {
+  const response = await api.get(
+    `${ROUTE.CLIENTS.OPP_CLIENT_SEARCH}?client_id=${client_id}`
+  );
+  return response.data;
+}
+
 export async function fetchClientByFilters(filter: any) {
   const response = await api.post(`${ROUTE.CLIENTS.SEARCH}`, { ...filter });
   return response.data;

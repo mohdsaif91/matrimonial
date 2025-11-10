@@ -7,6 +7,7 @@ interface ModalPopupProps {
   title?: string;
   children: ReactNode;
   width?: string; // optional custom width like 'max-w-lg'
+  data: any;
 }
 
 const ModalPopup: React.FC<ModalPopupProps> = ({
@@ -15,6 +16,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
   title,
   children,
   width = "max-w-lg",
+  data,
 }) => {
   if (!isOpen) return null;
 

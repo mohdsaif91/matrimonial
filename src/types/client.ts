@@ -200,3 +200,7 @@ export interface SharedDocument {
   file_type: "main_photo" | "profile_photo" | "bio_data"; // restrict to known values
   uploaded_at: string; // ISO datetime string
 }
+
+export interface CommonFilterProps {
+  filters: any[];
+}

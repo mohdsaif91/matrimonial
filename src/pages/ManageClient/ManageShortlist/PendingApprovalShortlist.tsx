@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { Check, X } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 import Table from "../../../component/table/Table";
 import {
@@ -16,6 +16,7 @@ import {
   ClientDetailsResponseProps,
   ShortlistItemProps,
 } from "../../../types/clientResponse";
+import Button from "../../../component/form/Button";
 
 const initialClientData = {
   client_id: null,
@@ -25,6 +26,7 @@ const initialClientData = {
 export default function PendingApprovalShortlist() {
   const [clientData, setClientData] =
     useState<ClientDetailsResponseProps>(initialClientData);
+  const [actionType, setActionType] = useState(null);
 
   const { state } = useLocation();
   const queryClient = useQueryClient();
@@ -32,6 +34,7 @@ export default function PendingApprovalShortlist() {
   useEffect(() => {
     if (state && state.shortlistData) {
       setClientData({ ...state.shortlistData });
+      setActionType(state.shortListType);
     }
   }, [state]);
 
@@ -145,22 +148,67 @@ export default function PendingApprovalShortlist() {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex flex-row gap-2 cursor-pointer">
-          <div className="bg-green-600 p-2 rounded-[4px]">
-            <Check
-              onClick={() => {
-                const appObj = {
-                  shortlist_id: row.original?.shortlisted_client_id,
-                  status: "approved",
-                };
-                mutation.mutate({ ...appObj });
-                console.log(appObj, " <>?");
-              }}
-              color="#fff"
-            />
-          </div>
-          <div className="bg-red-600 p-2 rounded-[4px]">
-            <X onClick={() => {}} color="#fff" />
-          </div>
+          {!actionType ? (
+            <React.Fragment>
+              <div className="bg-green-600 p-2 rounded-[4px]">
+                <Check
+                  onClick={() => {
+                    const appObj = {
+                      shortlist_id: acceptRejecttData.data[0].id,
+                      status: "approved",
+                    };
+                    mutation.mutate({ ...appObj });
+                    console.log(appObj, " <>?");
+                  }}
+                  color="#fff"
+                />
+              </div>
+              <div className="bg-red-600 p-2 rounded-[4px]">
+                <X
+                  onClick={() => {
+                    const appObj = {
+                      shortlist_id: acceptRejecttData.data[0].id,
+                      status: "rejected",
+                    };
+                    mutation.mutate({ ...appObj });
+                    console.log(appObj, " <>?");
+                  }}
+                  color="#fff"
+                />
+              </div>
+            </React.Fragment>
+          ) : actionType === "approve" ? (
+            <React.Fragment>
+              <div className="bg-red-600 p-2 rounded-[4px]">
+                <X
+                  onClick={() => {
+                    // const appObj = {
+                    //   shortlist_id: acceptRejecttData.data[0].id,
+                    //   status: "rejected",
+                    // };
+                    // mutation.mutate({ ...appObj });
+                    // console.log(appObj, " <>?");
+                  }}
+                  color="#fff"
+                />
+              </div>
+              <Button text="Send Profile" />
+            </React.Fragment>
+          ) : (
+            <div className="bg-red-600 p-2 rounded-[4px]">
+              <X
+                // onClick={() => {
+                //   const appObj = {
+                //     shortlist_id: acceptRejecttData.data[0].id,
+                //     status: "rejected",
+                //   };
+                //   mutation.mutate({ ...appObj });
+                //   console.log(appObj, " <>?");
+                // }}
+                color="#fff"
+              />
+            </div>
+          )}
         </div>
       ),
     },
@@ -190,11 +238,17 @@ export default function PendingApprovalShortlist() {
 
   return (
     <div>
+      <ToastContainer />
       {clientData.form_data && (
         <div className="p-2">
-          <p>
-            Profiles for ({clientData.form_data.client_name} (
-            {clientData.client_id}))
+          <p className="font-bold">
+            {actionType === "approve"
+              ? "Approved"
+              : actionType === "reject"
+              ? "Rejected"
+              : ""}{" "}
+            Profiles for
+            {clientData.form_data.client_name} ({clientData.client_id})
           </p>
         </div>
       )}

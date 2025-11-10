@@ -19,7 +19,6 @@ function LoginPage() {
     mutationFn: loginApi,
     onSuccess: (data) => {
       const token = data?.token || data?.access_token || data?.data?.token;
-
       if (token) {
         queryClient.setQueryData(["authUser"], data.data.user);
         sessionStorage.setItem("authUser", JSON.stringify(data.data.user));

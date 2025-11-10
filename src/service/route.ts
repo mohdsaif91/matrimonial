@@ -9,6 +9,7 @@ export const ROUTE = {
     IMAGEPOST: "v1/client-documents",
     SEARCH: "v1/search",
     SHARE_PROFILE: "v1/share-profile",
+    OPP_CLIENT_SEARCH: "v1/clients-search-profile",
   },
   ADD_FORM_ITEM: {
     GET: "v1/client-form-fields",

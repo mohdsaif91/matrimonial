@@ -124,3 +124,28 @@ export interface ShortlistItemProps {
   shortlist_count: number;
   shortlisted_clients: ShortlistedClientProps[];
 }
+
+export interface ClientResponseProps {
+  client_id: number | string;
+  profile_id: number | string;
+  response_status: string;
+  client_remark: string;
+  staff_remark: string;
+  added_by: number | string;
+  added_by_user_type: string;
+  profile_documents?: ClientPhotoProps[];
+  client_documents?: ClientPhotoProps[];
+  client?: ClientProps;
+  profile?: ClientProps;
+}
+
+interface ClientProps {
+  id: number | string;
+  name: string;
+}
+
+interface ClientPhotoProps {
+  file_path: string;
+  id: number | string;
+  type: string;
+}

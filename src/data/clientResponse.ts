@@ -8,7 +8,7 @@ export const lastDaysOptions = [
 ];
 
 export const responseOptions = [
-  { label: "Approved", value: "approved" },
-  { label: "Rejected", value: "rejected" },
-  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "Approved" },
+  { label: "Rejected", value: "Rejected" },
+  { label: "Pending", value: "Pending" },
 ];

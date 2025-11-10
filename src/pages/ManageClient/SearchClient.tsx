@@ -18,6 +18,7 @@ import { ClientData, ClientDataProps } from "../../types/client";
 import {
   fetchClientByFilters,
   fetchClientList,
+  fetchOppClientList,
   sendProfile,
 } from "../../service/client";
 import LoadingPage from "../Loading/Loading";
@@ -72,14 +73,9 @@ export default function SearchClient() {
     error: clientListError,
     isLoading: clientListLoading,
   } = useQuery({
-    queryKey: [
-      "client-list",
-      paginationData.current_page,
-      paginationData.per_page,
-    ], // include page number
+    queryKey: ["client-list"], // include page number
     queryFn: ({ queryKey }) => {
-      const [, pageNumber, perPage] = queryKey; // destructure from key
-      return fetchClientList(pageNumber as number, perPage as number);
+      return fetchOppClientList(selectClientDetails.id);
     },
     retry: false,
   });
@@ -94,7 +90,6 @@ export default function SearchClient() {
       clientFormModuleData?.data.filter((item) => {
         item.client_forms.filter((innerItem) => {
           console.log(innerItem.show_in_common, " <>?");
-
           if (innerItem.show_in_common === 1) {
             advanceSearchFeilds.push(innerItem);
             filters[innerItem.id] = {
@@ -390,18 +385,19 @@ export default function SearchClient() {
         ),
         client_documents: m.client_documents,
       }));
+  console.log(transformedClientList, " <>? MAIN");
 
   const handleChange = (updateFilter: any) => {
     setFilters({ ...updateFilter });
   };
 
-  const handledPaginationData = clientListData
-    ? {
-        current_page: clientListData.meta.current_page,
-        last_page: clientListData.meta.last_page,
-        per_page: clientListData.meta.per_page,
-      }
-    : initialPaginationData;
+  // const handledPaginationData = clientListData
+  //   ? {
+  //       current_page: clientListData.meta.current_page,
+  //       last_page: clientListData.meta.last_page,
+  //       per_page: clientListData.meta.per_page,
+  //     }
+  //   : initialPaginationData;
 
   const clientName = selectClientDetails
     ? selectClientDetails?.items?.client_name?.value
@@ -467,10 +463,10 @@ export default function SearchClient() {
           </div>
         </div>
         <Table columns={columns} data={transformedClientList || []} />
-        <Pagination
+        {/* <Pagination
           onPageChange={() => {}}
           pagination={handledPaginationData}
-        />
+        /> */}
       </div>
     </div>
   );

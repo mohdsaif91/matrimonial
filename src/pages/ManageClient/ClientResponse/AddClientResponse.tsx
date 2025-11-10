@@ -6,8 +6,11 @@ import { DropDown } from "../../../component/form/SearchableDropdown";
 import TextArea from "../../../component/form/TextArea";
 import Button from "../../../component/form/Button";
 import { ClientResponseProps } from "../../../types/clientResponse";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddCleintResponse } from "../../../service/clientResponse";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  AddCleintResponse,
+  fetchClientResponseById,
+} from "../../../service/clientResponse";
 import { toast, ToastContainer } from "react-toastify";
 import { responseOptions } from "../../../data/clientResponse";
 
@@ -17,18 +20,33 @@ const initailResponseData = {
   response_status: "",
   client_remark: "",
   staff_remark: "",
+  added_by: 0,
+  added_by_user_type: "",
 };
-export default function ResponseRemarkTable() {
+
+export default function ResponseRemarkTable({ data }: { data: any }) {
   const [formData, setFormData] = useState<ClientResponseProps>({
     ...initailResponseData,
   });
 
+  console.log(data, " <>?");
+
   const { state } = useLocation();
   const queryClient = useQueryClient();
 
+  const { data: clientResponseByIdData, isLoading: clientResponseByIdLoading } =
+    useQuery({
+      queryKey: ["single-client-response-list"],
+      queryFn: ({ queryKey }) => {
+        const [, clientId] = queryKey; // destructure from key
+
+        return fetchClientResponseById(data?.shared_with_user_id);
+      },
+      retry: false,
+    });
+
   useEffect(() => {
     if (state) {
-      console.log(state);
       setFormData({ ...formData, client_id: state.id });
     }
   }, [state]);
@@ -38,12 +56,26 @@ export default function ResponseRemarkTable() {
   };
 
   const handleSave = () => {
-    mutation.mutate(formData);
+    console.log(formData, data);
+    const userId = JSON.parse(sessionStorage.getItem("authUser"))?.id || "";
+    console.log(userId, " <>? MAIN ");
+    const obj = {
+      client_id: data.shared_with_user_id,
+      profile_id: data.shared_profile_id,
+      response_status: formData.response_status,
+      client_remark: formData.client_remark,
+      staff_remark: formData.staff_remark,
+      added_by: userId,
+      added_by_user_type: "client",
+    };
+    mutation.mutate(obj);
   };
 
   const handleReset = () => {
     setFormData({ ...initailResponseData });
   };
+
+  console.log(clientResponseByIdData);
 
   const columns: ColumnDef<ClientResponseProps>[] = [
     {
@@ -55,7 +87,7 @@ export default function ResponseRemarkTable() {
       header: "Client Remark",
     },
     {
-      accessorKey: "",
+      accessorKey: "staff_remark",
       header: "Staff Remark",
     },
     {
@@ -63,11 +95,11 @@ export default function ResponseRemarkTable() {
       header: "Added By",
     },
     {
-      accessorKey: "name",
+      accessorKey: "added_by_user_type",
       header: "Added By User Type",
     },
     {
-      accessorKey: "date_time",
+      accessorKey: "created_at",
       header: "Datetime",
     },
   ];
@@ -77,8 +109,8 @@ export default function ResponseRemarkTable() {
     onSuccess: (data) => {
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["client-response-list"] });
-      toast("Successfully added Response");
       setFormData({ ...initailResponseData });
+      toast("Successfully added Response");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
@@ -86,6 +118,11 @@ export default function ResponseRemarkTable() {
       toast(error.response?.data?.message || "Failed to add Response");
     },
   });
+
+  const handledClientResponseById = clientResponseByIdData
+    ? [clientResponseByIdData.data]
+    : [];
+  console.log(handledClientResponseById, " <>?<>?");
 
   return (
     <div className="flex flex-col gap-6 bg-[#f8f9fb] p-6 rounded-2xl">
@@ -122,11 +159,16 @@ export default function ResponseRemarkTable() {
           />
         </div>
         <div className="flex gap-3 justify-end">
-          <Button text="Save" onClick={handleSave} type="button" />
+          <Button
+            loading={mutation.isPending}
+            text="Save"
+            onClick={handleSave}
+            type="button"
+          />
           <Button text="Reset" onClick={handleReset} type="reset" />
         </div>
       </div>
-      <Table data={[]} columns={columns} />
+      <Table data={handledClientResponseById} columns={columns} />
     </div>
   );
 }

@@ -20,9 +20,11 @@ import Pagination from "../../component/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileCard from "./Components/ProfileCard";
 import TableInfoPopup from "../../component/table/TableInfoPopup";
+import CommonFilters from "./CommonFilters";
+import { fetchClientFormModule } from "../../service/clientFormModule";
 
 const initialPaginationData = {
   current_page: 1,
@@ -35,6 +37,8 @@ export default function ClientList() {
     ...initialPaginationData,
   });
   const [modalOpen, setModalOpen] = useState(false);
+  const [filters, setFilters] = useState<any>({});
+  const [formValues, setFormValues] = useState<any[]>([]);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -55,6 +59,37 @@ export default function ClientList() {
     retry: false,
   });
 
+  const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
+    useQuery({
+      queryKey: ["client-form-module-list"],
+      queryFn: fetchClientFormModule,
+      retry: false,
+    });
+
+  useEffect(() => {
+    if (
+      Object.keys(filters).length === 0 &&
+      clientFormModuleData &&
+      clientFormModuleData?.data?.length
+    ) {
+      const advanceSearchFeilds: any[] = [];
+      clientFormModuleData?.data.filter((item) => {
+        item.client_forms.filter((innerItem) => {
+          console.log(innerItem.show_in_common, " <>?");
+          if (innerItem.show_in_common === 1) {
+            advanceSearchFeilds.push(innerItem);
+            filters[innerItem.id] = {
+              value: innerItem.value || "",
+              field_id: innerItem.id,
+            };
+          }
+        });
+      });
+      setFormValues(advanceSearchFeilds);
+      // moduleRef.current = clientFormModuleData?.data;
+    }
+  }, [clientFormModuleData]);
+
   const columns: ColumnDef<ClientData>[] = [
     {
       accessorKey: "status",
@@ -64,13 +99,16 @@ export default function ClientList() {
         const mainPhoto = client_documents.find(
           (f) => f.file_type === "main_photo"
         );
-        console.log(mainPhoto, " <>?");
+        console.log(row.original, " <>?");
         return (
-          <img
-            alt="miain_photo"
-            src={mainPhoto?.file_path}
-            className="w-[200px] h-[140px]"
-          />
+          <div className="">
+            <div className={``}></div>
+            <img
+              alt="miain_photo"
+              src={mainPhoto?.file_path}
+              className="w-[200px] h-[140px]"
+            />
+          </div>
         );
       },
     },
@@ -328,11 +366,23 @@ export default function ClientList() {
     );
   };
 
+  const handleChange = (updateFilter: any) => {
+    setFilters({ ...updateFilter });
+  };
+
   return (
     <div className="">
       <ToastContainer />
       <div className="">
-        <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" />
+        <CommonFilters
+          filters={filters}
+          formValues={formValues}
+          clientFormModuleData={clientFormModuleData}
+          handleChangeMethod={handleChange}
+          onSubmit={(filter) => {}}
+          onReset={(filter) => {}}
+        />
+        {/* <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" /> */}
       </div>
       <div className="mt-2 mb-2">
         <div className="flex justify-end p-4 bg-[#fff]">
