@@ -114,6 +114,14 @@ export interface ClientData {
   modules: Module[];
   client_documents: ClientDocumentsProps[];
   shared_profiles: SharedProfile[];
+  items?: Field;
+}
+
+export interface SearchClientDataProps {
+  client_id: number;
+  id?: number;
+  forms: any[];
+  documents: ClientDocumentsProps[];
 }
 
 export interface Module {
@@ -129,6 +137,7 @@ export interface Field {
   value: string | number | boolean | null;
   field_type: FieldType;
   required: boolean;
+  field_id?: number | string;
 }
 
 export type FieldType =

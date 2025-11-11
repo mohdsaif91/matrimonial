@@ -43,7 +43,9 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
   };
 
   const handledShortProfile = data ? data.shared_profiles : [];
+  console.log(data, " <>? PP");
 
+  // const userId=ro
   return (
     <div className="flex flex-wrap flex-row gap-4">
       {handledShortProfile.map((item) => (

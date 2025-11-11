@@ -1,23 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Pencil,
-  Eye,
-  IndianRupee,
-  SquarePlus,
-  List,
-  ChevronDown,
-  Info,
-} from "lucide-react";
+import { Pencil, Eye, IndianRupee, SquarePlus, List, Info } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AdvanceSearchFilter } from "./ClientAdvanceSearch/AdvanceSearchFilter";
 import { ColumnDef } from "@tanstack/react-table";
-import { ClientData, ClientDataProps } from "../../types/client";
+import {
+  ClientData,
+  ClientDataProps,
+  SearchClientDataProps,
+} from "../../types/client";
 import {
   fetchClientByFilters,
-  fetchClientList,
   fetchOppClientList,
   sendProfile,
 } from "../../service/client";
@@ -73,10 +68,9 @@ export default function SearchClient() {
     error: clientListError,
     isLoading: clientListLoading,
   } = useQuery({
-    queryKey: ["client-list"], // include page number
-    queryFn: ({ queryKey }) => {
-      return fetchOppClientList(selectClientDetails.id);
-    },
+    queryKey: ["client-list", selectClientDetails?.id], // include it in the key
+    queryFn: () => fetchOppClientList(selectClientDetails.id),
+    enabled: !!selectClientDetails?.id, // run only when ID exists
     retry: false,
   });
 
@@ -89,7 +83,6 @@ export default function SearchClient() {
       const advanceSearchFeilds: any[] = [];
       clientFormModuleData?.data.filter((item) => {
         item.client_forms.filter((innerItem) => {
-          console.log(innerItem.show_in_common, " <>?");
           if (innerItem.show_in_common === 1) {
             advanceSearchFeilds.push(innerItem);
             filters[innerItem.id] = {
@@ -103,7 +96,6 @@ export default function SearchClient() {
       // moduleRef.current = clientFormModuleData?.data;
     }
   }, [clientFormModuleData]);
-  console.log("inside UseEffect <>? ", formValues);
 
   const mutation = useMutation({
     mutationFn: addShortList,
@@ -111,6 +103,7 @@ export default function SearchClient() {
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["clients-short-list"] });
       toast(`Successfully Short listed client`);
+      setSelectClient([]);
     },
     onError: (error: any) => {
       console.error("❌ Error adding Short list client:", error);
@@ -143,7 +136,7 @@ export default function SearchClient() {
     },
   });
 
-  const columns: ColumnDef<ClientData>[] = [
+  const columns: ColumnDef<SearchClientDataProps>[] = [
     {
       header: "Shortlist Select",
       cell: ({ row }) => {
@@ -152,13 +145,12 @@ export default function SearchClient() {
           <Checkbox
             checked={selectedClient.includes(id)}
             onChange={(checked) => {
+              console.log(selectedClient, " <>?<>?");
+
               if (checked) {
-                selectedClient.push(id);
-                setSelectClient([...selectedClient]);
+                setSelectClient([...selectedClient, id]);
               } else {
-                const removedClientID = selectedClient.filter(
-                  (f) => f != clientListData
-                );
+                const removedClientID = selectedClient.filter((f) => f != id);
                 setSelectClient([...removedClientID]);
               }
             }}
@@ -173,15 +165,13 @@ export default function SearchClient() {
       accessorKey: "status",
       header: "Profile Photo",
       cell: ({ row }) => {
-        const { client_documents } = row.original;
-        const mainPhoto = client_documents.find(
-          (f) => f.file_type === "main_photo"
-        );
+        const { documents } = row.original;
+        const mainPhoto = (documents && documents[0]?.document_path) || "";
         return (
           <img
             alt="miain_photo"
-            src={mainPhoto?.file_path}
-            className="w-[200px] h-[140px]"
+            src={mainPhoto}
+            className="w-[240px] h-[120px]"
           />
         );
       },
@@ -191,39 +181,40 @@ export default function SearchClient() {
       header: "Name | Profile ID | Lead ID | DOB",
       cell: ({ row }) => {
         const { items } = row.original;
-        const leadValue = items.lead_id?.value;
+        console.log(items, " <>?<>?");
+        const leadValue = items.lead_id;
         return (
           <div>
-            {items.client_name?.value} | | {leadValue || "-"}|
+            {items.client_name} | | {leadValue || "-"}|
             {moment(items.date_of_birth?.value).format("YYYY-MM-DD")}
           </div>
         );
       },
     },
-    {
-      header: "Profile Sent",
-      cell: ({ row }) => (
-        <div className="flex">
-          <span>{3}</span>
-          <ChevronDown
-            size={24}
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation(); // prevent row click conflict
-              row.toggleExpanded();
-            }}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   header: "Profile Sent",
+    //   cell: ({ row }) => (
+    //     <div className="flex">
+    //       <span>{3}</span>
+    //       <ChevronDown
+    //         size={24}
+    //         className="cursor-pointer"
+    //         onClick={(e) => {
+    //           e.stopPropagation(); // prevent row click conflict
+    //           row.toggleExpanded();
+    //         }}
+    //       />
+    //     </div>
+    //   ),
+    // },
     {
       accessorKey: "handleBy",
       header: "Handle By | Sex | Height",
       cell: ({ row }) => {
         const { items } = row.original;
-        const value = items.profile_handled?.value || "";
-        const genderValue = items.gender?.value;
-        const heightValue = items.height?.value;
+        const value = items.profile_handled || "";
+        const genderValue = items.gender;
+        const heightValue = items.height;
         return (
           <div className="">
             <span>
@@ -238,10 +229,10 @@ export default function SearchClient() {
       header: "Astrologically | Caste | Gotra | Marital Status",
       cell: ({ row }) => {
         const { items } = row.original;
-        const astroValue = items.astrologically?.value || "";
-        const casteValue = items.caste?.value;
-        const gotraValue = items.gotra?.value;
-        const maritalValue = items.marital_status?.value;
+        const astroValue = items.astrologically || "";
+        const casteValue = items.caste;
+        const gotraValue = items.gotra;
+        const maritalValue = items.marital_status;
         return (
           <div className="">
             <span>
@@ -256,10 +247,10 @@ export default function SearchClient() {
       header: "Education | Occupation | Personal Income | Annual Income",
       cell: ({ row }) => {
         const { items } = row.original;
-        const qualification = items.highest_qualification?.value || "";
-        const occupation = items && items.occupation?.value;
-        const pIncome = items && items.personal_income?.value;
-        const aIncome = items && items.annual_family_income?.value;
+        const qualification = items.highest_qualification || "";
+        const occupation = items && items.occupation;
+        const pIncome = items && items.personal_income;
+        const aIncome = items && items.annual_family_income;
         return (
           <div className="">
             {qualification} | {occupation} | {pIncome || 0} | {aIncome || 0}
@@ -272,8 +263,8 @@ export default function SearchClient() {
       header: "Client Mobile | Client Email",
       cell: ({ row }) => {
         const { items } = row.original;
-        const cMobileValue = items.client_mobile?.value || "";
-        const cEmailValue = items.client_email?.value;
+        const cMobileValue = items.client_mobile || "";
+        const cEmailValue = items.client_email;
         return (
           <div className="">
             <span>
@@ -288,8 +279,8 @@ export default function SearchClient() {
       header: "Budget",
       cell: ({ row }) => {
         const { items } = row.original;
-        const fromBudgetValue = items.from_marriage_budget?.value || "";
-        const toBudgetValue = items.to_marriage_budget?.value;
+        const fromBudgetValue = items.from_marriage_budget || "";
+        const toBudgetValue = items.to_marriage_budget;
 
         return (
           <div className="flex">
@@ -310,8 +301,8 @@ export default function SearchClient() {
       header: "Country | City",
       cell: ({ row }) => {
         const { items } = row.original;
-        const countryeValue = items.residing_country?.value;
-        const cityValue = items.residential_city?.value;
+        const countryeValue = items.residing_country;
+        const cityValue = items.residential_city;
         return (
           <div className="">
             {countryeValue} | {cityValue}
@@ -365,15 +356,13 @@ export default function SearchClient() {
 
   const transformedClientList = !filterData
     ? clientListData &&
-      Array.isArray(clientListData.data) &&
-      clientListData.data.map((m: ClientData) => ({
+      Array.isArray(clientListData) &&
+      clientListData.map((m: SearchClientDataProps) => ({
         id: m.client_id,
         items: Object.fromEntries(
-          m.modules.flatMap((mm) =>
-            mm.fields.map((field) => [field.field_name, field])
-          )
+          m.forms.map((item) => [item.field_name, item.value])
         ),
-        client_documents: m.client_documents,
+        documents: m.documents,
       }))
     : Array.isArray(filterData) &&
       filterData.map((m: ClientData) => ({
@@ -385,11 +374,11 @@ export default function SearchClient() {
         ),
         client_documents: m.client_documents,
       }));
-  console.log(transformedClientList, " <>? MAIN");
 
   const handleChange = (updateFilter: any) => {
     setFilters({ ...updateFilter });
   };
+  console.log(transformedClientList, " <>?<>?");
 
   // const handledPaginationData = clientListData
   //   ? {

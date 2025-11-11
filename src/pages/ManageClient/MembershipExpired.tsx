@@ -20,9 +20,11 @@ import Pagination from "../../component/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileCard from "./Components/ProfileCard";
 import TableInfoPopup from "../../component/table/TableInfoPopup";
+import CommonFilters from "./CommonFilters";
+import { fetchClientFormModule } from "../../service/clientFormModule";
 
 const initialPaginationData = {
   current_page: 1,
@@ -35,6 +37,8 @@ export default function MembershipExpired() {
     ...initialPaginationData,
   });
   const [modalOpen, setModalOpen] = useState(false);
+  const [filters, setFilters] = useState<any>({});
+  const [formValues, setFormValues] = useState<any[]>([]);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -55,22 +59,65 @@ export default function MembershipExpired() {
     retry: false,
   });
 
+  const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
+    useQuery({
+      queryKey: ["client-form-module-list"],
+      queryFn: fetchClientFormModule,
+      retry: false,
+    });
+
+  useEffect(() => {
+    if (
+      Object.keys(filters).length === 0 &&
+      clientFormModuleData &&
+      clientFormModuleData?.data?.length
+    ) {
+      const advanceSearchFeilds: any[] = [];
+      clientFormModuleData?.data.filter((item) => {
+        item.client_forms.filter((innerItem) => {
+          console.log(innerItem.show_in_common, " <>?");
+          if (innerItem.show_in_common === 1) {
+            advanceSearchFeilds.push(innerItem);
+            filters[innerItem.id] = {
+              value: innerItem.value || "",
+              field_id: innerItem.id,
+            };
+          }
+        });
+      });
+      setFormValues(advanceSearchFeilds);
+      // moduleRef.current = clientFormModuleData?.data;
+    }
+  }, [clientFormModuleData]);
+
   const columns: ColumnDef<ClientData>[] = [
     {
       accessorKey: "status",
       header: "Profile Photo	",
       cell: ({ row }) => {
-        const { client_documents } = row.original;
+        const { client_documents, items } = row.original;
         const mainPhoto = client_documents.find(
           (f) => f.file_type === "main_photo"
         );
-        console.log(mainPhoto, " <>?");
+        let color = "bg-[#fff]";
+        const date = new Date();
+        if (items?.expiry_date) {
+          color =
+            new Date(items?.expiry_date.value) <= new Date(date)
+              ? "bg-[#FA9189]"
+              : "bg-[#fff]";
+        }
         return (
-          <img
-            alt="miain_photo"
-            src={mainPhoto?.file_path}
-            className="w-[200px] h-[140px]"
-          />
+          <div className="flex justify-start h-full">
+            <div className={` ${color} h-auto w-[8px] mr-1`}></div>
+            <div>
+              <img
+                alt="miain_photo"
+                src={mainPhoto?.file_path}
+                className="w-[200px] h-[140px]"
+              />
+            </div>
+          </div>
         );
       },
     },
@@ -280,23 +327,35 @@ export default function MembershipExpired() {
     },
   });
 
-  if (clientListLoading) {
+  if (clientListLoading || clientFromModuleLoading) {
     return <LoadingPage />;
   }
 
+  const date = new Date();
   const transformedClientList =
     clientListData &&
     Array.isArray(clientListData.data) &&
-    clientListData.data.map((m: ClientData) => ({
-      id: m.client_id,
-      items: Object.fromEntries(
-        m.modules.flatMap((mm) =>
-          mm.fields.map((field) => [field.field_name, field])
-        )
-      ),
-      shared_profiles: m.shared_profiles,
-      client_documents: m.client_documents,
-    }));
+    clientListData.data
+      .map((m: ClientData) => ({
+        id: m.client_id,
+        items: Object.fromEntries(
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
+        ),
+        shared_profiles: m.shared_profiles,
+        client_documents: m.client_documents,
+      }))
+      .filter((f) => {
+        if (
+          f.items.expiry_date &&
+          new Date(f.items.expiry_date.value) <= new Date(date)
+        ) {
+          return f;
+        }
+      });
+
+  console.log(transformedClientList, " <>?<>?");
 
   const handledPaginationData = clientListData
     ? {
@@ -328,11 +387,26 @@ export default function MembershipExpired() {
     );
   };
 
+  const handleChange = (updateFilter: any) => {
+    setFilters({ ...updateFilter });
+  };
+
   return (
     <div className="">
       <ToastContainer />
       <div className="">
-        <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" />
+        <div className="">
+          <CommonFilters
+            filters={filters}
+            formValues={formValues}
+            clientFormModuleData={clientFormModuleData}
+            handleChangeMethod={handleChange}
+            onSubmit={(filter) => {}}
+            onReset={(filter) => {}}
+          />
+          {/* <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" /> */}
+        </div>
+        {/* <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" /> */}
       </div>
       <div className="mt-2 mb-2">
         <div className="flex justify-end p-4 bg-[#fff]">

@@ -29,8 +29,6 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
     ...initailResponseData,
   });
 
-  console.log(data, " <>?");
-
   const { state } = useLocation();
   const queryClient = useQueryClient();
 
@@ -75,8 +73,6 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
     setFormData({ ...initailResponseData });
   };
 
-  console.log(clientResponseByIdData);
-
   const columns: ColumnDef<ClientResponseProps>[] = [
     {
       accessorKey: "",
@@ -93,6 +89,9 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
     {
       accessorKey: "added_by",
       header: "Added By",
+      cell: ({ row }) => {
+        return <div className="capitalize">{row.original.added_by?.name}</div>;
+      },
     },
     {
       accessorKey: "added_by_user_type",
@@ -120,9 +119,8 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
   });
 
   const handledClientResponseById = clientResponseByIdData
-    ? [clientResponseByIdData.data]
+    ? clientResponseByIdData.data
     : [];
-  console.log(handledClientResponseById, " <>?<>?");
 
   return (
     <div className="flex flex-col gap-6 bg-[#f8f9fb] p-6 rounded-2xl">

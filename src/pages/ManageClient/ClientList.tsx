@@ -95,19 +95,28 @@ export default function ClientList() {
       accessorKey: "status",
       header: "Profile Photo	",
       cell: ({ row }) => {
-        const { client_documents } = row.original;
+        const { client_documents, items } = row.original;
         const mainPhoto = client_documents.find(
           (f) => f.file_type === "main_photo"
         );
-        console.log(row.original, " <>?");
+        let color = "bg-[#fff]";
+        const date = new Date();
+        if (items?.expiry_date) {
+          color =
+            new Date(items?.expiry_date.value) <= new Date(date)
+              ? "bg-[#FA9189]"
+              : "bg-[#fff]";
+        }
         return (
-          <div className="">
-            <div className={``}></div>
-            <img
-              alt="miain_photo"
-              src={mainPhoto?.file_path}
-              className="w-[200px] h-[140px]"
-            />
+          <div className="flex justify-start h-full">
+            <div className={` ${color} h-auto w-[8px] mr-1`}></div>
+            <div>
+              <img
+                alt="miain_photo"
+                src={mainPhoto?.file_path}
+                className="w-[200px] h-[140px]"
+              />
+            </div>
           </div>
         );
       },
