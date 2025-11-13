@@ -75,7 +75,6 @@ export default function MembershipExpired() {
       const advanceSearchFeilds: any[] = [];
       clientFormModuleData?.data.filter((item) => {
         item.client_forms.filter((innerItem) => {
-          console.log(innerItem.show_in_common, " <>?");
           if (innerItem.show_in_common === 1) {
             advanceSearchFeilds.push(innerItem);
             filters[innerItem.id] = {
@@ -125,7 +124,6 @@ export default function MembershipExpired() {
       accessorKey: "name",
       header: "Name | Profile ID | Lead ID | DOB",
       cell: ({ row }) => {
-        console.log(row.original);
         const { items } = row.original;
         const leadValue = items.lead_id?.value;
         return (
@@ -140,8 +138,6 @@ export default function MembershipExpired() {
       header: "Profile Sent",
       cell: ({ row }) => {
         const isExpanded = row.getIsExpanded();
-        console.log(row.original, " <>? MAIN");
-
         const handledShortProfilecount = Array.isArray(
           row.original.shared_profiles
         )
@@ -355,8 +351,6 @@ export default function MembershipExpired() {
         }
       });
 
-  console.log(transformedClientList, " <>?<>?");
-
   const handledPaginationData = clientListData
     ? {
         current_page: clientListData.meta.current_page,
@@ -364,28 +358,6 @@ export default function MembershipExpired() {
         per_page: clientListData.meta.per_page,
       }
     : initialPaginationData;
-
-  const expandedComponent = ({ data }: { data: any }) => {
-    return (
-      <div className="flex justify-start">
-        <ProfileCard
-          image={
-            data.original.client_documents?.find(
-              (doc: any) => doc.file_type === "main_photo"
-            )?.file_path || "https://via.placeholder.com/150"
-          }
-          name={data.original.items?.client_name?.value || "N/A"}
-          age={data.original.items?.age?.value || "-"}
-          dateTime={data.original.items?.created_at?.value || "N/A"}
-          onAttachProfile={() => console.log("Attach clicked", data.original)}
-          onAddResponse={() => {
-            console.log("Response clicked", data.original);
-            setOpenModal({ flag: true, data });
-          }}
-        />
-      </div>
-    );
-  };
 
   const handleChange = (updateFilter: any) => {
     setFilters({ ...updateFilter });

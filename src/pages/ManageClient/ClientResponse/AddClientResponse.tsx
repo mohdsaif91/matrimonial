@@ -13,6 +13,7 @@ import {
 } from "../../../service/clientResponse";
 import { toast, ToastContainer } from "react-toastify";
 import { responseOptions } from "../../../data/clientResponse";
+import LoadingPage from "../../Loading/Loading";
 
 const initailResponseData = {
   client_id: 0,
@@ -54,9 +55,7 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
   };
 
   const handleSave = () => {
-    console.log(formData, data);
     const userId = JSON.parse(sessionStorage.getItem("authUser"))?.id || "";
-    console.log(userId, " <>? MAIN ");
     const obj = {
       client_id: data.shared_with_user_id,
       profile_id: data.shared_profile_id,
@@ -77,6 +76,11 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
     {
       accessorKey: "",
       header: "#",
+      cell: ({ row }) => row.index + 1,
+    },
+    {
+      accessorKey: "response_status",
+      header: "status",
     },
     {
       accessorKey: "client_remark",
@@ -166,7 +170,11 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
           <Button text="Reset" onClick={handleReset} type="reset" />
         </div>
       </div>
-      <Table data={handledClientResponseById} columns={columns} />
+      {clientResponseByIdLoading ? (
+        <LoadingPage />
+      ) : (
+        <Table data={handledClientResponseById} columns={columns} />
+      )}
     </div>
   );
 }

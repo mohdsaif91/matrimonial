@@ -64,8 +64,6 @@ export default function PendingApprovalShortlist() {
       header: "Client Name",
       cell: ({ row }) => {
         const { form_values } = row.original;
-        console.log(row.original, " <>?");
-
         return (
           <div>
             {form_values.client_name} ({row.original.shortlisted_client_id})
@@ -80,7 +78,6 @@ export default function PendingApprovalShortlist() {
         const mainProfilePhoto = client_documents.find(
           (f) => f.type === "main_photo"
         );
-        // console.log(form_values);
         return (
           <img
             className="h-[120px] w-[150px]"
@@ -132,8 +129,6 @@ export default function PendingApprovalShortlist() {
     {
       header: "Shortlisted by",
       cell: ({ row }) => {
-        console.log(acceptRejecttData[0], " <>?");
-
         return (
           <div className="ml-3 capitalize">
             {acceptRejecttData &&
@@ -158,7 +153,6 @@ export default function PendingApprovalShortlist() {
                       status: "approved",
                     };
                     mutation.mutate({ ...appObj });
-                    console.log(appObj, " <>?");
                   }}
                   color="#fff"
                 />
@@ -171,7 +165,6 @@ export default function PendingApprovalShortlist() {
                       status: "rejected",
                     };
                     mutation.mutate({ ...appObj });
-                    console.log(appObj, " <>?");
                   }}
                   color="#fff"
                 />
@@ -187,7 +180,6 @@ export default function PendingApprovalShortlist() {
                     //   status: "rejected",
                     // };
                     // mutation.mutate({ ...appObj });
-                    // console.log(appObj, " <>?");
                   }}
                   color="#fff"
                 />
@@ -203,7 +195,6 @@ export default function PendingApprovalShortlist() {
                 //     status: "rejected",
                 //   };
                 //   mutation.mutate({ ...appObj });
-                //   console.log(appObj, " <>?");
                 // }}
                 color="#fff"
               />

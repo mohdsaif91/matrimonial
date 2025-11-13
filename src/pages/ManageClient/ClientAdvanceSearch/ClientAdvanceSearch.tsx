@@ -135,19 +135,26 @@ export default function ClientAdvanceSearch() {
     },
     {
       header: "Profile Sent",
-      cell: ({ row }) => (
-        <div className="flex">
-          <span>{3}</span>
-          <ChevronDown
-            size={24}
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation(); // prevent row click conflict
-              row.toggleExpanded();
-            }}
-          />
-        </div>
-      ),
+      cell: ({ row }) => {
+        const handledShortProfilecount = Array.isArray(
+          row.original.shared_profiles
+        )
+          ? row.original.shared_profiles.length
+          : 0;
+        return (
+          <div className="flex">
+            <span>{handledShortProfilecount}</span>
+            <ChevronDown
+              size={24}
+              className="cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation(); // prevent row click conflict
+                row.toggleExpanded();
+              }}
+            />
+          </div>
+        );
+      },
     },
     {
       accessorKey: "handleBy",
@@ -302,6 +309,7 @@ export default function ClientAdvanceSearch() {
           )
         ),
         client_documents: m.client_documents,
+        shared_profiles: m.shared_profiles,
       }))
     : Array.isArray(filterData) &&
       filterData.map((m: ClientData) => ({
@@ -312,6 +320,7 @@ export default function ClientAdvanceSearch() {
           )
         ),
         client_documents: m.client_documents,
+        shared_profiles: m.shared_profiles,
       }));
 
   const handledPaginationData = clientListData
@@ -321,8 +330,6 @@ export default function ClientAdvanceSearch() {
         per_page: clientListData.meta.per_page,
       }
     : initialPaginationData;
-
-  console.log(filters, " <>? MAIN FILGTER");
 
   return (
     <div className="">

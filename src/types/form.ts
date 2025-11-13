@@ -12,6 +12,7 @@ export interface ButtonProps {
 }
 
 export interface textFeildProps {
+  labelPosition?: string;
   label?: string;
   name: string;
   type?: string;

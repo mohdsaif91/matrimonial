@@ -111,7 +111,6 @@ export default function TaskList() {
   }
 
   const handledTaskData = taskData ? taskData.data : [];
-  console.log(handledTaskData, " <>?");
 
   return (
     <div className="p-4 bg-white">

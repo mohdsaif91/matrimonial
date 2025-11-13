@@ -4,6 +4,7 @@ import Button from "../../component/form/Button";
 import ModalPopup from "../../component/ModalPopup";
 import ResponseRemarkTable from "./ClientResponse/AddClientResponse";
 import TaskAdd from "../ManageTask/TaskAdd";
+import AttachProfile from "./AttachProfile";
 
 interface ProfileCardExpandedRowProps {
   image: string;
@@ -35,22 +36,28 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
         return <ResponseRemarkTable data={openModal.data} />;
       case "addTask":
         return <TaskAdd />;
-      case "attachProfile":
-        <></>;
+      case "sendProfile":
+        return (
+          <AttachProfile
+            data={openModal.data && openModal.data}
+            onClose={() => setOpenModal(initialModalData)}
+          />
+        );
       default:
         return <></>;
     }
   };
 
   const handledShortProfile = data ? data.shared_profiles : [];
-  console.log(data, " <>? PP");
 
-  // const userId=ro
   return (
     <div className="flex flex-wrap flex-row gap-4">
       {handledShortProfile.map((item) => (
-        <div className="flex flex-col items-center bg-green-100 p-4 rounded-2xl shadow-md border border-green-200 w-[220px]">
-          {/* Image */}
+        <div
+          className={`flex flex-col items-center ${
+            item.is_shared && "bg-green-100"
+          } p-4 rounded-2xl shadow-md border border-green-200 w-[220px]`}
+        >
           <img
             src={
               item.documents.find((f) => f.file_type === "main_photo")
@@ -59,15 +66,13 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
             alt={name}
             className="rounded-xl w-[150px] h-[150px] object-cover mb-2"
           />
-
-          {/* Name & Details */}
-          <h3 className="text-gray-800 font-semibold text-lg">
-            {item?.items?.client_name?.value || ""}
+          <h3 className="text-gray-800 font-semibold text-lg  capitalize">
+            {item?.shared_profile_name || ""}
           </h3>
-          <p className="text-gray-600 text-sm">{age}</p>
+          <p className="text-gray-600 text-sm">
+            {item?.shared_profile_age || "-"}
+          </p>
           <p className="text-gray-500 text-sm">{dateTime}</p>
-
-          {/* Plus Icon */}
           <div className="my-2 text-gray-700">
             <Plus
               size={20}
@@ -82,8 +87,6 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
               className="mx-auto cursor-pointer"
             />
           </div>
-
-          {/* Buttons */}
           <Button
             text="Attach Profile"
             className="bg-[#161D27] text-white w-full mb-2"
@@ -91,8 +94,8 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
               setOpenModal({
                 flag: true,
                 data,
-                component: "attachProfile",
-                title: "Attach Profile",
+                component: "sendProfile",
+                title: "Send Profile",
               })
             }
           />
@@ -108,9 +111,17 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
               })
             }
           />
-
-          <div className="mt-3 text-blue-600">
-            <Check size={20} className="mx-auto" />
+          <div className="flex">
+            {Array.isArray(item.responses) &&
+              item.responses.map((resItem) => (
+                <div
+                  className={`mt-3 ${
+                    resItem.color === "blue" ? "text-blue-600" : "text-red-600"
+                  } `}
+                >
+                  <Check size={20} className="mx-auto" />
+                </div>
+              ))}
           </div>
           <ModalPopup
             data={openModal.data}

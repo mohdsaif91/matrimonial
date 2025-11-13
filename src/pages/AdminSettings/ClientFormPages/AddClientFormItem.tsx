@@ -45,8 +45,6 @@ function AddClientFormItem() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data, " <>?");
-
       setFormData({ ...state.data });
     }
   }, []);

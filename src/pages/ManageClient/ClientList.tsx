@@ -19,12 +19,13 @@ import { ClientData } from "../../types/client";
 import Pagination from "../../component/Pagination";
 import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProfileCard from "./Components/ProfileCard";
 import TableInfoPopup from "../../component/table/TableInfoPopup";
 import CommonFilters from "./CommonFilters";
 import { fetchClientFormModule } from "../../service/clientFormModule";
+import ModalPopup from "../../component/ModalPopup";
 
 const initialPaginationData = {
   current_page: 1,
@@ -39,6 +40,7 @@ export default function ClientList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [filters, setFilters] = useState<any>({});
   const [formValues, setFormValues] = useState<any[]>([]);
+  const [profileModal, setProfileModal] = useState({ data: null, open: false });
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -75,7 +77,6 @@ export default function ClientList() {
       const advanceSearchFeilds: any[] = [];
       clientFormModuleData?.data.filter((item) => {
         item.client_forms.filter((innerItem) => {
-          console.log(innerItem.show_in_common, " <>?");
           if (innerItem.show_in_common === 1) {
             advanceSearchFeilds.push(innerItem);
             filters[innerItem.id] = {
@@ -125,12 +126,15 @@ export default function ClientList() {
       accessorKey: "name",
       header: "Name | Profile ID | Lead ID | DOB",
       cell: ({ row }) => {
-        console.log(row.original);
         const { items } = row.original;
         const leadValue = items.lead_id?.value;
         return (
           <div>
-            {items.client_name?.value} | | {leadValue || "-"}|
+            {items.client_name?.value} |{" "}
+            <span onClick={() => {}} className="font-bold">
+              Profile-id
+            </span>{" "}
+            | {leadValue || "-"}|{" "}
             {moment(items.date_of_birth?.value).format("YYYY-MM-DD")}
           </div>
         );
@@ -140,8 +144,6 @@ export default function ClientList() {
       header: "Profile Sent",
       cell: ({ row }) => {
         const isExpanded = row.getIsExpanded();
-        console.log(row.original, " <>? MAIN");
-
         const handledShortProfilecount = Array.isArray(
           row.original.shared_profiles
         )
@@ -353,28 +355,6 @@ export default function ClientList() {
       }
     : initialPaginationData;
 
-  const expandedComponent = ({ data }: { data: any }) => {
-    return (
-      <div className="flex justify-start">
-        <ProfileCard
-          image={
-            data.original.client_documents?.find(
-              (doc: any) => doc.file_type === "main_photo"
-            )?.file_path || "https://via.placeholder.com/150"
-          }
-          name={data.original.items?.client_name?.value || "N/A"}
-          age={data.original.items?.age?.value || "-"}
-          dateTime={data.original.items?.created_at?.value || "N/A"}
-          onAttachProfile={() => console.log("Attach clicked", data.original)}
-          onAddResponse={() => {
-            console.log("Response clicked", data.original);
-            setOpenModal({ flag: true, data });
-          }}
-        />
-      </div>
-    );
-  };
-
   const handleChange = (updateFilter: any) => {
     setFilters({ ...updateFilter });
   };
@@ -411,6 +391,14 @@ export default function ClientList() {
           pagination={handledPaginationData}
         />
       </div>
+      <ModalPopup
+        data={profileModal.data}
+        title="Client Profile Detail"
+        isOpen={profileModal.open}
+        children={<></>}
+        onClose={() => setProfileModal({ data: null, open: false })}
+        width="520px"
+      />
     </div>
   );
 }

@@ -47,7 +47,6 @@ function TaskAdd() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data, " <>?");
       const { assigned_to, category } = state.data;
 
       setFormData({
@@ -110,7 +109,6 @@ function TaskAdd() {
 
   const handledTaskCategory = taskCategoryData ? taskCategoryData.data : [];
   const handledManageUsers = manageUserData ? manageUserData.data : [];
-  console.log(handledTaskCategory, " <>?");
 
   return (
     <form

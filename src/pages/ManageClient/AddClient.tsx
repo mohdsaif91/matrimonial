@@ -103,8 +103,6 @@ const AddClient = () => {
       setFormValues(initialValues);
     }
     if (state && state.data) {
-      console.log(state.data.items, " Edit form  Items <>?");
-
       setFormValues({ ...state.data.items });
     }
   }, [clientFormModuleData, activeTab]);
@@ -625,8 +623,6 @@ const AddClient = () => {
           form_fields: formData,
           client_id: idRef.current,
         };
-        console.log(activeTab, "<", handleClientFromModule.length);
-
         if (activeTab < handleClientFromModule.length) {
           toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
           setActiveTab((prevState) => prevState + 1);
@@ -641,8 +637,6 @@ const AddClient = () => {
         finalObj = {
           form_fields: formData,
         };
-
-        console.log(activeTab + 1 < handleClientFromModule.length);
         mutation.mutate(finalObj as FormSubmitProps);
       }
     }
@@ -778,8 +772,6 @@ const AddClient = () => {
             item.field_name === "bio_data"
               ? ".pdf,.doc,.docx"
               : ".jpg,.jpeg,.png,.gif";
-          console.log(item.field_name);
-
           return (
             <div className="">
               <MemoizedImageField
@@ -873,9 +865,7 @@ const AddClient = () => {
         <div className="flex-1 mt-4 cursor-pointer col-span-4">
           <Button
             loading={mutation.isPending || updateMutation.isPending}
-            onClick={() => {
-              console.log("last BTN");
-            }}
+            onClick={() => {}}
             type="submit"
             className=""
             text={`${state && state.data ? "Update" : "Save"} ${

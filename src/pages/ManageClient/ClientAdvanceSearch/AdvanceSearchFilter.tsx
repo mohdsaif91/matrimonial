@@ -223,32 +223,6 @@ export const AdvanceSearchFilter = ({
     refetchOnWindowFocus: false,
   });
 
-  // useEffect(() => {
-  //   if (
-  //     Object.keys(filters).length === 0 &&
-  //     clientFormModuleData &&
-  //     clientFormModuleData?.data?.length
-  //   ) {
-  //     console.log("CALLED AGAIUN <>?");
-
-  //     // const forms = clientFormModuleData.data[activeTab].client_forms;
-  //     const advanceSearchFeilds: any[] = [];
-  //     clientFormModuleData?.data.filter((item) => {
-  //       item.client_forms.filter((innerItem) => {
-  //         if (innerItem.show_in_advance_search === 1) {
-  //           advanceSearchFeilds.push(innerItem);
-  //           filters[innerItem.id] = {
-  //             value: innerItem.value || "",
-  //             field_id: innerItem.id,
-  //           };
-  //         }
-  //       });
-  //     });
-  //     setFormValues(advanceSearchFeilds);
-  //     moduleRef.current = clientFormModuleData?.data;
-  //   }
-  // }, [clientFormModuleData]);
-
   const getOptions = (fieldName: string) => {
     let arr: { label: string; value: string | number }[] = [];
     switch (fieldName) {

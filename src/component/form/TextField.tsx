@@ -4,6 +4,7 @@ import { textFeildProps } from "../../types/form";
 // Generic input field
 export const TextField = memo(
   ({
+    labelPosition = "top",
     label,
     name,
     type = "text",
@@ -15,7 +16,11 @@ export const TextField = memo(
     showLabel = true,
   }: textFeildProps) => {
     return (
-      <div className="flex flex-col gap-1">
+      <div
+        className={`flex ${
+          labelPosition === "Top" ? "flex-col" : "flex-row"
+        } gap-1`}
+      >
         {label && label !== "" && (
           <label className="text-sm font-medium text-gray-700">
             {label} {required && <span className="text-red-500">*</span>}

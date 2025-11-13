@@ -84,8 +84,6 @@ export default function WebsiteSettings() {
   }
 
   const handledTaskData = taskData ? taskData.data : [];
-  console.log(handledTaskData, " <>?");
-
   return (
     <div className="p-4 bg-white">
       <ToastContainer />

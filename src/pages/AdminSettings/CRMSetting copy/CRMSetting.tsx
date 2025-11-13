@@ -110,8 +110,6 @@ export default function CRMSetting() {
   }
 
   const handledTaskData = taskData ? taskData.data : [];
-  console.log(handledTaskData, " <>?");
-
   return (
     <div className="p-4 bg-white">
       <ToastContainer />

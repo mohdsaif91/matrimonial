@@ -64,7 +64,6 @@ function AddEditRoles() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data, " P");
       const updatedPermissionArr =
         Array.isArray(state.data.permissions) &&
         state.data.permissions.map((m: PermissionIdProps) => m.id);
@@ -156,7 +155,6 @@ function AddEditRoles() {
       id: "permissions",
       header: "Permissions",
       cell: ({ row }) => {
-        console.log(row.original, " <>? OG ");
         const permissionName = row.original ? row.original.group : "";
         const arr = Array.isArray(row.original.permissions)
           ? row.original.permissions
@@ -204,8 +202,6 @@ function AddEditRoles() {
       },
     },
   ];
-
-  console.log(permissionArr, " <>? Whole Data");
 
   return (
     <form

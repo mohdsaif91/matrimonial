@@ -10,8 +10,6 @@ import ProfileCardExpandedRow from "../../pages/ManageClient/ProfileCardExpanded
 export default function Table({
   columns,
   data,
-  expandedRowChildren,
-  onAddResponse,
 }: {
   columns: any;
   data: any[];

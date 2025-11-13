@@ -145,8 +145,6 @@ export default function SearchClient() {
           <Checkbox
             checked={selectedClient.includes(id)}
             onChange={(checked) => {
-              console.log(selectedClient, " <>?<>?");
-
               if (checked) {
                 setSelectClient([...selectedClient, id]);
               } else {
@@ -181,7 +179,6 @@ export default function SearchClient() {
       header: "Name | Profile ID | Lead ID | DOB",
       cell: ({ row }) => {
         const { items } = row.original;
-        console.log(items, " <>?<>?");
         const leadValue = items.lead_id;
         return (
           <div>
@@ -191,22 +188,6 @@ export default function SearchClient() {
         );
       },
     },
-    // {
-    //   header: "Profile Sent",
-    //   cell: ({ row }) => (
-    //     <div className="flex">
-    //       <span>{3}</span>
-    //       <ChevronDown
-    //         size={24}
-    //         className="cursor-pointer"
-    //         onClick={(e) => {
-    //           e.stopPropagation(); // prevent row click conflict
-    //           row.toggleExpanded();
-    //         }}
-    //       />
-    //     </div>
-    //   ),
-    // },
     {
       accessorKey: "handleBy",
       header: "Handle By | Sex | Height",
@@ -378,15 +359,6 @@ export default function SearchClient() {
   const handleChange = (updateFilter: any) => {
     setFilters({ ...updateFilter });
   };
-  console.log(transformedClientList, " <>?<>?");
-
-  // const handledPaginationData = clientListData
-  //   ? {
-  //       current_page: clientListData.meta.current_page,
-  //       last_page: clientListData.meta.last_page,
-  //       per_page: clientListData.meta.per_page,
-  //     }
-  //   : initialPaginationData;
 
   const clientName = selectClientDetails
     ? selectClientDetails?.items?.client_name?.value

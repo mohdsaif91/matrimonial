@@ -123,11 +123,8 @@ export default function AddEditLeads() {
     ? leadData.data.filter((m) => m.type === "Lead")
     : [];
 
-  console.log(handledLeadData, " <>?");
-
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data, " <>?");
       setFormData({
         ...state.data,
       });

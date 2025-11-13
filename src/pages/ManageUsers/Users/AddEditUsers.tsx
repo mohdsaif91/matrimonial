@@ -45,13 +45,9 @@ function AddEditUsers() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data);
-
       setFormData({ ...state.data });
     }
   }, []);
-
-  console.log(roleData, " <>?");
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));

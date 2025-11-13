@@ -111,8 +111,6 @@ export default function LeadsList() {
       const assigneToDataItem = assigneToData.data.find(
         (f) => f.id === assigneTo
       );
-      console.log(assigneToDataItem, " <>?<>? ", assigneTo);
-
       return (assigneToDataItem && assigneToDataItem.name) || "";
     }
     return assigneTostr;
@@ -238,7 +236,6 @@ export default function LeadsList() {
   }
 
   const handledLeadData = leadData ? leadData.data : [];
-  console.log(handledLeadData);
 
   return (
     <div className="p-4 bg-white">

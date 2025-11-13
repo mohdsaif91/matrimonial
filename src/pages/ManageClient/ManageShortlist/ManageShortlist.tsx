@@ -38,7 +38,6 @@ export default function ManageShortlist() {
       accessorKey: "status",
       header: "Profile Id",
       cell: ({ row }) => {
-        console.log(row.original);
         return <div>{row.original.client_id}</div>;
       },
     },
@@ -46,14 +45,12 @@ export default function ManageShortlist() {
       accessorKey: "name",
       header: "Client Name",
       cell: ({ row }) => {
-        console.log(row.original);
         return <div>{row.original.form_data.client_name}</div>;
       },
     },
     {
       header: "Phone",
       cell: ({ row }) => {
-        console.log(row.original);
         return <div>{row.original.form_data.mobile_number}</div>;
       },
     },
