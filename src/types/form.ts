@@ -9,6 +9,7 @@ export interface ButtonProps {
   disabled?: boolean;
   type?: string;
   loading?: boolean;
+  icon?: React.ReactNode;
 }
 
 export interface textFeildProps {
@@ -22,6 +23,7 @@ export interface textFeildProps {
   onChange: (value: string | number) => void;
   extraText?: string;
   showLabel?: boolean;
+  disabled?: boolean;
 }
 
 export interface DateFeildProps {

@@ -22,7 +22,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex h-auto items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -41,7 +41,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto max-h-[70vh]">{children}</div>
+        <div className="overflow-y-auto ">{children}</div>
       </div>
     </div>
   );

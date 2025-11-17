@@ -6,26 +6,27 @@ import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../../Loading/Loading";
 import Button from "../../../component/form/Button";
 import Table from "../../../component/table/Table";
+import { deleteCRMSetting, fetchCRMSetting } from "../../../service/crmSetting";
 
 export default function CRMSetting() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: taskData, isLoading } = useQuery({
-    queryKey: ["task-list"],
-    // queryFn: fetchTask,
+  const { data: CRMData, isLoading } = useQuery({
+    queryKey: ["crm-setting-list"],
+    queryFn: fetchCRMSetting,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    // mutationFn: deleteTask,
+    mutationFn: deleteCRMSetting,
     onSuccess: () => {
-      toast("Successfully deleted Task item");
-      queryClient.invalidateQueries({ queryKey: ["task-list"] });
+      toast("Successfully deleted CRM Setting");
+      queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Task item:", error);
-      toast(error.response?.data?.message || "Failed to delete Task item");
+      console.error("❌ Error in deleting CRM Setting:", error);
+      toast(error.response?.data?.message || "Failed to delete CRM Setting");
     },
   });
 
@@ -37,47 +38,33 @@ export default function CRMSetting() {
     },
     {
       accessorKey: "name",
-      header: "ClIent Details",
+      header: "name",
     },
     {
-      accessorKey: "title",
-      header: "Task Title",
+      accessorKey: "slug_key",
+      header: "Key",
     },
     {
-      accessorKey: "role_for",
-      header: "Profile Details",
+      accessorKey: "value",
+      header: "Value",
     },
     {
-      accessorKey: "scheduled_on",
-      header: "Schedule Date",
-    },
-    {
-      accessorKey: "role_for",
-      header: "Created By",
-    },
-    {
-      accessorKey: "assigned_to",
-      header: "Assigned To",
+      accessorKey: "status",
+      header: "Status",
       cell: ({ getValue }) => {
-        const name = getValue() ? getValue()?.name : "";
-        return <div>{name}</div>;
+        const status = getValue() as string;
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+              status === "active"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {status}
+          </span>
+        );
       },
-    },
-    {
-      accessorKey: "category",
-      header: "Task Category",
-      cell: ({ getValue }) => {
-        const name = getValue() ? getValue()?.name : "";
-        return <div>{name}</div>;
-      },
-    },
-    {
-      accessorKey: "priority",
-      header: "Task Priority",
-    },
-    {
-      accessorKey: "role_for",
-      header: "Follow Up",
     },
     {
       id: "actions",
@@ -86,7 +73,7 @@ export default function CRMSetting() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/task-edit", { state: { data: row.original } });
+              navigate("/addCRMSetting", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -109,7 +96,7 @@ export default function CRMSetting() {
     return <LoadingPage />;
   }
 
-  const handledTaskData = taskData ? taskData.data : [];
+  const handledCRMData = CRMData ? CRMData.data : [];
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
@@ -118,7 +105,7 @@ export default function CRMSetting() {
         onClick={() => navigate("/addCRMSetting")}
       />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={handledTaskData} />
+        <Table borderX={true} columns={columns} data={handledCRMData} />
       </div>
     </div>
   );

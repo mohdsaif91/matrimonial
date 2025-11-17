@@ -82,6 +82,11 @@ export default function ClientResponse() {
     {
       accessorKey: "added_by",
       header: "Added By",
+      cell: ({ row }) => {
+        console.log(row.original, " <>?");
+        const name = row.original.added_by?.value || "-";
+        return <span className="font-bold">{name}</span>;
+      },
     },
     {
       accessorKey: "added_by_user_type",

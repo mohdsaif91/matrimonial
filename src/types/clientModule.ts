@@ -22,3 +22,12 @@ export interface ClientModuleField {
   created_at: string;
   updated_at: string;
 }
+
+export interface GetStatusProps {
+  field_id: number;
+  field_name: string;
+  display_name: string;
+  value: string;
+  field_type: string;
+  required: boolean;
+}

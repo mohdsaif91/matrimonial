@@ -105,7 +105,11 @@ export default function ManageShortlist() {
       <ToastContainer />
       <ManageShortlistFilters />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={transformedClientList || []} />
+        <Table
+          borderX={true}
+          columns={columns}
+          data={transformedClientList || []}
+        />
         <Pagination
           onPageChange={() => {}}
           pagination={handledPaginationData}

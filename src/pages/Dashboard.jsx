@@ -6,14 +6,33 @@ import { TodaysBirthday } from "./TodaysBirthday";
 import { TodaysAnniversaries } from "./TodaysAnniversaries";
 import { AbsentToday } from "./AbsentToday";
 import { UserActivity } from "./UserActivity";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCRMSetting } from "../service/crmSetting";
+import LoadingPage from "./Loading/Loading";
+
+const crmSessionData = JSON.parse(sessionStorage.getItem("CRM"));
+
 function Dashboard() {
   const { user, logout } = useContext(AuthContext);
+
+  const {
+    data: crmData,
+    isLoading: crmLoading,
+    isSuccess: crmDataSuccess,
+  } = useQuery({
+    queryKey: ["crm-setting-list"],
+    queryFn: fetchCRMSetting,
+  });
+
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
+  if (crmLoading) {
+    return <LoadingPage />;
+  }
+
+  if (crmDataSuccess && !crmSessionData) {
+    sessionStorage.setItem("CRM", JSON.stringify(crmData.data));
+  }
 
   return (
     <div className="bg-white rounded-md">

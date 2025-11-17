@@ -1,4 +1,4 @@
-import { ClientModuleField } from "../types/clientModule";
+import { ClientModuleField, GetStatusProps } from "../types/clientModule";
 
 export const getLabelValue = (arr: any[] = [], label = false) => {
   return arr.map((s: any) => ({
@@ -40,4 +40,30 @@ export const parseTimeStringToDate = (timeStr?: string): Date | null => {
   const date = new Date();
   date.setHours(hours, minutes, 0, 0);
   return date;
+};
+
+export const statusColor: Record<
+  "Paid" | "Others" | "Unpaid" | "PartiallyPaid",
+  string
+> = {
+  Paid: "#B3F5BC",
+  Others: "#374151",
+  Unpaid: "#374151",
+  PartiallyPaid: "#374151",
+};
+
+export const getStatusColor = (obj: GetStatusProps | undefined) => {
+  if (!obj) return "#fff";
+  return statusColor[obj.value];
+};
+
+export const getCRMObject = () => {
+  const settingsArray = JSON.parse(sessionStorage.getItem("CRM")) || [];
+
+  const settingsObject = settingsArray.reduce((acc, item) => {
+    acc[item.slug_key] = item;
+    return acc;
+  }, {});
+
+  return settingsObject;
 };

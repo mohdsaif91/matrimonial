@@ -13,7 +13,9 @@ export async function fetchShortList(status: string) {
 }
 
 export async function getPendingRequestByClientId(clientId: any) {
-  const response = await api.get(`${ROUTE.SHORT_LIST.GET}/client/${clientId}`);
+  const response = await api.get(
+    `${ROUTE.SHORT_LIST.GET}/client/${clientId}?status=pending`
+  );
   return response.data;
 }
 

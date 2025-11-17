@@ -25,6 +25,8 @@ import Checkbox from "../../component/form/Checkbox";
 import { addShortList } from "../../service/shortList";
 import { User } from "../../types/header";
 import { fetchClientFormModule } from "../../service/clientFormModule";
+import ModalPopup from "../../component/ModalPopup";
+import AttachProfile from "./AttachProfile";
 
 const initialPaginationData = {
   current_page: 1,
@@ -43,6 +45,7 @@ export default function SearchClient() {
   const [filters, setFilters] = useState<any>({});
   const [formValues, setFormValues] = useState<any[]>([]);
   const [filterData, setFilterData] = useState<any[] | null>(null);
+  const [modalPopup, setModalPopup] = useState({ open: false, data: null });
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -303,7 +306,10 @@ export default function SearchClient() {
                 from_client_id: selectClientDetails && selectClientDetails.id,
                 to_client_id: row.original.id,
               };
-              senProfileMutation.mutate(sendProfileObj);
+              setModalPopup({
+                open: true,
+                data: { ...row.original, sendProfileObj },
+              });
             }}
           />
           <div className="flex flex-row justify-between">
@@ -429,6 +435,18 @@ export default function SearchClient() {
           pagination={handledPaginationData}
         /> */}
       </div>
+      <ModalPopup
+        children={
+          <AttachProfile
+            data={modalPopup.data}
+            onClose={() => setModalPopup({ open: false, data: null })}
+          />
+        }
+        data={modalPopup.data}
+        isOpen={modalPopup.open}
+        onClose={() => setModalPopup({ open: false, data: null })}
+        title="Send Profile"
+      />
     </div>
   );
 }

@@ -1,151 +1,197 @@
 import { useState } from "react";
+
 import { TextField } from "../../component/form/TextField";
 import { SendProfileProps } from "../../types/sendProfile";
+import Button from "../../component/form/Button";
 
 export default function AttachProfile({ onClose, data }: SendProfileProps) {
-  const [profileData, setProfileData] = useState({ ...data });
-  console.log(profileData, " <>?");
+  const [profileData, setProfileData] = useState({
+    sendTo: {
+      name: data.shared_profiles.shared_profile_name,
+      mobile: data.shared_profiles.shared_profile_phone || "-",
+      photo:
+        data.shared_profiles.documents.find((f) => f.file_type === "main_photo")
+          ?.file_path || "",
+      email: data.items.shared_profile_email || "-",
+    },
+    attachProfile: {
+      name: data.items.client_name.value || "-",
+      mobile: data.items.client_mobile.value || "-",
+      photo:
+        data.client_documents.find((f) => f.file_type === "main_photo")
+          ?.file_path || "-",
+      email: data.items.client_email.value || "-",
+      subject: `Matrimonial Profile of ${data.shared_profiles.shared_profile_name} for ${data.items.client_name.value}`,
+    },
+  });
+  const [hideContent, setHideContent] = useState({
+    whatsApp: true,
+    email: true,
+  });
+  const [takeContent, setTakeContent] = useState({
+    whatsApp: true,
+    email: true,
+  });
+
+  const sendTo = {
+    name: data.shared_profiles.shared_profile_name,
+    mobile: data.shared_profiles.shared_profile_phone || "-",
+    photo:
+      data.shared_profiles.documents.find((f) => f.file_type === "main_photo")
+        ?.file_path || "",
+    email: data.items.shared_profile_email || "-",
+  };
+  const attachProfile = {
+    name: data.items.client_name.value || "-",
+    mobile: data.items.client_mobile.value || "-",
+    photo:
+      data.client_documents.find((f) => f.file_type === "main_photo")
+        ?.file_path || "-",
+    email: data.items.client_email.value || "-",
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="flex items-center justify-center bg-black/50">
       <div className="bg-white w-[90%] max-w-6xl rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
         <h2 className="text-xl font-semibold mb-4">Send Profile</h2>
-
-        {/* Top table section */}
-        <div className="border border-gray-300 rounded-lg overflow-hidden mb-6">
-          <table className="w-full text-sm text-gray-700 border-collapse">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="p-3 border-r text-left">Send Mail To</th>
-                <th className="p-3 border-r text-left">{profileData.nameTo}</th>
-                <th className="p-3 border-r text-left">
-                  {profileData.mobileTo}
-                </th>
-                <th className="p-3 border-r text-left">
-                  {profileData.emailTo}
-                </th>
-                <th className="p-3 text-left">
-                  <img
-                    src={profileData.imageTo}
-                    alt="profile"
-                    className="w-20 h-24 object-cover rounded"
-                  />
-                </th>
-              </tr>
-              <tr>
-                <th className="p-3 border-r text-left">Attached Profile</th>
-                <th className="p-3 border-r text-left">
-                  {profileData.nameAttach}
-                </th>
-                <th className="p-3 border-r text-left">
-                  {profileData.mobileAttached}
-                </th>
-                <th className="p-3 border-r text-left">
-                  {profileData.emailAttached}
-                </th>
-                <th className="p-3 text-left">
-                  <img
-                    src={profileData.imageAttached}
-                    alt="profile"
-                    className="w-20 h-24 object-cover rounded"
-                  />
-                </th>
-              </tr>
-            </thead>
-          </table>
+        <div className="w-full border border-gray-300 rounded-md overflow-hidden">
+          <div className="grid grid-cols-5 border-b border-gray-300">
+            <div className="border-r border-gray-300 p-4 font-semibold">
+              Send Mail To
+            </div>
+            <div className="border-r border-gray-300 p-4">{sendTo.name}</div>
+            <div className="border-r border-gray-300 p-4">{sendTo.mobile}</div>
+            <div className="border-r border-gray-300 p-4">{sendTo.email}</div>
+            <div className="p-4 flex justify-center">
+              <img
+                src={sendTo.photo}
+                className="h-28 w-28 object-cover rounded-md"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-5">
+            <div className="border-r border-gray-300 p-4 font-semibold">
+              Attached Profile
+            </div>
+            <div className="border-r border-gray-300 p-4">
+              {attachProfile.name}
+            </div>
+            <div className="border-r border-gray-300 p-4">
+              {attachProfile.mobile}
+            </div>
+            <div className="border-r border-gray-300 p-4">
+              {attachProfile.email}
+            </div>
+            <div className="p-4 flex justify-center">
+              <img
+                src={attachProfile.photo}
+                className="h-28 w-28 object-cover rounded-md"
+              />
+            </div>
+          </div>
         </div>
-
-        {/* Form section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left section - phone */}
-          <div className="border border-gray-300 rounded-lg p-3">
-            <input type="checkbox" className="mr-2" defaultChecked />
-            <TextField
-              labelPosition="left"
-              label="To :"
-              name="mobileTo"
-              value={profileData.mobileTo}
-              onChange={(e) => {
-                setProfileData({ ...profileData, mobileTo: e?.target.value });
-              }}
-            />
-            <TextField
-              labelPosition="left"
-              label="From :"
-              name=""
-              value={profileData.mobileAttached}
-              onChange={(e) => {
-                setProfileData({
-                  ...profileData,
-                  mobileAttached: e?.target.value,
-                });
-              }}
-            />
-          </div>
-
-          {/* Right section - email */}
-          <div className="border border-gray-300 rounded-lg p-3">
-            <input type="checkbox" className="mr-2" defaultChecked />
-            <TextField
-              labelPosition="left"
-              label="To :"
-              name="mobileTo"
-              value={profileData.mobileTo}
-              onChange={(e) => {
-                setProfileData({ ...profileData, mobileTo: e?.target.value });
-              }}
-            />
-            <TextField
-              labelPosition="left"
-              label="From :"
-              name=""
-              value={profileData.mobileAttached}
-              onChange={(e) => {
-                setProfileData({
-                  ...profileData,
-                  mobileAttached: e?.target.value,
-                });
-              }}
-            />
-            <div className="flex items-center mb-3">
-              <label className="w-12 font-medium">To :</label>
+          {hideContent.whatsApp && (
+            <div className="border border-gray-300 rounded-lg p-3">
               <input
-                type="text"
-                defaultValue="ceo@oneunitsolutions.com"
-                className="flex-1 border rounded-md px-2 py-1 text-sm"
+                type="checkbox"
+                checked={takeContent.whatsApp}
+                className="mr-2 cursor-pointer"
+                onChange={(e) =>
+                  setTakeContent({ ...takeContent, whatsApp: e.target.checked })
+                }
+                defaultChecked
+              />
+              <TextField
+                label="To :"
+                name="mobileTo"
+                value={profileData.attachProfile.mobile}
+                onChange={(e) => {
+                  setProfileData({
+                    ...profileData,
+                    attachProfile: {
+                      ...profileData.attachProfile,
+                      mobile: e?.target.value,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                disabled={true}
+                label="From :"
+                name=""
+                value={profileData.mobileAttached}
+                onChange={(e) => {
+                  setProfileData({
+                    ...profileData,
+                    mobileAttached: e?.target.value,
+                  });
+                }}
               />
             </div>
-            <div className="flex items-center mb-3">
-              <label className="w-12 font-medium">Subject :</label>
+          )}
+          {hideContent.email && (
+            <div className="border border-gray-300 rounded-lg p-3">
               <input
-                type="text"
-                defaultValue="Matrimonial Profile of Abhishekh Garg for Kavita Dhupar"
-                className="flex-1 border rounded-md px-2 py-1 text-sm"
+                type="checkbox"
+                checked={takeContent.email}
+                className="mr-2 cursor-pointer"
+                defaultChecked
+                onChange={(e) =>
+                  setTakeContent({ ...takeContent, email: e.target.checked })
+                }
+              />
+              <TextField
+                label="To :"
+                name="mobileTo"
+                value={profileData.attachProfile.mobile}
+                onChange={(e) => {
+                  setProfileData({
+                    ...profileData,
+                    attachProfile: {
+                      ...profileData.attachProfile,
+                      mobile: e?.target.value,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                label="Subject :"
+                name=""
+                value={profileData.attachProfile.subject}
+                onChange={(e) => {
+                  setProfileData({
+                    ...profileData,
+                    attachProfile: {
+                      ...profileData.attachProfile,
+                      subject: e?.target.value,
+                    },
+                  });
+                }}
+              />
+              <TextField
+                label="From :"
+                disabled={true}
+                name=""
+                value={profileData.mobileAttached}
+                onChange={(e) => {
+                  setProfileData({
+                    ...profileData,
+                    mobileAttached: e?.target.value,
+                  });
+                }}
               />
             </div>
-            <div className="flex items-center">
-              <label className="w-12 font-medium">From :</label>
-              <input
-                type="text"
-                readOnly
-                defaultValue="info@code10.in"
-                className="flex-1 border rounded-md px-2 py-1 bg-gray-100 text-sm"
-              />
-            </div>
-          </div>
+          )}
         </div>
-
-        {/* Footer buttons */}
         <div className="flex justify-end mt-6">
-          <button
-            onClick={onClose}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded mr-2"
-          >
-            Close
-          </button>
-          <button className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-6 rounded">
-            Send
-          </button>
+          <Button
+            text="Submit"
+            className="mr-4"
+            type="button"
+            onClick={() => {}}
+          />
+          <Button text="reset" type="reset" onClick={() => {}} />
         </div>
       </div>
     </div>

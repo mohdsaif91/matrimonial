@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, X, Paperclip } from "lucide-react";
 import Button from "../../component/form/Button";
 import ModalPopup from "../../component/ModalPopup";
 import ResponseRemarkTable from "./ClientResponse/AddClientResponse";
@@ -24,7 +24,6 @@ const initialModalData = {
 const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
   image,
   name,
-  age,
   dateTime,
   data,
 }) => {
@@ -49,14 +48,15 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
   };
 
   const handledShortProfile = data ? data.shared_profiles : [];
+  console.log(data, " <>?");
 
   return (
     <div className="flex flex-wrap flex-row gap-4">
-      {handledShortProfile.map((item) => (
+      {handledShortProfile.map((item, index: number) => (
         <div
           className={`flex flex-col items-center ${
             item.is_shared && "bg-green-100"
-          } p-4 rounded-2xl shadow-md border border-green-200 w-[220px]`}
+          } p-2 rounded-2xl shadow-md border border-green-200 w-[220px]`}
         >
           <img
             src={
@@ -73,6 +73,7 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
             {item?.shared_profile_age || "-"}
           </p>
           <p className="text-gray-500 text-sm">{dateTime}</p>
+          <div className="mb-[4px]">{item.shared_at}</div>
           <div className="my-2 text-gray-700">
             <Plus
               size={20}
@@ -87,39 +88,52 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
               className="mx-auto cursor-pointer"
             />
           </div>
-          <Button
-            text="Attach Profile"
-            className="bg-[#161D27] text-white w-full mb-2"
-            onClick={() =>
-              setOpenModal({
-                flag: true,
-                data,
-                component: "sendProfile",
-                title: "Send Profile",
-              })
-            }
-          />
-          <Button
-            text="Add Response"
-            className="bg-[#C22B36] text-white w-full"
-            onClick={() =>
-              setOpenModal({
-                flag: true,
-                data: item,
-                component: "addResponse",
-                title: "Add Response",
-              })
-            }
-          />
+          <div className="flex justify-between w-full">
+            <Button
+              type="expanderBtn"
+              icon={<Paperclip size={16} className="mr-1" />}
+              text={`Profile`}
+              className="bg-[#161D27] text-white w-full px-1 py-2 text-[12px] flex items-center justify-center mr-1"
+              onClick={() =>
+                setOpenModal({
+                  flag: true,
+                  data: {
+                    ...data,
+                    shared_profiles: data.shared_profiles[index],
+                  },
+                  component: "sendProfile",
+                  title: "Send Profile",
+                })
+              }
+            />
+            <Button
+              type="expanderBtn"
+              icon={<Plus size={16} className="mr-1" />}
+              text="Response"
+              className="bg-[#C22B36] text-white w-full px-1 py-2 text-[12px] flex items-center justify-center"
+              onClick={() =>
+                setOpenModal({
+                  flag: true,
+                  data: item,
+                  component: "addResponse",
+                  title: "Add Response",
+                })
+              }
+            />
+          </div>
           <div className="flex">
             {Array.isArray(item.responses) &&
               item.responses.map((resItem) => (
                 <div
-                  className={`mt-3 ${
-                    resItem.color === "blue" ? "text-blue-600" : "text-red-600"
-                  } `}
+                  className={`mt-3 p-1 rounded-[50%] mr-1 ${
+                    resItem.color === "blue" ? "bg-blue-500" : "bg-red-500"
+                  }`}
                 >
-                  <Check size={20} className="mx-auto" />
+                  {resItem.status === "Rejected" ? (
+                    <Check color="white" size={20} className="mx-auto" />
+                  ) : (
+                    <X color="white" size={20} className="mx-auto" />
+                  )}
                 </div>
               ))}
           </div>

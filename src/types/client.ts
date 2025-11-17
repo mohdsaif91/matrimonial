@@ -213,3 +213,44 @@ export interface SharedDocument {
 export interface CommonFilterProps {
   filters: any[];
 }
+
+export interface ClientDetailsprops {
+  data: ClientData;
+}
+
+export interface FieldItem {
+  field_id: number;
+  field_name: string;
+  display_name: string;
+  value: string | number | boolean | null;
+  field_type: "text" | "dropdown" | "textArea" | "richText" | "datepicker";
+  required: boolean;
+}
+
+export interface Items {
+  [key: string]: FieldItem;
+}
+
+export interface SharedDocument {
+  id: number;
+  file_path: string;
+  file_type: string;
+  uploaded_at: string;
+}
+
+export interface SharedProfile {
+  shared_profile_id: number;
+  shared_with_user_id: number | null;
+  shared_by: number;
+  shared_at: string;
+  is_shared: boolean;
+  shared_profile_name: string;
+  shared_profile_age: number;
+  documents: SharedDocument[];
+}
+
+export interface ClientProfileResponse {
+  id: number;
+  items: Items;
+  shared_profiles: SharedProfile[];
+}

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
 import {
@@ -53,11 +54,6 @@ const MemoizedDateField = React.memo(DateTimePicker);
 const MemoizedImageField = React.memo(ImageField);
 const MemoizedRichText = React.memo(CustomEditor);
 const MemoizedTimePicker = React.memo(TimePickerExample);
-
-interface OptionType {
-  label: string;
-  value: string;
-}
 
 export const AdvanceSearchFilter = ({
   onSubmit,

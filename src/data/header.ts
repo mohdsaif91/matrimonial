@@ -20,7 +20,9 @@ export const headerLinks = [
         show: true,
         text: "Client List",
         link: "/client-list",
-        element: lazy(() => import("../pages/ManageClient/ClientList")),
+        element: lazy(
+          () => import("../pages/ManageClient/ClientList/ClientList")
+        ),
         children: [
           {
             id: "cl-2",

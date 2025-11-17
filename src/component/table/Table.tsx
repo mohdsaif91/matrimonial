@@ -10,11 +10,13 @@ import ProfileCardExpandedRow from "../../pages/ManageClient/ProfileCardExpanded
 export default function Table({
   columns,
   data,
+  borderX = false,
 }: {
   columns: any;
   data: any[];
   expandedRowChildren?: JSX.Element;
   onAddResponse?: () => void;
+  borderX?: boolean;
 }) {
   const [expanded, setExpanded] = useState({});
 
@@ -36,7 +38,10 @@ export default function Table({
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"
+                  className={`px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b
+                            ${
+                              borderX ? "border-l border-r border-gray-300" : ""
+                            }`}
                 >
                   {header.isPlaceholder
                     ? null
@@ -57,7 +62,12 @@ export default function Table({
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="px-4 py-2 text-sm text-gray-700 border-b"
+                      className={`px-4 text-sm text-gray-700 border-b
+                                ${
+                                  borderX
+                                    ? "border-l border-r border-gray-300 py-2"
+                                    : ""
+                                }`}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -70,7 +80,7 @@ export default function Table({
                   <tr>
                     <td
                       colSpan={row.getVisibleCells().length}
-                      className="bg-gray-50 px-6 py-4"
+                      className="bg-gray-50 p-2"
                     >
                       <ProfileCardExpandedRow
                         data={row.original}

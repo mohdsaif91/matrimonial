@@ -20,8 +20,6 @@ const PhotoBioData = ({ client_id }: { client_id: string }) => {
   const queryClient = useQueryClient();
 
   // deletePhotoAndBio
-  console.log(data, " <>?");
-
   const deleteMutation = useMutation({
     mutationFn: deletePhotoAndBio,
     onSuccess: () => {

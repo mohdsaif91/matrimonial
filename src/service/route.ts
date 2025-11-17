@@ -177,4 +177,10 @@ export const ROUTE = {
     DELETE: "v1/shortlists",
     APPROVE_REJECT: "v1/shortlists/client",
   },
+  CRM_SETTING: {
+    ADD: "v1/crm-settings",
+    GET: "v1/crm-settings",
+    UPDATE: "v1/crm-settings",
+    DELETE: "v1/crm-settings",
+  },
 };

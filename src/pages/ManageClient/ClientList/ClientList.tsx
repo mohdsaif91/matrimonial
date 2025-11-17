@@ -1,10 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import ClientFilterForm from "../../component/ManageClient/ClientFilter";
-import { deleteClientList, fetchClientList } from "../../service/client";
-import LoadingPage from "../Loading/Loading";
 import { ColumnDef } from "@tanstack/react-table";
-import Table from "../../component/table/Table";
-import Button from "../../component/form/Button";
 import {
   Pencil,
   Eye,
@@ -15,17 +10,27 @@ import {
   ChevronUp,
   Info,
 } from "lucide-react";
-import { ClientData } from "../../types/client";
-import Pagination from "../../component/Pagination";
-import { toast, ToastContainer } from "react-toastify";
 import moment from "moment";
-import { data, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import ProfileCard from "./Components/ProfileCard";
-import TableInfoPopup from "../../component/table/TableInfoPopup";
-import CommonFilters from "./CommonFilters";
-import { fetchClientFormModule } from "../../service/clientFormModule";
-import ModalPopup from "../../component/ModalPopup";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+
+import {
+  deleteClientList,
+  fetchClientByFilters,
+  fetchClientList,
+} from "../../../service/client";
+import LoadingPage from "../../Loading/Loading";
+import Table from "../../../component/table/Table";
+import Button from "../../../component/form/Button";
+import { ClientData } from "../../../types/client";
+import Pagination from "../../../component/Pagination";
+import TableInfoPopup from "../../../component/table/TableInfoPopup";
+import CommonFilters from "../CommonFilters";
+import { fetchClientFormModule } from "../../../service/clientFormModule";
+import ModalPopup from "../../../component/ModalPopup";
+import { getStatusColor } from "../../../util/ClientUtils";
+import ClientDetails from "./Component/ClientDetails";
 
 const initialPaginationData = {
   current_page: 1,
@@ -40,7 +45,11 @@ export default function ClientList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [filters, setFilters] = useState<any>({});
   const [formValues, setFormValues] = useState<any[]>([]);
-  const [profileModal, setProfileModal] = useState({ data: null, open: false });
+  const [clientDataModal, setClientDataModal] = useState({
+    flag: false,
+    data: null,
+  });
+  const [filterData, setFilterData] = useState<any[] | null>(null);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -48,6 +57,7 @@ export default function ClientList() {
     data: clientListData,
     error: clientListError,
     isLoading: clientListLoading,
+    refetch: clientDataRefetch,
   } = useQuery({
     queryKey: [
       "client-list",
@@ -105,17 +115,20 @@ export default function ClientList() {
         if (items?.expiry_date) {
           color =
             new Date(items?.expiry_date.value) <= new Date(date)
-              ? "bg-[#FA9189]"
-              : "bg-[#fff]";
+              ? "#FA9189"
+              : getStatusColor(items?.membership_profile_status);
         }
         return (
           <div className="flex justify-start h-full">
-            <div className={` ${color} h-auto w-[8px] mr-1`}></div>
+            <div
+              style={{ backgroundColor: color }}
+              className={` h-auto w-[8px] mr-1`}
+            />
             <div>
               <img
                 alt="miain_photo"
                 src={mainPhoto?.file_path}
-                className="w-[200px] h-[140px]"
+                className="w-[200px] h-[140px] p-2"
               />
             </div>
           </div>
@@ -131,7 +144,15 @@ export default function ClientList() {
         return (
           <div>
             {items.client_name?.value} |{" "}
-            <span onClick={() => {}} className="font-bold">
+            <span
+              onClick={() => {
+                setClientDataModal({
+                  flag: true,
+                  data: row.original,
+                });
+              }}
+              className="font-bold cursor-pointer"
+            >
               Profile-id
             </span>{" "}
             | {leadValue || "-"}|{" "}
@@ -329,23 +350,47 @@ export default function ClientList() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: fetchClientByFilters,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["client-list"] });
+      toast("Successfully fetched client by filter");
+      setFilterData(data.data);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding Form Item:", error);
+      toast(error.response?.data?.message || "Failed to add Form Item");
+    },
+  });
+
   if (clientListLoading) {
     return <LoadingPage />;
   }
 
-  const transformedClientList =
-    clientListData &&
-    Array.isArray(clientListData.data) &&
-    clientListData.data.map((m: ClientData) => ({
-      id: m.client_id,
-      items: Object.fromEntries(
-        m.modules.flatMap((mm) =>
-          mm.fields.map((field) => [field.field_name, field])
-        )
-      ),
-      shared_profiles: m.shared_profiles,
-      client_documents: m.client_documents,
-    }));
+  const transformedClientList = !filterData
+    ? clientListData &&
+      Array.isArray(clientListData.data) &&
+      clientListData.data.map((m: ClientData) => ({
+        id: m.client_id,
+        items: Object.fromEntries(
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
+        ),
+        shared_profiles: m.shared_profiles,
+        client_documents: m.client_documents,
+      }))
+    : Array.isArray(filterData) &&
+      filterData.map((m: ClientData) => ({
+        id: m.client_id,
+        items: Object.fromEntries(
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
+        ),
+        client_documents: m.client_documents,
+        shared_profiles: m.shared_profiles,
+      }));
 
   const handledPaginationData = clientListData
     ? {
@@ -368,10 +413,20 @@ export default function ClientList() {
           formValues={formValues}
           clientFormModuleData={clientFormModuleData}
           handleChangeMethod={handleChange}
-          onSubmit={(filter) => {}}
-          onReset={(filter) => {}}
+          onSubmit={(filter) => {
+            const finalObj: any[] = [];
+            Object.keys(filters).forEach((key) => {
+              if (filters[key].value !== "") {
+                finalObj.push(filters[key]);
+              }
+            });
+            mutation.mutate({ search_fields: finalObj });
+          }}
+          onReset={() => {
+            setFilterData(null);
+            clientDataRefetch();
+          }}
         />
-        {/* <ClientFilterForm onSubmit={(filter) => {}} key="Client-form-list" /> */}
       </div>
       <div className="mt-2 mb-2">
         <div className="flex justify-end p-4 bg-[#fff]">
@@ -392,11 +447,11 @@ export default function ClientList() {
         />
       </div>
       <ModalPopup
-        data={profileModal.data}
+        data={clientDataModal.data}
         title="Client Profile Detail"
-        isOpen={profileModal.open}
-        children={<></>}
-        onClose={() => setProfileModal({ data: null, open: false })}
+        isOpen={clientDataModal.flag}
+        children={<ClientDetails data={clientDataModal.data} />}
+        onClose={() => setClientDataModal({ data: null, flag: false })}
         width="520px"
       />
     </div>

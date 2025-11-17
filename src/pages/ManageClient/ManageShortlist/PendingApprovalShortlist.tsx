@@ -224,7 +224,9 @@ export default function PendingApprovalShortlist() {
   }
 
   const handledAcceptRejectData = acceptRejecttData
-    ? acceptRejecttData.data[0].shortlisted_clients
+    ? Array.isArray(acceptRejecttData.data)
+      ? acceptRejecttData.data[0].shortlisted_clients
+      : []
     : [];
 
   return (
@@ -243,7 +245,7 @@ export default function PendingApprovalShortlist() {
           </p>
         </div>
       )}
-      <Table columns={columns} data={handledAcceptRejectData} />
+      <Table borderX={true} columns={columns} data={handledAcceptRejectData} />
     </div>
   );
 }
