@@ -19,3 +19,18 @@ export const websiteTypeOptions = [
     value: "seo",
   },
 ];
+
+export const assigneTypeOptions = [
+  {
+    label: "All",
+    value: "all",
+  },
+  {
+    label: "Roles",
+    value: "roles",
+  },
+  {
+    label: "Users",
+    value: "users",
+  },
+];

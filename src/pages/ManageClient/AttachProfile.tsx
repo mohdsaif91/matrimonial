@@ -3,6 +3,12 @@ import { useState } from "react";
 import { TextField } from "../../component/form/TextField";
 import { SendProfileProps } from "../../types/sendProfile";
 import Button from "../../component/form/Button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { sendProfile } from "../../service/client";
+import { toast, ToastContainer } from "react-toastify";
+import { getCRMObject } from "../../util/ClientUtils";
+
+const CRMData = getCRMObject();
 
 export default function AttachProfile({ onClose, data }: SendProfileProps) {
   const [profileData, setProfileData] = useState({
@@ -25,13 +31,15 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
     },
   });
   const [hideContent, setHideContent] = useState({
-    whatsApp: true,
+    whatsApp: ["true", "True"].includes(CRMData["WHATSAPP-ENABLE"].value),
     email: true,
   });
   const [takeContent, setTakeContent] = useState({
     whatsApp: true,
     email: true,
   });
+
+  const queryClient = useQueryClient();
 
   const sendTo = {
     name: data.shared_profiles.shared_profile_name,
@@ -50,10 +58,22 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
     email: data.items.client_email.value || "-",
   };
 
+  const senProfileMutation = useMutation({
+    mutationFn: sendProfile,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["client-Profile"] });
+      toast("Successfully sent profile");
+      // setFilterData(data.data);
+    },
+    onError: (error: any) => {
+      toast(error.response?.data?.message || "Failed to sent profile");
+    },
+  });
+
   return (
     <div className="flex items-center justify-center bg-black/50">
-      <div className="bg-white w-[90%] max-w-6xl rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
-        <h2 className="text-xl font-semibold mb-4">Send Profile</h2>
+      <ToastContainer />
+      <div className="bg-white max-w-6xl shadow-lg overflow-y-auto">
         <div className="w-full border border-gray-300 rounded-md overflow-hidden">
           <div className="grid grid-cols-5 border-b border-gray-300">
             <div className="border-r border-gray-300 p-4 font-semibold">
@@ -186,12 +206,20 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
         </div>
         <div className="flex justify-end mt-6">
           <Button
+            loading={senProfileMutation.isPending}
             text="Submit"
             className="mr-4"
             type="button"
-            onClick={() => {}}
+            onClick={() => {
+              console.log(data, " <>? ");
+
+              const sendProfileObj = {
+                from_client_id: data.id,
+                to_client_id: data.shared_profiles.shared_profile_id,
+              };
+              senProfileMutation.mutate(sendProfileObj);
+            }}
           />
-          <Button text="reset" type="reset" onClick={() => {}} />
         </div>
       </div>
     </div>

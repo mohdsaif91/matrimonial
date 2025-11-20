@@ -3,7 +3,7 @@ import { getCRMObject } from "../util/ClientUtils";
 const footerText = getCRMObject();
 
 const Footer = () => {
-  console.log(footerText.COPY_RIGHT);
+  console.log(footerText?.COPY_RIGHT?.value);
 
   return (
     <footer className="bg-[#F0F3F8]  border-t border-white/20 text-black text-center py-4 shadow-lg">

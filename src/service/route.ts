@@ -183,4 +183,16 @@ export const ROUTE = {
     UPDATE: "v1/crm-settings",
     DELETE: "v1/crm-settings",
   },
+  WHATSAPP_PROVIDER: {
+    ADD: "v1/whatsapp-providers",
+    GET: "v1/whatsapp-providers",
+    UPDATE: "v1/whatsapp-providers",
+    DELETE: "v1/whatsapp-providers",
+  },
+  WHATSAPP_KEY: {
+    ADD: "v1/whatsapp-keys",
+    GET: "v1/whatsapp-keys",
+    UPDATE: "v1/whatsapp-keys",
+    DELETE: "v1/whatsapp-keys",
+  },
 };

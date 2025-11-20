@@ -6,19 +6,23 @@ import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../../Loading/Loading";
 import Button from "../../../component/form/Button";
 import Table from "../../../component/table/Table";
+import {
+  deleteWhatsAppProvider,
+  fetchWhatsAppProvider,
+} from "../../../service/whatsAppProvider";
 
 export default function WhatsAppProvider() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: taskData, isLoading } = useQuery({
+  const { data: whatsAppProviderData, isLoading } = useQuery({
     queryKey: ["whatsapp-provider-list"],
-    // queryFn: fetchTask,
+    queryFn: fetchWhatsAppProvider,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    // mutationFn: deleteTask,
+    mutationFn: deleteWhatsAppProvider,
     onSuccess: () => {
       toast("Successfully deleted Whats App Provider");
       queryClient.invalidateQueries({ queryKey: ["whatsapp-provider-list"] });
@@ -42,15 +46,15 @@ export default function WhatsAppProvider() {
       header: "Name",
     },
     {
-      accessorKey: "title",
+      accessorKey: "base_url",
       header: "Base URL",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "base_url_with_file",
       header: "Base URL with file",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "status",
       header: "Status",
     },
     {
@@ -60,7 +64,9 @@ export default function WhatsAppProvider() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/addEditTemplate", { state: { data: row.original } });
+              navigate("/addWhatsAppProvider", {
+                state: { data: row.original },
+              });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -83,7 +89,9 @@ export default function WhatsAppProvider() {
     return <LoadingPage />;
   }
 
-  const handledTaskData = taskData ? taskData.data : [];
+  const handledTaskData = whatsAppProviderData
+    ? whatsAppProviderData?.data
+    : [];
 
   return (
     <div className="p-4 bg-white">
@@ -93,7 +101,7 @@ export default function WhatsAppProvider() {
         onClick={() => navigate("/addWhatsAppProvider")}
       />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={handledTaskData} />
+        <Table borderX={true} columns={columns} data={handledTaskData} />
       </div>
     </div>
   );

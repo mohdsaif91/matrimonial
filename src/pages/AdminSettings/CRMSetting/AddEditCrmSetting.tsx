@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
 import { TextField } from "../../../component/form/TextField";
 import { DropDown } from "../../../component/form/SearchableDropdown";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { statusOptions } from "../../../data/ClientForm";
 import { toast, ToastContainer } from "react-toastify";
 import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { gendereOptions } from "../../../data/manageUser";
-import {
-  addManageUserAPI,
-  updateManageUserAPI,
-} from "../../../service/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
-import { fetchRole } from "../../../service/roles";
 import { typeOptions } from "../../../data/adminSetting";
 import TextArea from "../../../component/form/TextArea";
 import { CRMSettingsProps } from "../../../types/crmSettings";
@@ -37,11 +31,6 @@ function AddEditCrmSetting() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: roleData, isLoading: leadLoading } = useQuery({
-    queryKey: ["crm-setting-list"],
-    queryFn: fetchRole,
-    retry: false,
-  });
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -60,10 +49,16 @@ function AddEditCrmSetting() {
 
   const mutation = useMutation({
     mutationFn: addCRMSetting,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });
+      // const freshData = await queryClient.fetchQuery({
+      //   queryKey: ["crm-setting-list"],
+      // });
+      console.log(mutation.data, " <>?<>? ");
+
+      // sessionStorage.setItem("CRM", JSON.stringify(freshData));
       toast("Successfully added CRM Setting");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
@@ -77,12 +72,17 @@ function AddEditCrmSetting() {
 
   const updateMutation = useMutation({
     mutationFn: updateCRMSetting,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });
       toast("Successfully Updated CRM Settings");
       setFormData({ ...initialFormItem });
+      const freshData = await queryClient.fetchQuery({
+        queryKey: ["crm-setting-list"],
+      });
+
+      sessionStorage.setItem("CRM", JSON.stringify(freshData));
       navigate("/crm-setting");
       // alert(`Successfully added form item! ${data}`);
     },

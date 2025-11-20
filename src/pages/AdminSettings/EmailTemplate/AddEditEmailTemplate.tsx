@@ -30,13 +30,7 @@ function AddEditEmailTemplate() {
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [password, setPassword] = useState(true);
 
-  const { data: roleData, isLoading: leadLoading } = useQuery({
-    queryKey: ["crm-setting-list"],
-    queryFn: fetchRole,
-    retry: false,
-  });
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -56,7 +50,7 @@ function AddEditEmailTemplate() {
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });
+      queryClient.invalidateQueries({ queryKey: ["email-template-list"] });
       toast("Successfully added Managed user");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
@@ -73,7 +67,7 @@ function AddEditEmailTemplate() {
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });
+      queryClient.invalidateQueries({ queryKey: ["email-template-list"] });
       toast("Successfully Updated Managed user");
       setFormData({ ...initialFormItem });
       navigate("/manage-users");

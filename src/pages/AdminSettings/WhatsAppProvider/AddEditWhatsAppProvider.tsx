@@ -17,25 +17,25 @@ import { getLabelValue } from "../../../util/ClientUtils";
 import { typeOptions } from "../../../data/adminSetting";
 import TextArea from "../../../component/form/TextArea";
 import CustomEditor from "../../../component/form/RichText";
+import {
+  addWhatsAppProvider,
+  updateWhatsAppProvider,
+} from "../../../service/whatsAppProvider";
+import { WhatsAppProviderProps } from "../../../types/whatsAppProvider";
 
 const initialFormItem = {
-  slug_key: "",
+  base_url: "",
+  base_url_with_file: "",
   name: "",
-  type: "",
-  value: "",
+  status: "",
 };
 
 function AddEditWhatsAppProvider() {
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<WhatsAppProviderProps>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: roleData, isLoading: leadLoading } = useQuery({
-    queryKey: ["crm-setting-list"],
-    queryFn: fetchRole,
-    retry: false,
-  });
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -51,37 +51,39 @@ function AddEditWhatsAppProvider() {
   };
 
   const mutation = useMutation({
-    mutationFn: addManageUserAPI,
+    mutationFn: addWhatsAppProvider,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
-      toast("Successfully added PDF Template");
+      queryClient.invalidateQueries({ queryKey: ["whatsapp-provider-list"] });
+      toast("Successfully added Whatsapp Provider");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding PDF Template:", error);
-      toast(error.response?.data?.message || "Failed to add PDF Template");
+      console.error("❌ Error adding Whatsapp Provider:", error);
+      toast(error.response?.data?.message || "Failed to add Whatsapp Provider");
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateManageUserAPI,
+    mutationFn: updateWhatsAppProvider,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
-      toast("Successfully Updated PDF Template");
+      queryClient.invalidateQueries({ queryKey: ["whatsapp-provider-list"] });
+      toast("Successfully Updated Whatsapp Provider");
       setFormData({ ...initialFormItem });
-      navigate("/manage-users");
+      navigate("/whatsapp-provider");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating PDF Template:", error);
-      toast(error.response?.data?.message || "Failed to Update PDF Template");
+      console.error("❌ Error updating Whatsapp Provider:", error);
+      toast(
+        error.response?.data?.message || "Failed to Update Whatsapp Provider"
+      );
     },
   });
 
@@ -108,29 +110,29 @@ function AddEditWhatsAppProvider() {
         <TextField
           label="Name"
           name="name"
-          value={formData.slug_key}
-          onChange={(e) => handleChange("slug_key", e.target.value)}
+          value={formData.name}
+          onChange={(e) => handleChange("name", e.target.value)}
           required
         />
         <TextField
           label="Base URL"
           name="baseUrl"
-          value={formData.name}
-          onChange={(e) => handleChange("email", e.target.value)}
+          value={formData.base_url}
+          onChange={(e) => handleChange("base_url", e.target.value)}
           required
         />
         <TextField
           label="Base URL with file"
           name="name"
-          value={formData.slug_key}
-          onChange={(e) => handleChange("slug_key", e.target.value)}
+          value={formData.base_url_with_file}
+          onChange={(e) => handleChange("base_url_with_file", e.target.value)}
           required
         />
         <DropDown
-          value={formData.value}
+          value={formData.status}
           label="Status"
           name="status"
-          onChange={() => {}}
+          onChange={(val) => handleChange("status", val)}
           options={statusOptions}
         />
       </div>

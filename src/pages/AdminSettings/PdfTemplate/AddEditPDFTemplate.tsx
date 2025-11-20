@@ -31,11 +31,6 @@ function AddEditPDFTemplate() {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: roleData, isLoading: leadLoading } = useQuery({
-    queryKey: ["crm-setting-list"],
-    queryFn: fetchRole,
-    retry: false,
-  });
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();

@@ -6,33 +6,62 @@ import Button from "../../../component/form/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   addManageUserAPI,
+  fetchManageUserAPI,
   updateManageUserAPI,
 } from "../../../service/manageUser";
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { fetchRole } from "../../../service/roles";
 import TextArea from "../../../component/form/TextArea";
+import { addWhatsAppKey } from "../../../service/whatsAppKey";
+import { fetchWhatsAppProvider } from "../../../service/whatsAppProvider";
+import { getLabelValue } from "../../../util/ClientUtils";
+import { DropDown } from "../../../component/form/SearchableDropdown";
+import { WhatsAppKeyProps } from "../../../types/whatsAppKey";
+import { assigneTypeOptions } from "../../../data/adminSetting";
+import { statusOptions } from "../../../data/ClientForm";
 
 const initialFormItem = {
-  slug_key: "",
+  assigned_id: 0,
+  assigned_type: "",
+  config: { setting: "" },
   name: "",
-  type: "",
-  value: "",
+  phone_number: "",
+  status: "",
+  token: "",
+  whatsapp_provider: "",
+  id: "",
 };
 
 function AddEditWhatsAppKey() {
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<WhatsAppKeyProps>({
     ...initialFormItem,
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: roleData, isLoading: leadLoading } = useQuery({
-    queryKey: ["crm-setting-list"],
-    queryFn: fetchRole,
-    retry: false,
-  });
   const queryClient = useQueryClient();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  const { data: whatsAppProviderData, isLoading: whatsAppProviderLoading } =
+    useQuery({
+      queryKey: ["whatsapp-provider-list"],
+      queryFn: fetchWhatsAppProvider,
+      retry: false,
+    });
+
+  const { data: roleData, isLoading: roleIsLoading } = useQuery({
+    queryKey: ["role-list"],
+    queryFn: fetchRole,
+    retry: false,
+    enabled: !!formData.assigned_type && formData.assigned_type !== "",
+  });
+
+  const { data: manageUserData, isLoading: manageUserLoading } = useQuery({
+    queryKey: ["manage-user-list"],
+    queryFn: fetchManageUserAPI,
+    retry: false,
+    enabled: !!formData.assigned_type && formData.assigned_type !== "",
+  });
 
   useEffect(() => {
     if (state && state.data) {
@@ -45,19 +74,19 @@ function AddEditWhatsAppKey() {
   };
 
   const mutation = useMutation({
-    mutationFn: addManageUserAPI,
+    mutationFn: addWhatsAppKey,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
-      toast("Successfully added PDF Template");
+      queryClient.invalidateQueries({ queryKey: ["whatsapp-key-list"] });
+      toast("Successfully added Whatsapp Key");
       setFormData({ ...initialFormItem });
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error adding PDF Template:", error);
-      toast(error.response?.data?.message || "Failed to add PDF Template");
+      console.error("❌ Error adding Whatsapp Key:", error);
+      toast(error.response?.data?.message || "Failed to add Whatsapp Key");
     },
   });
 
@@ -66,16 +95,16 @@ function AddEditWhatsAppKey() {
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
-      queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
-      toast("Successfully Updated PDF Template");
+      queryClient.invalidateQueries({ queryKey: ["whatsapp-key-list"] });
+      toast("Successfully Updated Whatsapp Key");
       setFormData({ ...initialFormItem });
       navigate("/manage-users");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
       setIsLoading(false);
-      console.error("❌ Error updating PDF Template:", error);
-      toast(error.response?.data?.message || "Failed to Update PDF Template");
+      console.error("❌ Error updating Whatsapp Key:", error);
+      toast(error.response?.data?.message || "Failed to Update Whatsapp Key");
     },
   });
 
@@ -89,6 +118,30 @@ function AddEditWhatsAppKey() {
     }
   };
 
+  const handledWhatsAppProviderData =
+    whatsAppProviderData && Array.isArray(whatsAppProviderData.data)
+      ? whatsAppProviderData.data.map((m) => {
+          return { label: m.name, value: m.name };
+        })
+      : [];
+
+  const handledRoleData =
+    roleData && Array.isArray(roleData.data)
+      ? getLabelValue(roleData.data)
+      : [];
+
+  const handledUserData =
+    manageUserData && Array.isArray(manageUserData.data)
+      ? getLabelValue(manageUserData.data)
+      : [];
+
+  const userIdData =
+    formData.assigned_type === "all"
+      ? [...handledRoleData, ...handledUserData]
+      : formData.assigned_type === "roles"
+      ? handledRoleData
+      : handledUserData;
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -96,30 +149,71 @@ function AddEditWhatsAppKey() {
     >
       <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "ADD"} PDF Template
+        {state && state.data ? "Edit" : "ADD"} Whats App Key
       </h2>
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-3 gap-y-5">
-        <TextField
-          label="Slug Key"
-          name="slug_key"
-          value={formData.slug_key}
-          onChange={(e) => handleChange("slug_key", e.target.value)}
-          required
+      <div className="grid grid-cols-4 md:grid-cols-3 gap-3">
+        <DropDown
+          label="Whatsapp Provider"
+          name="whatsappProvider"
+          value={formData.whatsapp_provider}
+          onChange={(val) => handleChange("whatsapp_provider", val)}
+          options={handledWhatsAppProviderData}
         />
         <TextField
-          label="Title"
-          name="title"
+          label="Name"
+          name="name"
           value={formData.name}
-          onChange={(e) => handleChange("email", e.target.value)}
+          onChange={(e) => handleChange("name", e.target.value)}
           required
         />
-        <TextArea
-          label="value"
-          name="value"
-          onChange={() => {}}
-          required={false}
-          value=""
+        <TextField
+          label="token"
+          name="token"
+          value={formData.token}
+          onChange={(e) => handleChange("token", e.target.value)}
+          required
         />
+        <TextField
+          label="Phone Number"
+          name="phoneNumber"
+          onChange={(e) => {
+            handleChange("phone_number", e.target.value);
+          }}
+          required={false}
+          value={formData.phone_number}
+        />
+        <DropDown
+          label="Assigned Type"
+          name="assignedType"
+          value={formData.assigned_type}
+          onChange={(val) => handleChange("assigned_type", val)}
+          options={assigneTypeOptions}
+        />
+        <DropDown
+          label="Assigned Id"
+          name="assignedId"
+          value={formData.assigned_id}
+          onChange={(val) => handleChange("assigned_id", val)}
+          options={userIdData}
+        />
+        <DropDown
+          label="Status"
+          name="status"
+          value={formData.status}
+          onChange={(val) => handleChange("status", val)}
+          options={statusOptions}
+        />
+        <div className="col-span-4">
+          <TextArea
+            name="config"
+            label="Config"
+            showLabel
+            onChange={(e) => {
+              setFormData({ ...formData, config: { setting: e.target.value } });
+            }}
+            value={formData.config.setting}
+          />
+        </div>
       </div>
       <div className="flex">
         <Button

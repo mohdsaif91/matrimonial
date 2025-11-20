@@ -6,22 +6,26 @@ import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../../Loading/Loading";
 import Button from "../../../component/form/Button";
 import Table from "../../../component/table/Table";
+import {
+  deleteWhatsAppKey,
+  fetchWhatsAppKey,
+} from "../../../service/whatsAppKey";
 
 export default function WhatsappKey() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: taskData, isLoading } = useQuery({
-    queryKey: ["whatsapp-provider-list"],
-    // queryFn: fetchTask,
+  const { data: whatsAppKey, isLoading } = useQuery({
+    queryKey: ["whatsapp-key-list"],
+    queryFn: fetchWhatsAppKey,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    // mutationFn: deleteTask,
+    mutationFn: deleteWhatsAppKey,
     onSuccess: () => {
       toast("Successfully deleted Whats App Provider");
-      queryClient.invalidateQueries({ queryKey: ["whatsapp-provider-list"] });
+      queryClient.invalidateQueries({ queryKey: ["whatsapp-key-list"] });
     },
     onError: (error: any) => {
       console.error("❌ Error in deleting Whats App Provider:", error);
@@ -38,35 +42,38 @@ export default function WhatsappKey() {
       cell: (info) => info.getValue(),
     },
     {
-      accessorKey: "name",
+      accessorKey: "whatsapp_provider",
       header: "Whatsapp Provider",
     },
     {
-      accessorKey: "title",
+      accessorKey: "name",
       header: "Name",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "token",
       header: "Token",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "phone_number",
       header: "Phone Number",
     },
     {
-      accessorKey: "title",
+      accessorKey: "assigned_type",
       header: "Assigned Type",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "assigned_id",
       header: "Assigned ID",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "config",
       header: "Config",
+      cell: ({ row }) => {
+        return <div>{row.original.setting}</div>;
+      },
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "status",
       header: "Status",
     },
     {
@@ -76,7 +83,7 @@ export default function WhatsappKey() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/addEditTemplate", { state: { data: row.original } });
+              navigate("/addWhatsAppKey", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -99,7 +106,7 @@ export default function WhatsappKey() {
     return <LoadingPage />;
   }
 
-  const handledTaskData = taskData ? taskData.data : [];
+  const handledwhatsAppKey = whatsAppKey ? whatsAppKey?.data : [];
 
   return (
     <div className="p-4 bg-white">
@@ -109,7 +116,7 @@ export default function WhatsappKey() {
         onClick={() => navigate("/addWhatsAppKey")}
       />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={handledTaskData} />
+        <Table borderX={true} columns={columns} data={handledwhatsAppKey} />
       </div>
     </div>
   );

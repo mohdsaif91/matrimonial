@@ -1,3 +1,4 @@
+import moment from "moment";
 import { ClientModuleField, GetStatusProps } from "../types/clientModule";
 
 export const getLabelValue = (arr: any[] = [], label = false) => {
@@ -66,4 +67,17 @@ export const getCRMObject = () => {
   }, {});
 
   return settingsObject;
+};
+
+export const safeValue = (field: any, fallback: string = "-") => {
+  if (!field) return fallback;
+  if (typeof field === "string") return field || fallback;
+  if (typeof field?.value === "string") return field.value || fallback;
+  return fallback;
+};
+
+export const safeDate = (date: any, format: string = "DD-MM-YYYY") => {
+  if (!date) return "-";
+  const d = moment(date);
+  return d.isValid() ? d.format(format) : "-";
 };

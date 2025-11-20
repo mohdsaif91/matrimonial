@@ -137,6 +137,7 @@ export interface ClientResponseProps {
   client_documents?: ClientPhotoProps[];
   client?: ClientProps;
   profile?: ClientProps;
+  id?: string;
 }
 
 interface ClientProps {

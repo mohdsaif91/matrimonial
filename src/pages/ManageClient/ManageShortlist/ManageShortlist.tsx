@@ -25,7 +25,7 @@ export default function ManageShortlist() {
     error: clientShortListError,
     isLoading: clientShortListLoading,
   } = useQuery({
-    queryKey: ["clients-short-list", "all"], // include page number
+    queryKey: ["clients-short-list", "pending"], // include page number
     queryFn: ({ queryKey }) => {
       const [, status] = queryKey;
       return fetchShortList(status);

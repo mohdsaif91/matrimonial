@@ -31,6 +31,15 @@ export const headerLinks = [
             link: "/editClient",
             element: lazy(() => import("../pages/ManageClient/AddClient")),
           },
+          {
+            id: "cl-3",
+            show: false,
+            text: "PDF View",
+            link: "/pdfView",
+            element: lazy(
+              () => import("../pages/ManageClient/ClientList/Component/PDFPage")
+            ),
+          },
         ],
       },
       {
@@ -79,6 +88,18 @@ export const headerLinks = [
             element: lazy(
               () =>
                 import("../pages/ManageClient/ClientResponse/AddClientResponse")
+            ),
+          },
+          {
+            id: "cr-3",
+            show: true,
+            text: "View Client Response",
+            link: "/viewSingleclientResponse",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/ManageClient/ClientResponse/ViewSingleClientResponse"
+                )
             ),
           },
         ],

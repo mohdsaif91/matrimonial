@@ -26,7 +26,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
       onClick={onClose}
     >
       <div
-        className={`bg-white rounded-2xl shadow-xl w-full ${width} p-6 relative`}
+        className={`bg-white rounded-2xl shadow-xl w-auto ${width} p-6 relative`}
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         {/* Header */}
@@ -34,14 +34,14 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
           <h2 className="text-xl font-semibold">{title || "Modal Title"}</h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-gray-100 transition"
+            className="p-2 rounded-full hover:bg-gray-100 cursor-pointer transition"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto ">{children}</div>
+        <div className="overflow-y-auto">{children}</div>
       </div>
     </div>
   );

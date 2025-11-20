@@ -43,7 +43,7 @@ export default function ClientResponse() {
               src={mainPhoto && mainPhoto.file_path}
               alt="client-main-photo"
             />
-            <div className="">Name</div>
+            <div className="">{row.original.client?.name}</div>
           </div>
         );
       },
@@ -62,7 +62,7 @@ export default function ClientResponse() {
               src={mainPhoto && mainPhoto.file_path}
               alt="profile-main-photo"
             />
-            <div className="">Name</div>
+            <div className="">{row.original.profile?.name}</div>
           </div>
         );
       },
@@ -101,7 +101,14 @@ export default function ClientResponse() {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex flex-col gap-2">
-          <Eye />
+          <Eye
+            className="cursor-pointer"
+            onClick={() => {
+              navigate("/viewSingleclientResponse", {
+                state: { clientId: row.original.client?.id },
+              });
+            }}
+          />
         </div>
       ),
     },
@@ -137,7 +144,11 @@ export default function ClientResponse() {
         <ClientResponseFilter />
       </div>
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={transformedClientList || []} />
+        <Table
+          borderX={true}
+          columns={columns}
+          data={transformedClientList || []}
+        />
         <Pagination
           onPageChange={() => {}}
           pagination={handledPaginationData}

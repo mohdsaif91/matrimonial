@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ChevronUp,
   Info,
+  FileText,
 } from "lucide-react";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -29,7 +30,7 @@ import TableInfoPopup from "../../../component/table/TableInfoPopup";
 import CommonFilters from "../CommonFilters";
 import { fetchClientFormModule } from "../../../service/clientFormModule";
 import ModalPopup from "../../../component/ModalPopup";
-import { getStatusColor } from "../../../util/ClientUtils";
+import { getCRMObject, getStatusColor } from "../../../util/ClientUtils";
 import ClientDetails from "./Component/ClientDetails";
 
 const initialPaginationData = {
@@ -37,6 +38,8 @@ const initialPaginationData = {
   last_page: 0,
   per_page: 30,
 };
+
+const CRMData = getCRMObject();
 
 export default function ClientList() {
   const [paginationData, setPaginationData] = useState({
@@ -53,6 +56,7 @@ export default function ClientList() {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const {
     data: clientListData,
     error: clientListError,
@@ -141,6 +145,8 @@ export default function ClientList() {
       cell: ({ row }) => {
         const { items } = row.original;
         const leadValue = items.lead_id?.value;
+        console.log(row.original.client_id, " <>? PROFILE ID");
+
         return (
           <div>
             {items.client_name?.value} |{" "}
@@ -153,7 +159,7 @@ export default function ClientList() {
               }}
               className="font-bold cursor-pointer"
             >
-              Profile-id
+              ({CRMData.PREFIX_PROFILE_TEXT.value}-{row.original.client_id})
             </span>{" "}
             | {leadValue || "-"}|{" "}
             {moment(items.date_of_birth?.value).format("YYYY-MM-DD")}
@@ -321,6 +327,13 @@ export default function ClientList() {
               size={16}
               className="cursor-pointer text-gray-600"
             />
+            <FileText
+              onClick={() =>
+                navigate("/pdfView", { state: { pdfData: row.original } })
+              }
+              size={16}
+              className="cursor-pointer text-gray-600"
+            />
             <IndianRupee size={16} className="cursor-pointer text-gray-600" />
             <SquarePlus size={16} className="cursor-pointer text-gray-600" />
             <List size={16} className="cursor-pointer text-gray-600" />
@@ -377,6 +390,7 @@ export default function ClientList() {
             mm.fields.map((field) => [field.field_name, field])
           )
         ),
+        client_id: m.client_profile_id,
         shared_profiles: m.shared_profiles,
         client_documents: m.client_documents,
       }))
@@ -388,6 +402,7 @@ export default function ClientList() {
             mm.fields.map((field) => [field.field_name, field])
           )
         ),
+        client_id: m.client_profile_id,
         client_documents: m.client_documents,
         shared_profiles: m.shared_profiles,
       }));

@@ -115,6 +115,7 @@ export interface ClientData {
   client_documents: ClientDocumentsProps[];
   shared_profiles: SharedProfile[];
   items?: Field;
+  client_profile_id: string;
 }
 
 export interface SearchClientDataProps {
@@ -214,8 +215,13 @@ export interface CommonFilterProps {
   filters: any[];
 }
 
+interface ItemsProps {
+  items: ClientItems;
+}
+
 export interface ClientDetailsprops {
   data: ClientData;
+  onClose: () => void;
 }
 
 export interface FieldItem {
