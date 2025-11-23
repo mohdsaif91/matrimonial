@@ -19,4 +19,5 @@ export interface CategoryTaskProps {
 
 export interface TaskFilterProps {
   onSubmit: (data: any) => void;
+  showAddTaskBtn: boolean;
 }

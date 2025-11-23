@@ -9,6 +9,7 @@ import { taskPriorityOptions } from "../../../data/task";
 import { fetchManageUserAPI } from "../../../service/manageUser";
 import { DateTimePicker } from "../../../component/form/DateField";
 import Button from "../../../component/form/Button";
+import { useNavigate } from "react-router-dom";
 
 const initialData = {
   taskCategory: "",
@@ -18,8 +19,13 @@ const initialData = {
   scheduleDateTo: new Date(),
 };
 
-export default function TaskFilter({ onSubmit }: TaskFilterProps) {
+export default function TaskFilter({
+  onSubmit,
+  showAddTaskBtn = false,
+}: TaskFilterProps) {
   const [filterData, setFilterData] = useState({ ...initialData });
+
+  const navigate = useNavigate();
 
   const { data: taskCategoryData, isLoading: taskCategoryLoading } = useQuery({
     queryKey: ["task-category-list"],
@@ -94,17 +100,22 @@ export default function TaskFilter({ onSubmit }: TaskFilterProps) {
         required={true}
         value={filterData.scheduleDateTo}
       />
-      <div className="flex justify-around">
+      <div className="col-span-2">
         <Button
+          className="mr-4"
           type="submit"
           text="Search"
           onClick={() => onSubmit(filterData)}
         />
         <Button
+          className="mr-4"
           type="reset"
           text="Reset"
           onClick={() => setFilterData({ ...initialData })}
         />
+        {showAddTaskBtn && (
+          <Button text="+ Add Task" onClick={() => navigate("/task-add")} />
+        )}
       </div>
     </form>
   );

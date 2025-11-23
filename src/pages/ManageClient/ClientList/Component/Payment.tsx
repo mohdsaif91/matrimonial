@@ -1,4 +1,4 @@
-import { Edit2 } from "lucide-react";
+import { Edit2, Pencil, Trash } from "lucide-react";
 import Button from "../../../../component/form/Button";
 import Table from "../../../../component/table/Table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,26 +9,26 @@ import {
 import LoadingPage from "../../../Loading/Loading";
 import { DropDown } from "../../../../component/form/SearchableDropdown";
 import { paymentType } from "../../../../data/payments";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   PaymentPopupResponseProps,
   PaymentProps,
 } from "../../../../types/payment";
 import { TextField } from "../../../../component/form/TextField";
 import { DateTimePicker } from "../../../../component/form/DateField";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import TextArea from "../../../../component/form/TextArea";
+import moment from "moment";
 
 const initialData = {
   brief: "",
-  PaymentProps: "",
   client_id: "",
-  expected_amount: "",
+  expected_amount: 0,
   followup_date: new Date(),
   payment_date: new Date(),
   payment_mode: "",
   payment_type: "",
-  received_amount: "",
+  received_amount: 0,
 };
 
 export default function Payment({
@@ -36,29 +36,37 @@ export default function Payment({
   tableArr,
 }: PaymentPopupResponseProps) {
   const [formData, setFormData] = useState<PaymentProps>({ ...initialData });
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
-  const { data: clientPaymentData, isLoading: clientPaymentLoading } = useQuery(
-    {
-      queryKey: ["client-payment-list", client_id],
-      queryFn: ({ queryKey }) => {
-        const [, clientId] = queryKey;
-        fetchPaymentByClientId(clientId);
-      },
-      retry: false,
-    }
-  );
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const {
+    data: clientPaymentData,
+    isLoading: clientPaymentLoading,
+    refetch: refetchClientPaymentData,
+  } = useQuery({
+    queryKey: ["client-payment-list", client_id || "1"],
+    queryFn: ({ queryKey }) => {
+      const [, clientId] = queryKey;
+      return fetchPaymentByClientId(clientId);
+    },
+    retry: false,
+    enabled: !!client_id,
+  });
 
   const paymentColumns = [
     {
       header: "Name (Profile Id)",
       accessorKey: "name_profile_id",
       Cell: ({ row }) => {
-        const { name, profile_id } = row.original;
+        console.log(row.original);
+        const { client_name } = row.original;
+
         return (
           <div>
-            {name} <br />
-            <span className="text-gray-600 text-sm">({profile_id})</span>
+            {client_name} <br />
+            {/* <span className="text-gray-600 text-sm">({profile_id})</span> */}
           </div>
         );
       },
@@ -109,13 +117,15 @@ export default function Payment({
   const paymentColumnswithActions = [
     {
       header: "Name (Profile Id)",
-      accessorKey: "name_profile_id",
-      Cell: ({ row }) => {
-        const { name, profile_id } = row.original;
+      accessorKey: "client_name",
+      cell: ({ row }) => {
+        console.log(row.original);
+        const { client_name } = row.original;
+
         return (
           <div>
-            {name} <br />
-            <span className="text-gray-600 text-sm">({profile_id})</span>
+            {client_name} <br />
+            {/* <span className="text-gray-600 text-sm">({profile_id})</span> */}
           </div>
         );
       },
@@ -138,7 +148,7 @@ export default function Payment({
     },
     {
       header: "Received Payment",
-      accessorKey: "received_payment",
+      accessorKey: "received_amount",
     },
     {
       header: "Payment Due",
@@ -165,18 +175,43 @@ export default function Payment({
     {
       header: "Action",
       accessorKey: "action",
-      Cell: ({ row }) => (
-        <button
-          className="p-1 rounded hover:bg-gray-200"
-          onClick={() => console.log("Edit: ", row.original)}
-        >
-          <Edit2 size={18} />
-        </button>
-      ),
+      cell: ({ row }) => {
+        return (
+          <div className="flex justify-around">
+            <Pencil
+              onClick={() => {
+                setIsUpdate(true);
+                scrollRef.current &&
+                  scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
+                setFormData({ ...row.original });
+              }}
+              size={16}
+              className="text-gray-600 cursor-pointer"
+            />
+            <Trash size={16} className="text-red-500 cursor-pointer" />
+          </div>
+        );
+      },
     },
   ];
 
   const mutation = useMutation({
+    mutationFn: addPayment,
+    onSuccess: (data) => {
+      // invalidate or refresh client list queries
+      queryClient.invalidateQueries({ queryKey: ["client-payment-list"] });
+      toast("Successfully added Client Payment");
+      setFormData({ ...initialData });
+      refetchClientPaymentData();
+      // alert(`Successfully added form item! ${data}`);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding Client Payment:", error);
+      toast(error.response?.data?.message || "Failed to add Client Payment");
+    },
+  });
+
+  const updateMutation = useMutation({
     mutationFn: addPayment,
     onSuccess: (data) => {
       // invalidate or refresh client list queries
@@ -195,15 +230,41 @@ export default function Payment({
     return <LoadingPage />;
   }
 
-  const handledPaymentsData = clientPaymentData
-    ? [clientPaymentData?.data]
-    : [];
+  const handledPaymentsData = clientPaymentData ? clientPaymentData?.data : [];
 
   return (
-    <div className="overflow-y-auto">
-      <div className="bg-white p-6 rounded shadow-md mb-6">
+    <div className="overflow-y-auto" ref={scrollRef}>
+      <ToastContainer />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          isUpdate
+            ? updateMutation.mutate({
+                ...formData,
+                client_id,
+                followup_date: moment(formData.followup_date).format(
+                  "yyyy/MM/DD"
+                ),
+                payment_date: moment(formData.payment_date).format(
+                  "yyyy/MM/DD"
+                ),
+              })
+            : mutation.mutate({
+                ...formData,
+                client_id,
+                followup_date: moment(formData.followup_date).format(
+                  "yyyy/MM/DD"
+                ),
+                payment_date: moment(formData.payment_date).format(
+                  "yyyy/MM/DD"
+                ),
+              });
+        }}
+        className="bg-white p-6 rounded shadow-md mb-6"
+      >
         <div className="grid grid-cols-5 gap-4">
           <DropDown
+            required={true}
             options={paymentType}
             label="Payment Type"
             value={formData.payment_type}
@@ -213,6 +274,7 @@ export default function Payment({
             }
           />
           <TextField
+            required={true}
             name="paymentMode"
             onChange={(e) =>
               setFormData({ ...formData, payment_mode: e.target.value })
@@ -221,17 +283,26 @@ export default function Payment({
             label="Payment Mode"
           />
           <TextField
+            required={true}
+            type="number"
             name="expectedAmount"
             onChange={(e) =>
-              setFormData({ ...formData, expected_amount: e.target.value })
+              setFormData({
+                ...formData,
+                expected_amount: parseInt(e.target.value),
+              })
             }
             value={formData.expected_amount}
             label="Expected Amount"
           />
           <TextField
+            type="number"
             name="receivedAmount"
             onChange={(e) =>
-              setFormData({ ...formData, received_amount: e.target.value })
+              setFormData({
+                ...formData,
+                received_amount: parseInt(e.target.value),
+              })
             }
             value={formData.received_amount}
             label="Received Amount"
@@ -253,7 +324,7 @@ export default function Payment({
             value={formData.followup_date}
             required={false}
           />
-          <div className="col-span-5">
+          <div className="col-span-4">
             <TextArea
               name="Brief"
               onChange={(e) => setFormData({ ...formData, brief: e })}
@@ -264,19 +335,18 @@ export default function Payment({
         </div>
         <div className="text-right mt-4">
           <Button
-            loading={mutation.isPending}
-            text="Submit"
-            onClick={() => {
-              mutation.mutate({ ...formData, client_id });
-            }}
+            type="submit"
+            loading={isUpdate ? updateMutation.isPending : mutation.isPending}
+            text={isUpdate ? "Update" : "Submit"}
+            onClick={() => {}}
           />
         </div>
-      </div>
+      </form>
       <div className="">Additinal Payment Details</div>
       <Table
         borderX
         columns={paymentColumnswithActions}
-        data={[...handledPaymentsData]}
+        data={handledPaymentsData}
       />
       <div className="mt-4">Payment Registration Details</div>
       <Table borderX columns={paymentColumns} data={tableArr} />

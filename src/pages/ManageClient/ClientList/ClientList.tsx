@@ -16,11 +16,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
-import {
-  deleteClientList,
-  fetchClientByFilters,
-  fetchClientList,
-} from "../../../service/client";
+import { fetchClientByFilters, fetchClientList } from "../../../service/client";
 import LoadingPage from "../../Loading/Loading";
 import Table from "../../../component/table/Table";
 import Button from "../../../component/form/Button";
@@ -102,6 +98,8 @@ export default function ClientList() {
       clientFormModuleData &&
       clientFormModuleData?.data?.length
     ) {
+      console.log(clientFormModuleData, " <>?");
+
       const advanceSearchFeilds: any[] = [];
       clientFormModuleData?.data.filter((item) => {
         item.client_forms.filter((innerItem) => {
@@ -159,8 +157,6 @@ export default function ClientList() {
       cell: ({ row }) => {
         const { items } = row.original;
         const leadValue = items.lead_id?.value;
-        console.log(row.original.client_id, " <>? PROFILE ID");
-
         return (
           <div>
             {items.client_name?.value} |{" "}
@@ -325,8 +321,6 @@ export default function ClientList() {
       id: "actions",
       header: "Action",
       cell: ({ row }) => {
-        console.log(row.original);
-
         const clientName =
           (row.original.items && row.original.items?.client_name?.value) || "";
         const profileId =
@@ -378,12 +372,17 @@ export default function ClientList() {
               <Tooltip text="Payments">
                 <IndianRupee
                   onClick={() => {
-                    const paymentModuleData = clientFormModuleData.data.find(
-                      (f) => f.slug === "payment_details"
-                    );
+                    const paymentModuleData = clientListData.data[
+                      row.index
+                    ].modules.find(
+                      (f) => f.module_slug === "payment_details"
+                    ).fields;
+
                     const convertedData = convertDynamicFieldsToPaymentRows(
-                      paymentModuleData.client_forms
+                      paymentModuleData,
+                      row.original.items.client_name.value
                     );
+                    console.log(convertedData, " <>?<>?");
                     setClientDataModal({
                       type: "payment",
                       data: {

@@ -2,8 +2,8 @@ export interface PaymentProps {
   client_id: string;
   payment_type: string;
   payment_mode: string;
-  expected_amount: string;
-  received_amount: string;
+  expected_amount: number;
+  received_amount: number;
   payment_date: string | Date;
   followup_date: string | Date;
   brief: string;

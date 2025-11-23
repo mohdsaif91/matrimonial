@@ -198,5 +198,6 @@ export const ROUTE = {
   PAYMENT: {
     GET: "v1/payments",
     ADD: "v1/payments",
+    PUT: "v1/pauments",
   },
 };

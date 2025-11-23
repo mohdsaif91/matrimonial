@@ -82,19 +82,24 @@ export const safeDate = (date: any, format: string = "DD-MM-YYYY") => {
   return d.isValid() ? d.format(format) : "-";
 };
 
-export function convertDynamicFieldsToPaymentRows(fieldsArray) {
+export function convertDynamicFieldsToPaymentRows(fieldsArray, name) {
   const groups = {};
 
   fieldsArray.forEach((item) => {
     const prefix = item.field_name.split("_")[0]; // "registration"
     const suffix = item.field_name.replace(prefix + "_", ""); // "amount"
+    console.log(item, " <>? IN Util ");
 
-    if (!groups[prefix]) groups[prefix] = {};
-
+    if (!groups[prefix]) {
+      groups[prefix] = {};
+    }
     groups[prefix][suffix] = item.value ?? null; // dynamic value here
+    // console.log(groups, " <>?<?> IN UTIL");
   });
+
   return Object.keys(groups).map((key) => {
     const g = groups[key];
+
     return {
       payment_type: key, // registration
       expected_amount: g.amount || null, // registration_amount
@@ -103,6 +108,9 @@ export function convertDynamicFieldsToPaymentRows(fieldsArray) {
       payment_date: g.payment_date || null, // registration_payment_date
       brief: g.brief || null, // registration_brief
       payment_followup_date: g.followup_date || null, // optional
+      client_name: name,
     };
   });
 }
+
+export const paymentSlugs = [""];

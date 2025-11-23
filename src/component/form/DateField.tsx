@@ -12,8 +12,6 @@ export function DateTimePicker({
   showYear = false,
 }: DateFeildProps) {
   const dateValue = value ? new Date(value) : undefined;
-  console.log(value, " DateVALUE KI MAA KI");
-
   return (
     <div className="flex flex-col gap-1">
       {showLabel && (

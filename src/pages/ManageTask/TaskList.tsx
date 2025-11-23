@@ -94,7 +94,7 @@ export default function TaskList() {
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
-            <Pencil size={16} className="text-gray-600" />
+            <Pencil size={16} className="text-gray-600" />|
           </button>
           <button
             onClick={() =>
@@ -118,10 +118,10 @@ export default function TaskList() {
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      {!state.clientIdForTask && (
-        <Button text="+ Add Task" onClick={() => navigate("/task-add")} />
-      )}
-      <TaskFilter onSubmit={() => {}} />
+      <TaskFilter
+        showAddTaskBtn={!(state && !state.clientIdForTask)}
+        onSubmit={() => {}}
+      />
       <div className="mt-2 mb-2">
         <Table borderX columns={columns} data={handledTaskData} />
       </div>

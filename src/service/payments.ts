@@ -16,3 +16,8 @@ export async function addPayment(data: PaymentProps) {
   const response = await api.post(`${ROUTE.PAYMENT.ADD}`, { ...data });
   return response.data;
 }
+
+export async function updatePayment(data: PaymentProps) {
+  const response = await api.put(`${ROUTE.PAYMENT.PUT}`, { ...data });
+  return response.data;
+}
