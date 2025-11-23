@@ -22,11 +22,11 @@ const ModalPopup: React.FC<ModalPopupProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex h-auto items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex h-screen items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className={`bg-white rounded-2xl shadow-xl w-auto ${width} p-6 relative`}
+        className={`bg-white rounded-2xl shadow-xl h-auto ${width} max-h-[90vh] p-6 relative overflow-y-auto`}
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         {/* Header */}

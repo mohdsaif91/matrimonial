@@ -30,13 +30,28 @@ import TableInfoPopup from "../../../component/table/TableInfoPopup";
 import CommonFilters from "../CommonFilters";
 import { fetchClientFormModule } from "../../../service/clientFormModule";
 import ModalPopup from "../../../component/ModalPopup";
-import { getCRMObject, getStatusColor } from "../../../util/ClientUtils";
+import {
+  convertDynamicFieldsToPaymentRows,
+  getCRMObject,
+  getStatusColor,
+} from "../../../util/ClientUtils";
 import ClientDetails from "./Component/ClientDetails";
+import Tooltip from "../../../component/Tooltip";
+import Interaction from "./Component/Interaction";
+import Payment from "./Component/Payment";
+import TaskAdd from "../../ManageTask/TaskAdd";
 
 const initialPaginationData = {
   current_page: 1,
   last_page: 0,
   per_page: 30,
+};
+
+const initialClientModalData = {
+  flag: false,
+  data: null,
+  type: "",
+  title: "",
 };
 
 const CRMData = getCRMObject();
@@ -49,8 +64,7 @@ export default function ClientList() {
   const [filters, setFilters] = useState<any>({});
   const [formValues, setFormValues] = useState<any[]>([]);
   const [clientDataModal, setClientDataModal] = useState({
-    flag: false,
-    data: null,
+    ...initialClientModalData,
   });
   const [filterData, setFilterData] = useState<any[] | null>(null);
 
@@ -153,6 +167,8 @@ export default function ClientList() {
             <span
               onClick={() => {
                 setClientDataModal({
+                  title: "Client Profile Detail",
+                  type: "clientDetails",
                   flag: true,
                   data: row.original,
                 });
@@ -308,60 +324,120 @@ export default function ClientList() {
     {
       id: "actions",
       header: "Action",
-      cell: ({ row }) => (
-        <div className="flex flex-col gap-2">
-          <Button
-            text="Search Profile"
-            onClick={() =>
-              navigate("/search-profile", {
-                state: { profileData: row.original },
-              })
-            }
-          />
-          <div className="flex flex-row justify-between">
-            <Eye size={16} className="cursor-pointer text-gray-600" />
-            <Pencil
+      cell: ({ row }) => {
+        console.log(row.original);
+
+        const clientName =
+          (row.original.items && row.original.items?.client_name?.value) || "";
+        const profileId =
+          `${CRMData.PREFIX_PROFILE_TEXT.value}-${row.original?.client_id}` ||
+          "";
+        return (
+          <div className="flex flex-col gap-2">
+            <Button
+              text="Search Profile"
               onClick={() =>
-                navigate("/editClient", { state: { data: row.original } })
+                navigate("/search-profile", {
+                  state: { profileData: row.original },
+                })
               }
-              size={16}
-              className="cursor-pointer text-gray-600"
             />
-            <FileText
-              onClick={() =>
-                navigate("/pdfView", { state: { pdfData: row.original } })
-              }
-              size={16}
-              className="cursor-pointer text-gray-600"
-            />
-            <IndianRupee size={16} className="cursor-pointer text-gray-600" />
-            <SquarePlus size={16} className="cursor-pointer text-gray-600" />
-            <List size={16} className="cursor-pointer text-gray-600" />
-            {/* <Trash
+            <div className="flex flex-row justify-between">
+              <Tooltip text="View Interaction">
+                <Eye
+                  size={16}
+                  onClick={() =>
+                    setClientDataModal({
+                      type: "interaction",
+                      data: row.original,
+                      flag: true,
+                      title: `Interaction Client Name:- ${clientName}, Profile Id:- ${profileId}, Lead Id:-`,
+                    })
+                  }
+                  className="cursor-pointer text-gray-600"
+                />
+              </Tooltip>
+              <Tooltip text="Edit client">
+                <Pencil
+                  onClick={() =>
+                    navigate("/editClient", { state: { data: row.original } })
+                  }
+                  size={16}
+                  className="cursor-pointer text-gray-600"
+                />
+              </Tooltip>
+              <Tooltip text="View PDF">
+                <FileText
+                  onClick={() =>
+                    navigate("/pdfView", { state: { pdfData: row.original } })
+                  }
+                  size={16}
+                  className="cursor-pointer text-gray-600"
+                />
+              </Tooltip>
+              <Tooltip text="Payments">
+                <IndianRupee
+                  onClick={() => {
+                    const paymentModuleData = clientFormModuleData.data.find(
+                      (f) => f.slug === "payment_details"
+                    );
+                    const convertedData = convertDynamicFieldsToPaymentRows(
+                      paymentModuleData.client_forms
+                    );
+                    setClientDataModal({
+                      type: "payment",
+                      data: {
+                        tableArr: convertedData,
+                        client_id: row.original.id,
+                      },
+                      flag: true,
+                      title: "Payments",
+                    });
+                  }}
+                  size={16}
+                  className="cursor-pointer text-gray-600"
+                />
+              </Tooltip>
+              <Tooltip text="Add Task">
+                <SquarePlus
+                  onClick={() => {
+                    setClientDataModal({
+                      data: row.original.id,
+                      flag: true,
+                      title: "Add Task",
+                      type: "task",
+                    });
+                  }}
+                  size={16}
+                  className="cursor-pointer text-gray-600"
+                />
+              </Tooltip>
+              <Tooltip text="View Task">
+                <List
+                  onClick={() => {
+                    navigate("/task-list", {
+                      state: {
+                        clientIdForTask: row.original.id,
+                      },
+                    });
+                  }}
+                  size={16}
+                  className="cursor-pointer text-gray-600"
+                />
+              </Tooltip>
+              {/* <Trash
               size={16}
               className="text-gray-600"
               onClick={() => {
                 row.original.id && deleteMutation.mutate(row.original.id);
               }}
             /> */}
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
   ];
-  // deleteClientList
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteClientList,
-    onSuccess: () => {
-      toast("Successfully deleted Clients");
-      queryClient.invalidateQueries({ queryKey: ["client-list"] });
-    },
-    onError: (error: any) => {
-      console.error("❌ Error in deleting Clients:", error);
-      toast(error.response?.data?.message || "Failed to delete Clients");
-    },
-  });
 
   const mutation = useMutation({
     mutationFn: fetchClientByFilters,
@@ -379,6 +455,27 @@ export default function ClientList() {
   if (clientListLoading) {
     return <LoadingPage />;
   }
+
+  const getComponent = (type) => {
+    switch (type) {
+      case "clientDetails":
+        return <ClientDetails data={clientDataModal.data} />;
+      case "interaction":
+        return <Interaction data={clientDataModal.data} />;
+      case "payment":
+        return (
+          <Payment
+            client_id={clientDataModal.data?.client_id}
+            tableArr={clientDataModal.data?.tableArr}
+          />
+        );
+      case "task":
+        return <TaskAdd client_id={clientDataModal.data} />;
+      default:
+        return <></>;
+        break;
+    }
+  };
 
   const transformedClientList = !filterData
     ? clientListData &&
@@ -463,11 +560,11 @@ export default function ClientList() {
       </div>
       <ModalPopup
         data={clientDataModal.data}
-        title="Client Profile Detail"
+        title={clientDataModal.title}
         isOpen={clientDataModal.flag}
-        children={<ClientDetails data={clientDataModal.data} />}
-        onClose={() => setClientDataModal({ data: null, flag: false })}
-        width="520px"
+        children={getComponent(clientDataModal.type)}
+        onClose={() => setClientDataModal(initialClientModalData)}
+        width="640px"
       />
     </div>
   );

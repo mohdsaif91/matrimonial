@@ -12,7 +12,10 @@ import {
 import { BackNavigationButton } from "../../../component/BackNavigationButton";
 import { fetchRole } from "../../../service/roles";
 import TextArea from "../../../component/form/TextArea";
-import { addWhatsAppKey } from "../../../service/whatsAppKey";
+import {
+  addWhatsAppKey,
+  updateWhatsAppKey,
+} from "../../../service/whatsAppKey";
 import { fetchWhatsAppProvider } from "../../../service/whatsAppProvider";
 import { getLabelValue } from "../../../util/ClientUtils";
 import { DropDown } from "../../../component/form/SearchableDropdown";
@@ -91,14 +94,14 @@ function AddEditWhatsAppKey() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateManageUserAPI,
+    mutationFn: updateWhatsAppKey,
     onSuccess: (data) => {
       setIsLoading(false);
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["whatsapp-key-list"] });
       toast("Successfully Updated Whatsapp Key");
       setFormData({ ...initialFormItem });
-      navigate("/manage-users");
+      navigate("/whatsapp-key");
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
@@ -209,7 +212,7 @@ function AddEditWhatsAppKey() {
             label="Config"
             showLabel
             onChange={(e) => {
-              setFormData({ ...formData, config: { setting: e.target.value } });
+              setFormData({ ...formData, config: { setting: e } });
             }}
             value={formData.config.setting}
           />

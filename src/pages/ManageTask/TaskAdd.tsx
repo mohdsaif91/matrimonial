@@ -25,7 +25,9 @@ const initialTaskFormData = {
   priority: "",
 };
 
-function TaskAdd() {
+function TaskAdd({ client_id }: { client_id?: string }) {
+  console.log(client_id);
+
   const [formData, setFormData] = useState<TaskProps>(initialTaskFormData);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -116,9 +118,11 @@ function TaskAdd() {
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
       <ToastContainer />
-      <h2 className="text-xl font-semibold mb-4">
-        {state && state.data ? "Edit" : "ADD"} Task
-      </h2>
+      {!client_id && (
+        <h2 className="text-xl font-semibold mb-4">
+          {state && state.data ? "Edit" : "ADD"} Task
+        </h2>
+      )}
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <div className="col-span-4">
           <TextArea

@@ -1,6 +1,27 @@
 export interface SendProfileProps {
+  data: AttachProfileProps;
   onClose: () => void;
-  data: SelectedProfileData;
+}
+
+interface AttachProfileItemProps {
+  name: string;
+  mobile: string;
+  photo: string;
+  email: string;
+}
+
+export interface AttachProfileProps {
+  sendToName: string;
+  sendToMobile: string;
+  sendToPhoto: string;
+  sendToEmail: string;
+  attachProfileName: string;
+  attachProfileMobile: string;
+  attachProfilePhoto: string;
+  attachProfileEmail: string;
+  subject: string;
+  from_client_id: string;
+  to_client_id: string;
 }
 
 interface SelectedProfileData {

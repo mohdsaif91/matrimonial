@@ -16,3 +16,7 @@ export interface CategoryTaskProps {
   created_at: string;
   updated_at: string;
 }
+
+export interface TaskFilterProps {
+  onSubmit: (data: any) => void;
+}

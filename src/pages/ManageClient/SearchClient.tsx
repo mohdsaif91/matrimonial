@@ -18,7 +18,6 @@ import {
 } from "../../service/client";
 import LoadingPage from "../Loading/Loading";
 import Table from "../../component/table/Table";
-import Pagination from "../../component/Pagination";
 import Button from "../../component/form/Button";
 import TableInfoPopup from "../../component/table/TableInfoPopup";
 import Checkbox from "../../component/form/Checkbox";
@@ -302,13 +301,25 @@ export default function SearchClient() {
           <Button
             text="Send Profile"
             onClick={() => {
-              const sendProfileObj = {
+              const sendObjs = {
+                sendToName: selectClientDetails.items.client_name.value,
+                sendToMobile: selectClientDetails.items.client_mobile.value,
+                sendTPohoto: selectClientDetails.client_documents.find(
+                  (f) => f.file_type === "main_photo"
+                ).file_path,
+                sendToEmail: selectClientDetails.items.client_email.value,
+                attachProfileName: row.original.items.client_name,
+                attachProfileMobile: row.original.items.client_mobile,
+                attachProfilePhoto: row.original.documents[0].document_path,
+                attachProfileEmail: row.original.items.client_email || "-",
+                subject: `Matrimonial Profile of ${selectClientDetails.items.client_name.value} for ${row.original.items.client_name}`,
                 from_client_id: selectClientDetails && selectClientDetails.id,
                 to_client_id: row.original.id,
               };
+
               setModalPopup({
                 open: true,
-                data: { ...row.original, sendProfileObj },
+                data: { ...sendObjs },
               });
             }}
           />
@@ -446,6 +457,7 @@ export default function SearchClient() {
         isOpen={modalPopup.open}
         onClose={() => setModalPopup({ open: false, data: null })}
         title="Send Profile"
+        width="520px"
       />
     </div>
   );

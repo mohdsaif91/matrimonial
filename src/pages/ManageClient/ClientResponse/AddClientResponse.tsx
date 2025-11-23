@@ -33,16 +33,19 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
   const { state } = useLocation();
   const queryClient = useQueryClient();
 
-  const { data: clientResponseByIdData, isLoading: clientResponseByIdLoading } =
-    useQuery({
-      queryKey: ["single-client-response-list"],
-      queryFn: ({ queryKey }) => {
-        const [, clientId] = queryKey; // destructure from key
+  const {
+    data: clientResponseByIdData,
+    isLoading: clientResponseByIdLoading,
+    refetch: clientResponseRefetch,
+  } = useQuery({
+    queryKey: ["single-client-response-list"],
+    queryFn: ({ queryKey }) => {
+      const [, clientId] = queryKey; // destructure from key
 
-        return fetchClientResponseById(data?.shared_with_user_id);
-      },
-      retry: false,
-    });
+      return fetchClientResponseById(data?.shared_with_user_id);
+    },
+    retry: false,
+  });
 
   useEffect(() => {
     if (state) {
@@ -114,6 +117,7 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
       queryClient.invalidateQueries({ queryKey: ["client-response-list"] });
       setFormData({ ...initailResponseData });
       toast("Successfully added Response");
+      clientResponseRefetch();
       // alert(`Successfully added form item! ${data}`);
     },
     onError: (error: any) => {
@@ -173,7 +177,7 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
       {clientResponseByIdLoading ? (
         <LoadingPage />
       ) : (
-        <Table data={handledClientResponseById} columns={columns} />
+        <Table borderX data={handledClientResponseById} columns={columns} />
       )}
     </div>
   );

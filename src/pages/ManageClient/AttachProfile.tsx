@@ -11,25 +11,7 @@ import { getCRMObject } from "../../util/ClientUtils";
 const CRMData = getCRMObject();
 
 export default function AttachProfile({ onClose, data }: SendProfileProps) {
-  const [profileData, setProfileData] = useState({
-    sendTo: {
-      name: data.shared_profiles.shared_profile_name,
-      mobile: data.shared_profiles.shared_profile_phone || "-",
-      photo:
-        data.shared_profiles.documents.find((f) => f.file_type === "main_photo")
-          ?.file_path || "",
-      email: data.items.shared_profile_email || "-",
-    },
-    attachProfile: {
-      name: data.items.client_name.value || "-",
-      mobile: data.items.client_mobile.value || "-",
-      photo:
-        data.client_documents.find((f) => f.file_type === "main_photo")
-          ?.file_path || "-",
-      email: data.items.client_email.value || "-",
-      subject: `Matrimonial Profile of ${data.shared_profiles.shared_profile_name} for ${data.items.client_name.value}`,
-    },
-  });
+  const [profileData, setProfileData] = useState({ ...data });
   const [hideContent, setHideContent] = useState({
     whatsApp: ["true", "True"].includes(CRMData["WHATSAPP-ENABLE"].value),
     email: true,
@@ -40,23 +22,6 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
   });
 
   const queryClient = useQueryClient();
-
-  const sendTo = {
-    name: data.shared_profiles.shared_profile_name,
-    mobile: data.shared_profiles.shared_profile_phone || "-",
-    photo:
-      data.shared_profiles.documents.find((f) => f.file_type === "main_photo")
-        ?.file_path || "",
-    email: data.items.shared_profile_email || "-",
-  };
-  const attachProfile = {
-    name: data.items.client_name.value || "-",
-    mobile: data.items.client_mobile.value || "-",
-    photo:
-      data.client_documents.find((f) => f.file_type === "main_photo")
-        ?.file_path || "-",
-    email: data.items.client_email.value || "-",
-  };
 
   const senProfileMutation = useMutation({
     mutationFn: sendProfile,
@@ -71,41 +36,58 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
   });
 
   return (
-    <div className="flex items-center justify-center bg-black/50">
+    <div className="flex items-center justify-center bg-black/50 w-[750px]">
       <ToastContainer />
       <div className="bg-white max-w-6xl shadow-lg overflow-y-auto">
         <div className="w-full border border-gray-300 rounded-md overflow-hidden">
+          {/* ROW 1 */}
           <div className="grid grid-cols-5 border-b border-gray-300">
-            <div className="border-r border-gray-300 p-4 font-semibold">
+            <div className="border-r border-gray-300 p-4 font-semibold flex items-center justify-center">
               Send Mail To
             </div>
-            <div className="border-r border-gray-300 p-4">{sendTo.name}</div>
-            <div className="border-r border-gray-300 p-4">{sendTo.mobile}</div>
-            <div className="border-r border-gray-300 p-4">{sendTo.email}</div>
-            <div className="p-4 flex justify-center">
+
+            <div className="border-r border-gray-300 p-4 flex items-center justify-center">
+              {data.sendToName}
+            </div>
+
+            <div className="border-r border-gray-300 p-4 flex items-center justify-center">
+              {data.sendToMobile}
+            </div>
+
+            <div className="border-r border-gray-300 p-4 flex items-center justify-center">
+              {data.sendToEmail}
+            </div>
+
+            <div className="p-4 flex items-center justify-center">
               <img
-                src={sendTo.photo}
-                className="h-28 w-28 object-cover rounded-md"
+                src={data.sendToPhoto}
+                className="h-24 w-24 object-cover rounded-md"
               />
             </div>
           </div>
+
+          {/* ROW 2 */}
           <div className="grid grid-cols-5">
-            <div className="border-r border-gray-300 p-4 font-semibold">
+            <div className="border-r border-gray-300 p-4 font-semibold flex items-center justify-center">
               Attached Profile
             </div>
-            <div className="border-r border-gray-300 p-4">
-              {attachProfile.name}
+
+            <div className="border-r border-gray-300 p-4 flex items-center justify-center">
+              {data.attachProfileName}
             </div>
-            <div className="border-r border-gray-300 p-4">
-              {attachProfile.mobile}
+
+            <div className="border-r border-gray-300 p-4 flex items-center justify-center">
+              {data.attachProfileMobile}
             </div>
-            <div className="border-r border-gray-300 p-4">
-              {attachProfile.email}
+
+            <div className="border-r border-gray-300 p-4 flex items-center justify-center">
+              {data.attachProfileEmail}
             </div>
-            <div className="p-4 flex justify-center">
+
+            <div className="p-4 flex items-center justify-center">
               <img
-                src={attachProfile.photo}
-                className="h-28 w-28 object-cover rounded-md"
+                src={data.attachProfilePhoto}
+                className="h-24 w-24 object-cover rounded-md"
               />
             </div>
           </div>
@@ -125,14 +107,11 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
               <TextField
                 label="To :"
                 name="mobileTo"
-                value={profileData.attachProfile.mobile}
+                value={profileData.attachProfileMobile}
                 onChange={(e) => {
                   setProfileData({
                     ...profileData,
-                    attachProfile: {
-                      ...profileData.attachProfile,
-                      mobile: e?.target.value,
-                    },
+                    attachProfileMobile: e?.target.value,
                   });
                 }}
               />
@@ -140,11 +119,12 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
                 disabled={true}
                 label="From :"
                 name=""
-                value={profileData.mobileAttached}
+                value={profileData.attachProfileMobile}
                 onChange={(e) => {
+                  const obj = {};
                   setProfileData({
                     ...profileData,
-                    mobileAttached: e?.target.value,
+                    attachProfileMobile: e?.target.value,
                   });
                 }}
               />
@@ -163,41 +143,35 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
               />
               <TextField
                 label="To :"
-                name="mobileTo"
-                value={profileData.attachProfile.mobile}
+                name="emailTo"
+                value={profileData.sendToEmail}
                 onChange={(e) => {
                   setProfileData({
                     ...profileData,
-                    attachProfile: {
-                      ...profileData.attachProfile,
-                      mobile: e?.target.value,
-                    },
+                    sendToEmail: e?.target.value,
                   });
                 }}
               />
               <TextField
                 label="Subject :"
-                name=""
-                value={profileData.attachProfile.subject}
+                name="subject"
+                value={profileData.subject}
                 onChange={(e) => {
                   setProfileData({
                     ...profileData,
-                    attachProfile: {
-                      ...profileData.attachProfile,
-                      subject: e?.target.value,
-                    },
+                    subject: e?.target.value,
                   });
                 }}
               />
               <TextField
                 label="From :"
                 disabled={true}
-                name=""
-                value={profileData.mobileAttached}
+                name="from"
+                value="info@code10.in"
                 onChange={(e) => {
                   setProfileData({
                     ...profileData,
-                    mobileAttached: e?.target.value,
+                    attachProfileMobile: e?.target.value,
                   });
                 }}
               />
@@ -211,11 +185,10 @@ export default function AttachProfile({ onClose, data }: SendProfileProps) {
             className="mr-4"
             type="button"
             onClick={() => {
-              console.log(data, " <>? ");
-
               const sendProfileObj = {
-                from_client_id: data.id,
-                to_client_id: data.shared_profiles.shared_profile_id,
+                from_client_id: data.from_client_id,
+                to_client_id: data.to_client_id,
+                email: data.sendToEmail,
               };
               senProfileMutation.mutate(sendProfileObj);
             }}

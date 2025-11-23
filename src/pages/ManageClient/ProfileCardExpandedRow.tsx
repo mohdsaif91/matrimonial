@@ -94,17 +94,40 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
               icon={<Paperclip size={16} className="mr-1" />}
               text={`Profile`}
               className="bg-[#161D27] text-white w-full px-1 py-2 text-[12px] flex items-center justify-center mr-1"
-              onClick={() =>
+              onClick={() => {
+                console.log(data, " <>?");
+                const {
+                  items,
+                  client_documents,
+                  shared_profiles,
+                  id: sendToId,
+                } = data;
+                const sendObjs = {
+                  sendToName: items.client_name.value,
+                  sendToMobile: items.client_mobile.value,
+                  sendTPohoto: client_documents.find(
+                    (f) => f.file_type === "main_photo"
+                  ).file_path,
+                  sendToEmail: items.client_email.value,
+                  attachProfileName: shared_profiles[index].shared_profile_name,
+                  attachProfileMobile: shared_profiles[index].client_mobile,
+                  attachProfilePhoto: shared_profiles[index].documents.find(
+                    (f) => f.file_type === "main_photo"
+                  ).file_path,
+                  attachProfileEmail:
+                    shared_profiles[index].shared_profile_email,
+                  subject: `Matrimonial Profile of ${items.client_name.value} for ${shared_profiles[index].shared_profile_name}`,
+                  from_client_id: sendToId,
+                  to_client_id: shared_profiles[index].shared_profile_id,
+                };
+
                 setOpenModal({
                   flag: true,
-                  data: {
-                    ...data,
-                    shared_profiles: data.shared_profiles[index],
-                  },
+                  data: sendObjs,
                   component: "sendProfile",
                   title: "Send Profile",
-                })
-              }
+                });
+              }}
             />
             <Button
               type="expanderBtn"

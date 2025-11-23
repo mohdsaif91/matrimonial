@@ -195,4 +195,8 @@ export const ROUTE = {
     UPDATE: "v1/whatsapp-keys",
     DELETE: "v1/whatsapp-keys",
   },
+  PAYMENT: {
+    GET: "v1/payments",
+    ADD: "v1/payments",
+  },
 };

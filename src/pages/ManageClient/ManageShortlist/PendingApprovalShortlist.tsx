@@ -17,6 +17,8 @@ import {
   ShortlistItemProps,
 } from "../../../types/clientResponse";
 import Button from "../../../component/form/Button";
+import ModalPopup from "../../../component/ModalPopup";
+import AttachProfile from "../AttachProfile";
 
 const initialClientData = {
   client_id: null,
@@ -27,9 +29,12 @@ export default function PendingApprovalShortlist() {
   const [clientData, setClientData] =
     useState<ClientDetailsResponseProps>(initialClientData);
   const [actionType, setActionType] = useState(null);
+  const [clientDataModal, setClientDataModal] = useState({
+    flag: false,
+    data: null,
+  });
 
   const { state } = useLocation();
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (state && state.shortlistData) {
@@ -42,11 +47,12 @@ export default function PendingApprovalShortlist() {
     data: acceptRejecttData,
     error: acceptRejecttError,
     isLoading: acceptRejecttLoading,
+    refetch: acceptRejectRefetch,
   } = useQuery({
     queryKey: ["clients-short-list", clientData.client_id], // include page number
     queryFn: ({ queryKey }) => {
       const [, clientId] = queryKey;
-      return getPendingRequestByClientId(clientId);
+      return getPendingRequestByClientId(clientId, actionType);
     },
     enabled: !!clientData.client_id,
     retry: false,
@@ -170,35 +176,54 @@ export default function PendingApprovalShortlist() {
                 />
               </div>
             </React.Fragment>
-          ) : actionType === "approve" ? (
+          ) : actionType === "approved" ? (
             <React.Fragment>
-              <div className="bg-red-600 p-2 rounded-[4px]">
-                <X
+              <Button
+                text="Send Profile"
+                onClick={() =>
+                  setClientDataModal({ data: row.original, flag: true })
+                }
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <div className="bg-green-600 p-2 rounded-[4px]">
+                <Check
                   onClick={() => {
-                    // const appObj = {
-                    //   shortlist_id: acceptRejecttData.data[0].id,
-                    //   status: "rejected",
-                    // };
-                    // mutation.mutate({ ...appObj });
+                    const appObj = {
+                      shortlist_id: acceptRejecttData.data[0].id,
+                      status: "approved",
+                    };
+                    mutation.mutate({ ...appObj });
                   }}
                   color="#fff"
                 />
               </div>
-              <Button text="Send Profile" />
+              <div className="bg-red-600 p-2 rounded-[4px]">
+                <X
+                  onClick={() => {
+                    const appObj = {
+                      shortlist_id: acceptRejecttData.data[0].id,
+                      status: "rejected",
+                    };
+                    mutation.mutate({ ...appObj });
+                  }}
+                  color="#fff"
+                />
+              </div>
             </React.Fragment>
-          ) : (
-            <div className="bg-red-600 p-2 rounded-[4px]">
-              <X
-                // onClick={() => {
-                //   const appObj = {
-                //     shortlist_id: acceptRejecttData.data[0].id,
-                //     status: "rejected",
-                //   };
-                //   mutation.mutate({ ...appObj });
-                // }}
-                color="#fff"
-              />
-            </div>
+            // <div className="bg-red-600 p-2 rounded-[4px]">
+            //   <X
+            //     onClick={() => {
+            //       const appObj = {
+            //         shortlist_id: acceptRejecttData.data[0].id,
+            //         status: "rejected",
+            //       };
+            //       mutation.mutate({ ...appObj });
+            //     }}
+            //     color="#fff"
+            //   />
+            // </div>
           )}
         </div>
       ),
@@ -207,15 +232,34 @@ export default function PendingApprovalShortlist() {
 
   const mutation = useMutation({
     mutationFn: approveShortlist,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["clients-approve-reject-list"],
-      });
-      toast(`Successfully updated status`);
+
+    onSuccess: (data, variables) => {
+      toast("Successfully updated status");
+      acceptRejectRefetch();
+      // 🚀 Update the existing cache WITHOUT refetching
+      // queryClient.setQueryData(
+      //   ["clients-short-list", clientData.client_id],
+      //   (oldData: any) => {
+      //     if (!oldData?.data?.[0]) return oldData;
+
+      //     return {
+      //       ...oldData,
+      //       data: [
+      //         {
+      //           ...oldData.data[0],
+      //           shortlisted_clients: oldData.data[0].shortlisted_clients.filter(
+      //             (item: any) =>
+      //               item.shortlisted_client_id !== variables.shortlist_id
+      //           ),
+      //         },
+      //       ],
+      //     };
+      //   }
+      // );
     },
+
     onError: (error: any) => {
-      console.error("❌ Error adding updated status:", error);
-      alert(error.response?.data?.message || "Failed to add updated status");
+      alert(error.response?.data?.message || "Failed to update status");
     },
   });
 
@@ -246,6 +290,19 @@ export default function PendingApprovalShortlist() {
         </div>
       )}
       <Table borderX={true} columns={columns} data={handledAcceptRejectData} />
+      <ModalPopup
+        data={clientDataModal.data}
+        title="Client Profile Detail"
+        isOpen={clientDataModal.flag}
+        children={
+          <AttachProfile
+            data={clientDataModal.data}
+            onClose={() => setClientDataModal({ data: null, flag: false })}
+          />
+        }
+        onClose={() => {}}
+        width="520px"
+      />
     </div>
   );
 }

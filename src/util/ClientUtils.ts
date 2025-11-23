@@ -81,3 +81,28 @@ export const safeDate = (date: any, format: string = "DD-MM-YYYY") => {
   const d = moment(date);
   return d.isValid() ? d.format(format) : "-";
 };
+
+export function convertDynamicFieldsToPaymentRows(fieldsArray) {
+  const groups = {};
+
+  fieldsArray.forEach((item) => {
+    const prefix = item.field_name.split("_")[0]; // "registration"
+    const suffix = item.field_name.replace(prefix + "_", ""); // "amount"
+
+    if (!groups[prefix]) groups[prefix] = {};
+
+    groups[prefix][suffix] = item.value ?? null; // dynamic value here
+  });
+  return Object.keys(groups).map((key) => {
+    const g = groups[key];
+    return {
+      payment_type: key, // registration
+      expected_amount: g.amount || null, // registration_amount
+      received_payment: g.received_amount || null, // registration_received_amount
+      payment_mode: g.payment_mode || null, // registration_payment_mode
+      payment_date: g.payment_date || null, // registration_payment_date
+      brief: g.brief || null, // registration_brief
+      payment_followup_date: g.followup_date || null, // optional
+    };
+  });
+}

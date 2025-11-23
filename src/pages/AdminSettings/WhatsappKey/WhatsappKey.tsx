@@ -69,7 +69,7 @@ export default function WhatsappKey() {
       accessorKey: "config",
       header: "Config",
       cell: ({ row }) => {
-        return <div>{row.original.setting}</div>;
+        return <div>{row.original.config.setting}</div>;
       },
     },
     {

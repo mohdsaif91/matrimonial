@@ -25,7 +25,7 @@ export default function RejectShortlist() {
     error: clientShortListError,
     isLoading: clientShortListLoading,
   } = useQuery({
-    queryKey: ["clients-short-list", "all"], // include page number
+    queryKey: ["clients-short-list", "pending"], // include page number
     queryFn: ({ queryKey }) => {
       const [, status] = queryKey;
       return fetchShortList(status);
@@ -106,7 +106,7 @@ export default function RejectShortlist() {
       <ToastContainer />
       <ManageShortlistFilters />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={transformedClientList || []} />
+        <Table borderX columns={columns} data={transformedClientList || []} />
         <Pagination
           onPageChange={() => {}}
           pagination={handledPaginationData}

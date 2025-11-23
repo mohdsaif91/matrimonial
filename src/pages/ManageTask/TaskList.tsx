@@ -1,16 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { Pencil, Trash } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../Loading/Loading";
 import Button from "../../component/form/Button";
 import Table from "../../component/table/Table";
 import { deleteTask, fetchTask } from "../../service/task";
+import TaskFilter from "./component/TaskFilter";
 
 export default function TaskList() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { state } = useLocation();
 
   const { data: taskData, isLoading } = useQuery({
     queryKey: ["task-list"],
@@ -115,9 +118,12 @@ export default function TaskList() {
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
-      <Button text="+ Add Task" onClick={() => navigate("/task-add")} />
+      {!state.clientIdForTask && (
+        <Button text="+ Add Task" onClick={() => navigate("/task-add")} />
+      )}
+      <TaskFilter onSubmit={() => {}} />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={handledTaskData} />
+        <Table borderX columns={columns} data={handledTaskData} />
       </div>
     </div>
   );

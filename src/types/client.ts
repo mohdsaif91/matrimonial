@@ -114,7 +114,7 @@ export interface ClientData {
   modules: Module[];
   client_documents: ClientDocumentsProps[];
   shared_profiles: SharedProfile[];
-  items?: Field;
+  items?: ClientItems;
   client_profile_id: string;
 }
 

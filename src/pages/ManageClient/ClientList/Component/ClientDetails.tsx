@@ -1,11 +1,6 @@
-import React from "react";
-import { ClientDetailsprops, SharedProfile } from "../../../../types/client";
-import moment from "moment";
-import {
-  getCRMObject,
-  safeDate,
-  safeValue,
-} from "../../../../util/ClientUtils";
+import { ClientDetailsprops } from "../../../../types/client";
+import { safeDate, safeValue } from "../../../../util/ClientUtils";
+import { SharedProfileCard } from "./SharedProfileCard";
 
 export default function ClientDetails({ data, onClose }: ClientDetailsprops) {
   const profileImage = Array.isArray(data.client_documents)
@@ -14,9 +9,6 @@ export default function ClientDetails({ data, onClose }: ClientDetailsprops) {
 
   const clientData = data.items;
   const sharedProfiles = data.shared_profiles ?? [];
-
-  console.log(clientData, " <>? ITEMS");
-  //   console.log(data, " <>? Data");
 
   return (
     <div className="bg-white w-auto max-w-7xl rounded-lg shadow-xl max-h-[90vh] overflow-y p-5">
@@ -477,41 +469,8 @@ export default function ClientDetails({ data, onClose }: ClientDetailsprops) {
       </h2>
       <div className="mb-5 flex flex-wrap">
         {sharedProfiles.map((sharedProfilesItems) => (
-          <ProfileCard data={sharedProfilesItems} />
+          <SharedProfileCard data={sharedProfilesItems} />
         ))}
-      </div>
-    </div>
-  );
-}
-
-const CRMData = getCRMObject();
-
-function ProfileCard({ data }: { data: SharedProfile }) {
-  const mainProfile = data.documents.find((f) => f.file_type === "main_photo");
-  console.log(data, " Sh");
-
-  return (
-    <div className="flex flex-col border rounded-[8px] w-[200px] p-2 border-gray-500 mr-2">
-      <div className="border rounded-[6px] border-gray-500">
-        <img src={mainProfile?.file_path} alt="profilePicture" className="" />
-      </div>
-      <div className="">
-        <div>
-          <span className="text-[12px] text-gray-500">Name:</span>{" "}
-          <span>{data.shared_profile_name}</span>
-        </div>
-        <div>
-          <span className="text-[12px] text-gray-500">Profile Id:</span>
-          <span>{`(${CRMData.PREFIX_PROFILE_TEXT.value}-${data.shared_profile_id})`}</span>
-        </div>
-        <div>
-          <span className="text-[12px] text-gray-500">Age:</span>{" "}
-          <span>{data.shared_profile_age}</span>
-        </div>
-        <div>
-          <span className="text-[12px] text-gray-500">Send Date:</span>{" "}
-          <span>{moment(data.shared_at).format("DD-MM-YYYY")}</span>
-        </div>
       </div>
     </div>
   );

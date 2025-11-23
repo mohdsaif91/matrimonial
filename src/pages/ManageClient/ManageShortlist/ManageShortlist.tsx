@@ -71,6 +71,7 @@ export default function ManageShortlist() {
               navigate("/pendingApproveShortlist", {
                 state: {
                   shortlistData: row.original,
+                  shortListType: "pending",
                 },
               })
             }
