@@ -6,19 +6,23 @@ import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../../Loading/Loading";
 import Button from "../../../component/form/Button";
 import Table from "../../../component/table/Table";
+import {
+  deletePDFTemplate,
+  fetchPDFTemplate,
+} from "../../../service/PDFTemplate";
 
 export default function PDFTemplate() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: taskData, isLoading } = useQuery({
+  const { data: PDFTemplate, isLoading } = useQuery({
     queryKey: ["pdf-template-list"],
-    // queryFn: fetchTask,
+    queryFn: fetchPDFTemplate,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    // mutationFn: deleteTask,
+    mutationFn: deletePDFTemplate,
     onSuccess: () => {
       toast("Successfully deleted PDF Template");
       queryClient.invalidateQueries({ queryKey: ["pdf-template-list"] });
@@ -36,16 +40,30 @@ export default function PDFTemplate() {
       cell: (info) => info.getValue(),
     },
     {
-      accessorKey: "name",
+      accessorKey: "title",
       header: "Title",
     },
     {
-      accessorKey: "title",
+      accessorKey: "slug_key",
       header: "Key",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "status",
       header: "Status",
+      cell: ({ getValue }) => {
+        const status = getValue() as string;
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+              status === "active"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
     },
     {
       id: "actions",
@@ -54,7 +72,7 @@ export default function PDFTemplate() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/addEditTemplate", { state: { data: row.original } });
+              navigate("/addPDFTemplate", { state: { data: row.original } });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -77,7 +95,7 @@ export default function PDFTemplate() {
     return <LoadingPage />;
   }
 
-  const handledTaskData = taskData ? taskData.data : [];
+  const handledPDFTemplate = Array.isArray(PDFTemplate) ? PDFTemplate : [];
 
   return (
     <div className="p-4 bg-white">
@@ -87,7 +105,7 @@ export default function PDFTemplate() {
         onClick={() => navigate("/addPDFTemplate")}
       />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={handledTaskData} />
+        <Table borderX columns={columns} data={handledPDFTemplate} />
       </div>
     </div>
   );

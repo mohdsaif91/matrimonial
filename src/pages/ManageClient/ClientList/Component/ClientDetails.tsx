@@ -315,7 +315,7 @@ export default function ClientDetails({ data, onClose }: ClientDetailsprops) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <InfoBox
           label="Complete Residence Address"
-          value={safeValue(clientData.complete_residence_address?.value)}
+          value={safeValue(clientData?.complete_residence_address?.value)}
         />
         <InfoBox
           label="Earn In Currency"

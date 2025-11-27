@@ -150,7 +150,7 @@ export const headerLinks = [
           },
           {
             id: "ms-4",
-            show: true,
+            show: false,
             text: "Pending Approve Shortlist",
             link: "/pendingApproveShortlist",
             element: lazy(
@@ -360,8 +360,18 @@ export const headerLinks = [
         show: true,
         text: "Activity Log",
         link: "/activity-log",
-        element: lazy(() => import("../pages/ActivityLog")),
-        children: [],
+        element: lazy(() => import("../pages/ActivityLog/ActivityLog")),
+        children: [
+          {
+            id: "s-1",
+            show: true,
+            text: "Activity log details",
+            link: "/activity-log-details",
+            element: lazy(
+              () => import("../pages/ActivityLog/DetailedActivityLog")
+            ),
+          },
+        ],
       },
       {
         id: 8,
@@ -1176,7 +1186,36 @@ export const headerLinks = [
         show: true,
         text: "Whatsapp Template",
         link: "/whatsapp-template",
-        element: lazy(() => import("../pages/AdminSettings/WhatsappTemplate")),
+        element: lazy(
+          () =>
+            import("../pages/AdminSettings/WhatsAppTemplate/WhatsappTemplate")
+        ),
+        children: [
+          {
+            id: "wt-1",
+            show: false,
+            text: "Add Whats App Template",
+            link: "/addWhatsAppTemplate",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/WhatsAppTemplate/AddEditWhatsAppTemplate"
+                )
+            ),
+          },
+          {
+            id: "wt-2",
+            show: false,
+            text: "Edit Whats App Template",
+            link: "/editWhatsAppTemplate",
+            element: lazy(
+              () =>
+                import(
+                  "../pages/AdminSettings/WhatsAppTemplate/AddEditWhatsAppTemplate"
+                )
+            ),
+          },
+        ],
       },
     ],
   },

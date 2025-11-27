@@ -5,7 +5,13 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // optimizeDeps: {
+  //   include: ["@ckeditor/ckeditor5-build-classic"],
+  // },
   build: {
+    // commonjsOptions: {
+    //   include: [/ckeditor5-build/],
+    // },
     outDir: "dist",
   },
 });

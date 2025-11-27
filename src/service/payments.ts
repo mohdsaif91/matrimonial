@@ -18,6 +18,29 @@ export async function addPayment(data: PaymentProps) {
 }
 
 export async function updatePayment(data: PaymentProps) {
-  const response = await api.put(`${ROUTE.PAYMENT.PUT}`, { ...data });
+  const { id, ...restprops } = data;
+  const response = await api.put(`${ROUTE.PAYMENT.PUT}/${id}`, {
+    ...restprops,
+  });
+  return response.data;
+}
+
+export async function deletePayment({
+  id,
+  client_id,
+}: {
+  id: string;
+  client_id: string;
+}) {
+  const response = await api.delete(`${ROUTE.PAYMENT.DELETE}/${id}`, {
+    data: {
+      client_id: parseInt(client_id),
+    },
+  });
+  return response.data;
+}
+
+export async function fetchPaymentReport() {
+  const response = await api.get(`${ROUTE.PAYMENT.PAYMENT_REPORT}`);
   return response.data;
 }

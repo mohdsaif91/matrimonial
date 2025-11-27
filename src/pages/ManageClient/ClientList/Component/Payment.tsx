@@ -230,7 +230,9 @@ export default function Payment({
     return <LoadingPage />;
   }
 
-  const handledPaymentsData = clientPaymentData ? clientPaymentData?.data : [];
+  const handledPaymentsData = clientPaymentData
+    ? clientPaymentData?.data?.payments
+    : [];
 
   return (
     <div className="overflow-y-auto" ref={scrollRef}>

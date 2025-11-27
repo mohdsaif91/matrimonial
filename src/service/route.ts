@@ -157,6 +157,9 @@ export const ROUTE = {
     GET: "v1/tasks",
     UPDATE: "v1/tasks",
     DELETE: "v1/tasks",
+    ADD_CLIENT_Task: "v1/clients",
+    GET_CLIENT_TASK: "v1/clients",
+    DELETE_CLIENT_TASK: "v1/clients",
   },
   LEAD: {
     ADD: "v1/leads",
@@ -198,6 +201,38 @@ export const ROUTE = {
   PAYMENT: {
     GET: "v1/payments",
     ADD: "v1/payments",
-    PUT: "v1/pauments",
+    PUT: "v1/payments",
+    DELETE: "v1/payments",
+    PAYMENT_REPORT: "v1/payment-report",
+  },
+  EMAIL_TEMPLATE: {
+    GET: "v1/email-templates",
+    ADD: "v1/email-templates",
+    PUT: "v1/email-templates",
+    DELETE: "v1/email-templates",
+  },
+  WEBSITE_SETTINGS: {
+    GET: "v1/website-settings",
+    ADD: "v1/website-settings",
+    PUT: "v1/website-settings",
+    DELETE: "v1/website-settings",
+  },
+  ACTIVITY_LOG: {
+    GET: "v1/activity-logs",
+  },
+  PDF_TEMPLATE: {
+    GET: "v1/pdf-templates",
+    ADD: "v1/pdf-templates",
+    PUT: "v1/pdf-templates",
+    DELETE: "v1/pdf-templates",
+  },
+  WHATSAPP_TEMPLATE: {
+    GET: "v1/whatsapp-templates",
+    ADD: "v1/whatsapp-templates",
+    PUT: "v1/whatsapp-templates",
+    DELETE: "v1/whatsapp-templates",
+  },
+  CLIENT_REPORT: {
+    GET: "v1/client-report",
   },
 };

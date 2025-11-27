@@ -6,26 +6,30 @@ import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../../Loading/Loading";
 import Button from "../../../component/form/Button";
 import Table from "../../../component/table/Table";
+import { deleteWhatsAppProvider } from "../../../service/whatsAppProvider";
+import { fetchWhatsAppTemplate } from "../../../service/whatsAppTemplate";
 
-export default function EmailTemplate() {
+export default function WhatsappTemplate() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: taskData, isLoading } = useQuery({
-    queryKey: ["email-template-list"],
-    // queryFn: fetchTask,
+  const { data: whatsAppTemplateData, isLoading } = useQuery({
+    queryKey: ["whatsapp-template-list"],
+    queryFn: fetchWhatsAppTemplate,
     retry: false,
   });
 
   const deleteMutation = useMutation({
-    // mutationFn: deleteTask,
+    mutationFn: deleteWhatsAppProvider,
     onSuccess: () => {
-      toast("Successfully deleted Email Template");
-      queryClient.invalidateQueries({ queryKey: ["email-template-list"] });
+      toast("Successfully deleted Whats App Template");
+      queryClient.invalidateQueries({ queryKey: ["whatsapp-template-list"] });
     },
     onError: (error: any) => {
-      console.error("❌ Error in deleting Email Template:", error);
-      toast(error.response?.data?.message || "Failed to delete Email Template");
+      console.error("❌ Error in deleting Whats App Template:", error);
+      toast(
+        error.response?.data?.message || "Failed to delete Whats App Template"
+      );
     },
   });
 
@@ -36,16 +40,30 @@ export default function EmailTemplate() {
       cell: (info) => info.getValue(),
     },
     {
-      accessorKey: "name",
+      accessorKey: "title",
       header: "Title",
     },
     {
-      accessorKey: "title",
-      header: "Key",
+      accessorKey: "slug_key",
+      header: "Slug Key",
     },
     {
-      accessorKey: "role_for",
+      accessorKey: "status",
       header: "Status",
+      cell: ({ getValue }) => {
+        const status = getValue() as string;
+        return (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${
+              status === "active"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {status}
+          </span>
+        );
+      },
     },
     {
       id: "actions",
@@ -54,7 +72,9 @@ export default function EmailTemplate() {
         <div className="flex gap-2">
           <button
             onClick={() => {
-              navigate("/addEditTemplate", { state: { data: row.original } });
+              navigate("/editWhatsAppTemplate", {
+                state: { data: row.original },
+              });
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
@@ -77,16 +97,23 @@ export default function EmailTemplate() {
     return <LoadingPage />;
   }
 
-  const handledTaskData = taskData ? taskData.data : [];
+  const handledWhatsAppTemplateData = whatsAppTemplateData
+    ? whatsAppTemplateData
+    : [];
+
   return (
     <div className="p-4 bg-white">
       <ToastContainer />
       <Button
-        text="+ Add Email Template"
-        onClick={() => navigate("/addEmailTemplate")}
+        text="+ Add Whats App Template"
+        onClick={() => navigate("/addWhatsAppTemplate")}
       />
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={handledTaskData} />
+        <Table
+          borderX={true}
+          columns={columns}
+          data={handledWhatsAppTemplateData}
+        />
       </div>
     </div>
   );
