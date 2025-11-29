@@ -460,7 +460,7 @@ export default function ClientList() {
       case "clientDetails":
         return <ClientDetails data={clientDataModal.data} />;
       case "interaction":
-        return <Interaction data={clientDataModal.data} />;
+        return <Interaction data={clientDataModal.data} type="client" />;
       case "payment":
         return (
           <Payment

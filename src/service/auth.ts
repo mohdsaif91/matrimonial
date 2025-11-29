@@ -9,3 +9,13 @@ export async function loginApi(credentials: Login) {
   const response = await api.post(ROUTE.LOGIN_ROUTE, { ...credentials });
   return response.data;
 }
+
+export async function markAttendenceCheckIN() {
+  const response = await api.post(ROUTE.MARK_ATTENDENC.CHECK_IN);
+  return response.data;
+}
+
+export async function markAttendenceCheckOut() {
+  const response = await api.post(ROUTE.MARK_ATTENDENC.CHECK_OUT);
+  return response.data;
+}

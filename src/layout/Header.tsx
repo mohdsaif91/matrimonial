@@ -1,7 +1,7 @@
 import { useState, useRef, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { AuthContext } from "../context/AuthContext";
@@ -9,6 +9,7 @@ import ProfileComponent from "../component/ProfileComponent";
 import { headerLinks } from "../data/header";
 import { HeaderLink, HeaderProps, MenuItem } from "../types/header";
 import ousplLogo from "../assets/one_unit_sol.png";
+import { markAttendenceCheckOut } from "../service/auth";
 
 function Header({ className }: HeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -39,9 +40,19 @@ function Header({ className }: HeaderProps) {
     };
   }, []);
 
+  const attendenceMutation = useMutation({
+    mutationFn: markAttendenceCheckOut,
+    onSuccess: (data) => {
+      logout();
+      navigate("/");
+    },
+    onError: (error: any) => {
+      alert(error.response?.data?.message || "Login failed");
+    },
+  });
+
   const handleLogout = () => {
-    logout();
-    navigate("/");
+    attendenceMutation.mutate();
   };
 
   return (

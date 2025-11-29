@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash } from "lucide-react";
+import { Eye, Pencil, Trash } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import LoadingPage from "../Loading/Loading";
@@ -8,8 +8,14 @@ import Button from "../../component/form/Button";
 import Table from "../../component/table/Table";
 import { deleteTask, fetchTask } from "../../service/task";
 import TaskFilter from "./component/TaskFilter";
+import ModalPopup from "../../component/ModalPopup";
+import React, { useState } from "react";
+import TaskFollowUp from "./TaskFollowUp";
+import Tooltip from "../../component/Tooltip";
 
 export default function TaskList() {
+  const [openFolowUp, setOpenFollowUp] = useState({ taskId: "", flag: false });
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -82,6 +88,22 @@ export default function TaskList() {
     {
       accessorKey: "role_for",
       header: "Follow Up",
+      cell: ({ row }) => {
+        return (
+          <div className="flex align-middle justify-center">
+            <Tooltip text="View Follow Up">
+              <Eye
+                onClick={() =>
+                  setOpenFollowUp({ flag: true, taskId: row.original.id })
+                }
+                size={16}
+                className="text-red-500 cursor-pointer"
+              />
+            </Tooltip>
+            <div className="ml-2">{row.original.followups.length || 0}</div>
+          </div>
+        );
+      },
     },
     {
       id: "actions",
@@ -94,7 +116,7 @@ export default function TaskList() {
             }}
             className="p-2 rounded hover:bg-gray-200 cursor-pointer"
           >
-            <Pencil size={16} className="text-gray-600" />|
+            <Pencil size={16} className="text-gray-600" />
           </button>
           <button
             onClick={() =>
@@ -125,6 +147,13 @@ export default function TaskList() {
       <div className="mt-2 mb-2">
         <Table borderX columns={columns} data={handledTaskData} />
       </div>
+      <ModalPopup
+        width="560px"
+        data={[]}
+        isOpen={openFolowUp.flag}
+        onClose={() => setOpenFollowUp({ flag: false, taskId: "" })}
+        children={<TaskFollowUp taskId={openFolowUp.taskId} />}
+      />
     </div>
   );
 }

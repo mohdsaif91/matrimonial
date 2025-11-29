@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import bgImage from "../assets/bg_image.webp";
 import ousplLogo from "../assets/ouspl_logo.png";
-import { loginApi } from "../service/auth";
+import { loginApi, markAttendenceCheckIN } from "../service/auth";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,6 +15,20 @@ function LoginPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const attendenceMutation = useMutation({
+    mutationFn: markAttendenceCheckIN,
+    onSuccess: (data) => {
+      navigate("/dashboard");
+    },
+    onError: (error: any) => {
+      setError("Invalid email or password.");
+      alert(error.response?.data?.message || "Login failed");
+    },
+    onSettled: () => {
+      setLoading(false);
+    },
+  });
+
   const mutation = useMutation({
     mutationFn: loginApi,
     onSuccess: (data) => {
@@ -23,7 +37,7 @@ function LoginPage() {
         queryClient.setQueryData(["authUser"], data.data.user);
         sessionStorage.setItem("authUser", JSON.stringify(data.data.user));
         localStorage.setItem("access_token", token);
-        navigate("/dashboard");
+        attendenceMutation.mutate();
       } else {
         console.error("Token not found in response:", data);
         alert("Login succeeded but no token was returned.");

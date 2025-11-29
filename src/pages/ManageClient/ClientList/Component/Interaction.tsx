@@ -1,33 +1,65 @@
-import React, { useState } from "react";
-import { Edit2 } from "lucide-react";
+import { useState } from "react";
+import { Pencil } from "lucide-react";
 import Table from "../../../../component/table/Table";
 import { DropDown } from "../../../../component/form/SearchableDropdown";
 import { interactionType } from "../../../../data/interaction";
 import { yesNoOptions } from "../../../../data/ClientForm";
 import TextArea from "../../../../component/form/TextArea";
 import Button from "../../../../component/form/Button";
+import { InteractionProps } from "../../../../types/interaction";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  addInteraction,
+  fetchInteraction,
+  updateInteraction,
+} from "../../../../service/interaction";
+import LoadingPage from "../../../Loading/Loading";
+import { toast } from "react-toastify";
+import moment from "moment";
 
 const initialData = {
-  type: "",
-  interactionWithClient: "",
-  remark: "",
+  interactable_type: "",
+  interaction_with_client: "",
+  remarks: "",
+  interactable_id: "",
+  interaction_type: "",
 };
-export default function Interaction({ data }) {
-  const [formData, setFormData] = useState({ ...initialData });
+export default function Interaction({
+  data,
+  type,
+}: {
+  data: any;
+  type: string;
+}) {
+  const [formData, setFormData] = useState<InteractionProps>({
+    ...initialData,
+  });
+  const [isUpdate, setIsUpdate] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: interactionData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["interaction-list"],
+    queryFn: fetchInteraction,
+  });
 
   const columns = [
     {
       header: "#",
       accessorKey: "serial",
-      Cell: ({ row }) => row.index + 1,
+      cell: ({ row }) => row.index + 1,
     },
     {
       header: "Remark",
-      accessorKey: "remark",
+      accessorKey: "remarks",
     },
     {
       header: "Interaction",
-      accessorKey: "interaction",
+      accessorKey: "interaction_type",
     },
     {
       header: "Interaction With Client",
@@ -40,68 +72,117 @@ export default function Interaction({ data }) {
     {
       header: "Created At",
       accessorKey: "created_at",
-      Cell: ({ value }) => <span>{new Date(value).toLocaleString()}</span>,
+      cell: ({ value }) => <span>{moment(value).format("yyyy-MM-DD")}</span>,
     },
     {
       header: "Action",
       accessorKey: "action",
-      Cell: ({ row }) => (
-        <button
-          onClick={() => console.log("Edit row", row.original)}
-          className="p-1 rounded hover:bg-gray-200"
-        >
-          <Edit2 size={18} />
-        </button>
+      cell: ({ row }) => (
+        <Pencil
+          onClick={() => {
+            setFormData({ ...row.original });
+            setIsUpdate(true);
+          }}
+          className="cursor-pointer"
+          size={18}
+        />
       ),
     },
   ];
 
-  const transformedClientList = [];
+  const mutation = useMutation({
+    mutationFn: addInteraction,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["interaction-list"] });
+      toast("Successfully added Interaction");
+      setFormData({ ...initialData });
+    },
+    onError: (error: any) => {
+      console.error("❌ Error adding Interaction:", error);
+      toast(error.response?.data?.message || "Failed to add Interaction");
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: updateInteraction,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["interaction-list"] });
+      toast("Successfully Updated Interaction");
+      setFormData({ ...initialData });
+      setIsUpdate(false);
+    },
+    onError: (error: any) => {
+      console.error("❌ Error updating Interaction:", error);
+      toast(error.response?.data?.message || "Failed to Update Interaction");
+    },
+  });
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  const transformedInteractionData = interactionData
+    ? interactionData.data
+    : [];
 
   return (
     <div className="bg-gray-50">
-      {/* Header Section */}
-      <div className="bg-white p-6 rounded shadow-md mb-6">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          isUpdate
+            ? updateMutation.mutate({
+                ...formData,
+                // created_at: moment(formData.created_at).format("yyyy-MM-DD"),
+              })
+            : mutation.mutate({
+                ...formData,
+                interactable_type: type,
+                interactable_id: data?.id,
+              });
+        }}
+        className="bg-white p-6 rounded shadow-md mb-6"
+      >
         <div className="mt-6 grid grid-cols-4 gap-4">
           <DropDown
             label="Select Type"
             name="selectType"
             options={interactionType}
-            value={formData.type}
+            value={formData.interaction_type as string}
             onChange={(val) => {
-              setFormData({ ...formData, type: val });
+              setFormData({ ...formData, interaction_type: val });
             }}
           />
           <DropDown
             label="Interaction With Client"
             name="interactionWitClient"
             options={yesNoOptions}
-            value={formData.interactionWithClient}
+            value={formData.interaction_with_client}
             onChange={(val) => {
               setFormData({
                 ...formData,
-                interactionWithClient: val as string,
+                interaction_with_client: val as string,
               });
             }}
           />
-
           <div className="col-span-2">
             <TextArea
               label="Remark"
               name="remark"
-              value={formData.remark}
-              onChange={(e) => setFormData({ ...formData, remark: e })}
+              value={formData.remarks}
+              onChange={(e) => setFormData({ ...formData, remarks: e })}
             />
           </div>
         </div>
-        <Button text="Save All" />
-      </div>
-
-      {/* Table Section */}
+        <Button
+          loading={mutation.isPending || updateMutation.isPending}
+          type="submit"
+          text={`${isUpdate ? "Update" : "Save"} All`}
+        />
+      </form>
       <div className="bg-white p-6 shadow rounded">
         <h3 className="text-lg font-semibold mb-3">Service Interactions</h3>
-
-        <Table borderX columns={columns} data={transformedClientList} />
+        <Table borderX columns={columns} data={transformedInteractionData} />
       </div>
     </div>
   );

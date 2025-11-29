@@ -536,6 +536,11 @@ export const yesNoOptions = [
   { label: "No", value: "No" },
 ];
 
+export const yesNoOptionsSmall = [
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "no" },
+];
+
 export const genderOptions = [
   { label: "Male", value: "Male" },
   { label: "Female", value: "Female" },

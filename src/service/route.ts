@@ -1,5 +1,9 @@
 export const ROUTE = {
   LOGIN_ROUTE: "v1/auth/sign-in",
+  MARK_ATTENDENC: {
+    CHECK_IN: "v1/attendance/check-in",
+    CHECK_OUT: "v1/attendance/check-out",
+  },
   ADD_CLIENT_ROUTE: "clients",
   CLIENTS: {
     GET: "v1/clients",
@@ -234,5 +238,21 @@ export const ROUTE = {
   },
   CLIENT_REPORT: {
     GET: "v1/client-report",
+  },
+  STAFF_REPORT: {
+    GET: "v1/reports/staff",
+  },
+  ATTENDANC_REPORT: { GET: "v1/attendance-report" },
+  INTERACTION: {
+    GET: "v1/interactions",
+    ADD: "v1/interactions",
+    PUT: "v1/interactions",
+    DELETE: "v1/interactions",
+  },
+  TASK_FOLLOW_UP: {
+    GET: "v1/task-followups",
+    ADD: "v1/task-followups",
+    PUT: "v1/task-followups",
+    DELETE: "v1/task-followups",
   },
 };
