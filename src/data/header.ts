@@ -1360,4 +1360,11 @@ export const headerLinks = [
     element: lazy(() => import("../pages/DataAddedCompleted")),
     children: [],
   },
+  {
+    id: 12,
+    show: false,
+    link: "/resetPassword",
+    element: lazy(() => import("../pages/ResetPassword")),
+    children: [],
+  },
 ];

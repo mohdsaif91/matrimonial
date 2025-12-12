@@ -1,9 +1,10 @@
 import { CheckCircle, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../component/form/Button";
 
 const DataAddedCompleted = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
@@ -15,7 +16,8 @@ const DataAddedCompleted = () => {
 
         {/* Title */}
         <h1 className="text-2xl font-semibold mb-2 text-gray-800">
-          Client Added Successfully!
+          Client {state && state.addClientSuccessType ? "Updated" : "Added"}{" "}
+          Successfully!
         </h1>
 
         {/* Description */}

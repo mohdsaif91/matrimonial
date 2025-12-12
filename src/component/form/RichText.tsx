@@ -10,8 +10,9 @@ const RichTextEditor = ({ value, onChange, label, required }) => {
         </label>
       )}
 
-      <div className="border rounded-md overflow-hidden shadow-sm">
+      <div className="border rounded-md overflow-hidden shadow-sm h-60">
         <CKEditor
+          className="h-60"
           editor={ClassicEditor}
           data={value}
           config={{

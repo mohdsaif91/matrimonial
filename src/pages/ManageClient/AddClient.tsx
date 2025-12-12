@@ -278,6 +278,10 @@ const AddClient = () => {
     enabled: !!(state && state.data),
   });
 
+  const handleClientFromModule: any[] = clientFormModuleData
+    ? clientFormModuleData.data
+    : [];
+
   const mutation = useMutation({
     mutationFn: AddClientApi,
     onSuccess: (data) => {
@@ -285,13 +289,12 @@ const AddClient = () => {
       sessionStorage.setItem("id_forPhoto", data.client_id);
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["clients"] });
-      if (activeTab + 1 <= handleClientFromModule.length) {
-        console.log(activeTab + 1, "<=", handleClientFromModule.length);
-        toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
-        setActiveTab((prevState) => prevState + 1);
-      } else {
+      if (activeTab + 1 === handleClientFromModule.length) {
         navigate("/addingClientComplete");
         toast(`Saving Client Data Completed.`);
+      } else {
+        toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
+        setActiveTab((prevState) => prevState + 1);
       }
     },
     onError: (error: any) => {
@@ -308,12 +311,14 @@ const AddClient = () => {
       sessionStorage.setItem("id_forPhoto", data.client_id);
       // invalidate or refresh client list queries
       queryClient.invalidateQueries({ queryKey: ["clients"] });
-      if (activeTab + 1 < handleClientFromModule.length) {
+      if (activeTab + 1 === handleClientFromModule.length) {
+        navigate("/addingClientComplete", {
+          state: { addClientSuccessType: true },
+        });
+        toast(`Saving Client Data Completed.`);
+      } else {
         toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
         setActiveTab((prevState) => prevState + 1);
-      } else {
-        navigate("/addingClientComplete");
-        toast(`Saving Client Data Completed.`);
       }
     },
     onError: (error: any) => {
@@ -596,7 +601,6 @@ const AddClient = () => {
         toast(`Stage ${activeTab + 1} Added.`);
         setActiveTab((prevState) => prevState + 1);
       } else {
-        const formData: FormSubmitItemProps[] = [];
         const moduleFormItems =
           clientFormModuleData.data[activeTab].client_forms;
         const updatedFormFeilds = moduleFormItems.map((formItems) => {
@@ -631,10 +635,6 @@ const AddClient = () => {
           form_fields: formData,
           client_id: idRef.current,
         };
-        if (activeTab < handleClientFromModule.length) {
-          toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
-          setActiveTab((prevState) => prevState + 1);
-        }
         mutation.mutate(finalObj as FormSubmitProps);
       } else if (
         clientFormModuleData.data[activeTab].name === "Photo and Bio-Data"
@@ -821,23 +821,21 @@ const AddClient = () => {
         }
       case "richText":
         return (
-          <MemoizedRichText
-            label={item.display_name}
-            onChange={(str) => handleChange(item.field_name, str)}
-            required={item.required === 1}
-            value={
-              (formValues[item.field_name] &&
-                formValues[item.field_name].value) ||
-              ""
-            }
-          />
+          <div className="col-span-3">
+            <MemoizedRichText
+              label={item.display_name}
+              onChange={(str) => handleChange(item.field_name, str)}
+              required={item.required === 1}
+              value={
+                (formValues[item.field_name] &&
+                  formValues[item.field_name].value) ||
+                ""
+              }
+            />
+          </div>
         );
     }
   };
-
-  const handleClientFromModule: any[] = clientFormModuleData
-    ? clientFormModuleData.data
-    : [];
 
   return (
     <div className="bg-white rounded-xl shadow-md m-1">

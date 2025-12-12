@@ -239,7 +239,7 @@ export const formSchema = {
     label: "Drinking Habits",
     options: [
       { label: "Never", value: "never" },
-      { label: "regularly", value: "regularly" },
+      { label: "Regularly", value: "regularly" },
       { label: "Seldom", value: "seldom" },
       { label: "Occasionally/Rarely", value: "occasionally/rarely" },
     ],
@@ -513,7 +513,7 @@ export const addClientFormClientType = [
 export const clientVerificationOptions = [
   { value: "Physical", label: "Physical" },
   { value: "Video", label: "Video" },
-  { value: "Kyc", label: "KYC" },
+  { value: "KYC", label: "KYC" },
 ];
 
 export const complexionOptions = [
@@ -601,7 +601,7 @@ export const heightOptions = [
 
 export const drinkingHabitOptions = [
   { label: "Never", value: "Never" },
-  { label: "regularly", value: "Regularly" },
+  { label: "Regularly", value: "Regularly" },
   { label: "Seldom", value: "Seldom" },
   { label: "Occasionally/Rarely", value: "Occasionally/Rarely" },
 ];
@@ -616,7 +616,7 @@ export const eatingHabitOptions = [
 
 export const smokingHabitsOptions = [
   { label: "Never", value: "Never" },
-  { label: "regularly", value: "Regularly" },
+  { label: "Regularly", value: "Regularly" },
   { label: "Seldom", value: "Seldom" },
   { label: "Occasionally/Rarely", value: "Occasionally/Rarely" },
 ];
