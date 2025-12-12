@@ -19,3 +19,8 @@ export async function markAttendenceCheckOut() {
   const response = await api.post(ROUTE.MARK_ATTENDENC.CHECK_OUT);
   return response.data;
 }
+
+export async function getUserDataById(id: string) {
+  const response = await api.get(`${ROUTE.MANAGE_USER.GET_USER_BY_ID}/${id}`);
+  return response.data;
+}

@@ -1,7 +1,9 @@
 import { ChevronDown, Search, CircleUserIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ProfileDropdownProps } from "../types/header";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { getUserDataById } from "../service/auth";
 
 function ProfileDropdown({
   user,
@@ -10,9 +12,31 @@ function ProfileDropdown({
   dropdownRef,
   handleLogout,
 }: ProfileDropdownProps) {
+  const [userData, setUserData] = useState(null);
   const searchInput = useRef<HTMLInputElement | null>(null);
 
+  const userId = sessionStorage.getItem("staffUserID");
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userData && userId) {
+      userMutation.mutate(userId);
+    }
+  }, [userId]);
+
+  const userMutation = useMutation({
+    mutationFn: getUserDataById,
+    onSuccess: (data) => {
+      setUserData({ ...data.data });
+    },
+    onError: (error: any) => {
+      alert(error.response?.data?.message || "Login failed");
+    },
+    onSettled: () => {},
+  });
+
+  console.log(userData, " <>?");
 
   return (
     <div
@@ -47,20 +71,18 @@ function ProfileDropdown({
           <span className="text-sm font-medium capitalize text-white">
             {user?.name || "User"}
           </span>
-          {/* <span className="text-xs text-green-600 font-medium">Premium</span> */}
         </div>
       </button>
-      {/* Dropdown Menu */}
       {dropdownOpen && (
         <div
           ref={dropdownRef}
           className="absolute right-0 top-12 bg-white rounded-md shadow-lg py-2 w-56 z-50 border border-gray-200"
         >
           <div className="px-4 py-2 text-gray-700 text-sm">
-            Login Time - 12:08 PM
+            Login Time - {userData?.login_time}
           </div>
           <div className="px-4 py-2 text-gray-700 text-sm">
-            Last Activity - 01:24 PM
+            Last Activity - {userData?.last_activity_time}
           </div>
           <div
             onClick={() => {

@@ -1,10 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Mutation,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import bgImage from "../assets/bg_image.webp";
 import ousplLogo from "../assets/ouspl_logo.png";
-import { loginApi, markAttendenceCheckIN } from "../service/auth";
+import {
+  getUserDataById,
+  loginApi,
+  markAttendenceCheckIN,
+} from "../service/auth";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -38,6 +47,8 @@ function LoginPage() {
         sessionStorage.setItem("authUser", JSON.stringify(data.data.user));
         sessionStorage.setItem("access_token", token);
         attendenceMutation.mutate();
+        sessionStorage.setItem("staffUserID", data.data.user.id);
+        // userMutation.mutate(data.data.user.id);
       } else {
         console.error("Token not found in response:", data);
         alert("Login succeeded but no token was returned.");

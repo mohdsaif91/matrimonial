@@ -110,6 +110,7 @@ export const ROUTE = {
     GET: "v1/users",
     UPDATE: "v1/users",
     DELETE: "v1/users",
+    GET_USER_BY_ID: "v1/users",
   },
   INCOME: {
     ADD: "v1/incomes",

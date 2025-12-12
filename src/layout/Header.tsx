@@ -9,7 +9,7 @@ import ProfileComponent from "../component/ProfileComponent";
 import { headerLinks } from "../data/header";
 import { HeaderProps } from "../types/header";
 import ousplLogo from "../assets/one_unit_sol.png";
-import { markAttendenceCheckOut } from "../service/auth";
+import { getUserDataById, markAttendenceCheckOut } from "../service/auth";
 import { getAuthUserPermission } from "../util/ClientUtils";
 
 function Header({ className }: HeaderProps) {
