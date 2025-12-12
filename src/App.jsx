@@ -11,6 +11,7 @@ import PrivateRoute from "./util/PrivateRoute";
 import ErrorPage from "./pages/ErrorPage";
 import NoInternetPage from "./pages/NoInternet";
 import { ToastContainer } from "react-toastify";
+import ResetPassword from "./pages/ResetPassword";
 
 // import { pdfjs } from "react-pdf";
 // import workerSrc from "pdfjs-dist/build/pdf.worker.min.js";
@@ -48,6 +49,11 @@ function App() {
               key="error"
               path="/noInternet"
               element={<NoInternetPage />}
+            />
+            <Route
+              key="resetPassword"
+              path="/resetPassword"
+              element={<ResetPassword />}
             />
           </Routes>
         </Suspense>

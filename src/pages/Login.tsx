@@ -1,25 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Mutation,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import bgImage from "../assets/bg_image.webp";
 import ousplLogo from "../assets/ouspl_logo.png";
-import {
-  getUserDataById,
-  loginApi,
-  markAttendenceCheckIN,
-} from "../service/auth";
+import { loginApi, markAttendenceCheckIN } from "../service/auth";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -31,43 +21,42 @@ function LoginPage() {
     },
     onError: (error: any) => {
       setError("Invalid email or password.");
-      alert(error.response?.data?.message || "Login failed");
     },
-    onSettled: () => {
-      setLoading(false);
-    },
+    onSettled: () => {},
   });
 
   const mutation = useMutation({
     mutationFn: loginApi,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const token = data?.token || data?.access_token || data?.data?.token;
       if (token) {
         queryClient.setQueryData(["authUser"], data.data.user);
         sessionStorage.setItem("authUser", JSON.stringify(data.data.user));
         sessionStorage.setItem("access_token", token);
-        attendenceMutation.mutate();
         sessionStorage.setItem("staffUserID", data.data.user.id);
+        try {
+          await attendenceMutation.mutateAsync();
+        } catch (err) {}
         // userMutation.mutate(data.data.user.id);
       } else {
         console.error("Token not found in response:", data);
-        alert("Login succeeded but no token was returned.");
       }
     },
     onError: (error: any) => {
       setError("Invalid email or password.");
-      alert(error.response?.data?.message || "Login failed");
     },
-    onSettled: () => {
-      setLoading(false);
-    },
+    onSettled: () => {},
   });
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
-    mutation.mutate({ email, password });
+    try {
+      await mutation.mutateAsync({ email, password });
+    } catch (err) {
+      // this stops the page refresh
+      setError("Invalid email or password.");
+    }
   };
 
   return (
@@ -105,7 +94,7 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                disabled={loading}
+                disabled={mutation.isPending}
               />
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/70">
                 <svg
@@ -133,7 +122,7 @@ function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                disabled={loading}
+                disabled={mutation.isPending}
               />
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/70">
                 {/* Lock Icon */}
@@ -157,21 +146,23 @@ function LoginPage() {
               <input
                 type="checkbox"
                 className="form-checkbox bg-white/60 mr-2 rounded w-5 h-5 outline-none font-bold"
-                disabled={loading}
+                disabled={mutation.isPending}
               />
               Remember me
             </label>
-            <a href="#" className="text-sm text-black-200 hover:underline">
-              Lost password?
+            <a
+              onClick={() => navigate("/reset-password")}
+              className="text-sm text-black-200 hover:underline cursor-pointer"
+            >
+              Forgot password?
             </a>
           </div>
-
           <button
             type="submit"
-            disabled={loading}
+            disabled={mutation.isPending}
             className="w-full bg-[#2a3341] cursor-pointer text-white py-2 rounded-lg hover:bg-[#1d2029] transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? (
+            {mutation.isPending ? (
               <div className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

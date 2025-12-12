@@ -14,7 +14,7 @@ export function DateTimePicker({
 }: DateFeildProps) {
   const dateValue = value ? new Date(value) : undefined;
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 w-full">
       {showLabel && (
         <label className="text-sm font-medium text-gray-700">
           {label} {required && <span className="text-red-500">*</span>}
@@ -26,8 +26,8 @@ export function DateTimePicker({
           dateFormat={dateFormat}
           required={required}
           showYearPicker={showYear}
-          className={`rounded-xl px-3 py-2 bg-[#F0F3F8] outline-[#465dff] w-auto ${
-            showLabel ? "" : "placeholder:text-[#000]"
+          className={`rounded-xl px-3 py-2 bg-[#F0F3F8] outline-[#465dff] w-full ${
+            showLabel ? "" : "placeholder:text"
           }`}
           selected={
             dateValue instanceof Date && !isNaN(dateValue.getTime())

@@ -15,6 +15,7 @@ import {
 import moment from "moment";
 import { getAuthUserPermission } from "../../util/ClientUtils";
 import React from "react";
+import Button from "../../component/form/Button";
 
 const crmSessionData = JSON.parse(sessionStorage.getItem("CRM") as string);
 
@@ -63,7 +64,7 @@ function Dashboard() {
                     });
                   }}
                   bgColor="#27005d"
-                  label="Task Follow Up"
+                  label="Task Follow up today"
                   value={handledDashboardData?.tasks_followup_today || 0}
                 />
                 <StatsCard
@@ -75,7 +76,7 @@ function Dashboard() {
                     });
                   }}
                   bgColor="#7149c6"
-                  label="Leads Follow Up"
+                  label="Task Follow Up Today"
                   value={handledDashboardData?.leads_followup_today || 0}
                 />
               </div>
@@ -197,12 +198,16 @@ function Dashboard() {
               // style={{ height: "300px" }}
             >
               <div className="flex justify-between mb-2">
-                <h3 className="font-semibold text-blue-600">
+                <h3 className="font-semibold text-black">
                   Today’s Client Birthday
                 </h3>
-                <a href="#" className="text-xs text-blue-500 underline">
+                <Button
+                  text="View More"
+                  onClick={() => navigate("/client-list")}
+                />
+                {/* <a href="#" className="text-xs text-blue-500 underline">
                   View More
-                </a>
+                </a> */}
               </div>
               <Table
                 borderX
@@ -212,12 +217,16 @@ function Dashboard() {
             </div>
             <div className="mb-2 bg-white p-4 rounded shadow ag-theme-alpine">
               <div className="flex justify-between mb-2">
-                <h3 className="font-semibold text-blue-600">
+                <h3 className="font-semibold text-black">
                   Today’s Client Anniversaries
                 </h3>
-                <a href="#" className="text-xs text-blue-500 underline">
+                <Button
+                  text="View More"
+                  // onClick={() => navigate("/activity-log")}
+                />
+                {/* <a href="#" className="text-xs text-blue-500 underline">
                   View More
-                </a>
+                </a> */}
               </div>
               <Table
                 borderX
@@ -232,10 +241,14 @@ function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-6">
           <div className="md:col-span-4">
             <div className="flex justify-between mb-2">
-              <h3 className="font-semibold text-blue-600">Absent Today</h3>
-              <a href="#" className="text-xs text-blue-500 underline">
+              <h3 className="font-semibold text-black">Absent Today</h3>
+              <Button
+                text="View More"
+                // onClick={() => navigate("/activity-log")}
+              />
+              {/* <a href="#" className="text-xs text-blue-500 underline">
                 View More
-              </a>
+              </a> */}
             </div>
             <Table
               borderX
@@ -245,13 +258,18 @@ function Dashboard() {
           </div>
           <div className="md:col-span-6">
             <div className="flex justify-between mb-2">
-              <h3 className="font-semibold text-blue-600">User Activity</h3>
-              <div
+              <h3 className="font-semibold text-black">User Activity</h3>
+              <Button
+                text="View More"
+                onClick={() => navigate("/activity-log")}
+              />
+
+              {/* <div
                 className="text-xs cursor-pointer text-blue-500 underline"
                 onClick={() => navigate("/activity-log")}
               >
                 View More
-              </div>
+              </div> */}
             </div>
             <Table
               borderX
