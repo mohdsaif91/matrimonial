@@ -55,7 +55,7 @@ import { fetchQualificationAPI } from "../../service/qualification";
 import { fetchOccupationAPI } from "../../service/occupation";
 import { fetchCountry } from "../../service/country";
 import { ImageField } from "../../component/form/ImageField";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import CustomEditor from "../../component/form/RichText";
 import PhotoBioData from "./Components/PhotoBioData";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -293,7 +293,9 @@ const AddClient = () => {
         navigate("/addingClientComplete");
         toast(`Saving Client Data Completed.`);
       } else {
-        toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
+        toast(
+          `${clientFormModuleData.data[activeTab].name} Successfully Added.`
+        );
         setActiveTab((prevState) => prevState + 1);
       }
     },
@@ -317,7 +319,9 @@ const AddClient = () => {
         });
         toast(`Saving Client Data Completed.`);
       } else {
-        toast(`Stage ${clientFormModuleData.data[activeTab].name} Added.`);
+        toast(
+          `${clientFormModuleData.data[activeTab].name} Successfully Added.`
+        );
         setActiveTab((prevState) => prevState + 1);
       }
     },
@@ -659,16 +663,20 @@ const AddClient = () => {
         imgArr.push(foundImageObject.file[im]);
       });
     const clientId = state && state.data ? state.data.id : idRef.current;
-    if (clientId) {
-      const formData = new FormData();
-      formData.append("client_id", clientId);
-      formData.append("type", getFeildname(feildName));
-      imgArr.forEach((file, index) => {
-        formData.append(`files[${index}]`, file);
-      });
-      imageMutation.mutate(formData);
+    if (foundImageObject && JSON.stringify(foundImageObject) !== "{}") {
+      if (clientId) {
+        const formData = new FormData();
+        formData.append("client_id", clientId);
+        formData.append("type", getFeildname(feildName));
+        imgArr.forEach((file, index) => {
+          formData.append(`files[${index}]`, file);
+        });
+        imageMutation.mutate(formData);
+      } else {
+        toast(`Client ID not Provided`);
+      }
     } else {
-      toast(`Client ID not Provided`);
+      toast(`Please select an image`);
     }
   };
 
@@ -803,7 +811,7 @@ const AddClient = () => {
                 loading={
                   imageMutation.isPending && activeImgBtn === item.field_name
                 }
-                className="mt-3 px-2 py-1  bg-[#161D27] text-[#fff] "
+                className="mt-3 px-2 py-1  bg-[#161D27] text-white"
                 text={`+ ${item.display_name}`}
                 onClick={() => getImageDataAndSubmit(item.field_name)}
               />
@@ -839,7 +847,6 @@ const AddClient = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-md m-1">
-      <ToastContainer />
       <div className="flex p-4">
         {handleClientFromModule.map(
           (moduleItem: staticClientFormTab, moduleIndex: number) => (
