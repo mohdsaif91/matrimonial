@@ -30,6 +30,8 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
 }) => {
   const [openModal, setOpenModal] = useState(initialModalData);
 
+  console.log(data, " <>?");
+
   const getComponent = (type: string) => {
     switch (type) {
       case "addResponse":
@@ -155,10 +157,12 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
                     resItem.color === "blue" ? "bg-blue-500" : "bg-red-500"
                   }`}
                 >
-                  {resItem.status === "Rejected" ? (
+                  {resItem.status === "Approved" ? (
                     <Check color="white" size={20} className="mx-auto" />
-                  ) : (
+                  ) : resItem.status === "Rejected" ? (
                     <X color="white" size={20} className="mx-auto" />
+                  ) : (
+                    <></>
                   )}
                 </div>
               ))}
