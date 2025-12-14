@@ -1,6 +1,6 @@
 import ReactSelect from "react-select";
+
 import { SearchableSelectProps } from "../../types/form";
-// Searchable dropdown
 
 export function DropDown({
   label,
@@ -8,7 +8,6 @@ export function DropDown({
   name,
   options,
   required = false,
-  placeholder = "",
   value,
   onChange,
   searchable = true,
@@ -93,7 +92,7 @@ export function DropDown({
         styles={customStyles}
         className={`border-none outline-none w-full text-sm ${
           showLabel && "text-600"
-        }`}
+        } placeholder:text-[#8c96a6]`}
         classNamePrefix="rs"
         name={name}
         required={required}

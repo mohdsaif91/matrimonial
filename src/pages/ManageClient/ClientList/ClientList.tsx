@@ -567,7 +567,7 @@ export default function ClientList() {
             onClose={() => setModalOpen(false)}
           />
         </div>
-        <Table columns={columns} data={transformedClientList || []} />
+        <Table borderX columns={columns} data={transformedClientList || []} />
         <Pagination
           onActionChange={(pData) => {
             setPaginationData({

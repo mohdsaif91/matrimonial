@@ -1,5 +1,9 @@
 export const ROUTE = {
   LOGIN_ROUTE: "v1/auth/sign-in",
+  FORGET_PASSWORD: {
+    F_P: "v1/auth/forgot-password",
+    RESET_PASSWORD: "v1/auth/reset-password",
+  },
   MARK_ATTENDENC: {
     CHECK_IN: "v1/attendance/check-in",
     CHECK_OUT: "v1/attendance/check-out",

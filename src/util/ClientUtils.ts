@@ -141,3 +141,13 @@ export const companyDetails = {
   domain: "ceo@oneunitsolutions.com",
   Website: "https://oneunitsolutions.com/",
 };
+
+export const openInNewTab = (path: string, state?: any) => {
+  const url = state
+    ? `${path}?state=${encodeURIComponent(JSON.stringify(state))}`
+    : path;
+
+  window.open(url, "_blank", "noopener,noreferrer");
+};
+
+export const noHeaderRoutes = ["/noInternet", "/reset-password"];

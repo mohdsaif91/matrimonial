@@ -639,6 +639,7 @@ export const incomeOptions = [
 ];
 
 export const personalIncomeOptions = [
+  { label: "1 Lac", value: "1 Lac" },
   { label: "2 Lacs", value: "2 Lacs" },
   { label: "3 Lacs", value: "3 Lacs" },
   { label: "4 Lacs", value: "4 Lacs" },

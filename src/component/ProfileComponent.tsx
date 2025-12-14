@@ -1,5 +1,5 @@
-import { ChevronDown, Search, CircleUserIcon } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Search, CircleUserIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { ProfileDropdownProps } from "../types/header";
 import { useEffect, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -18,6 +18,23 @@ function ProfileDropdown({
   const userId = sessionStorage.getItem("staffUserID");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownOpen &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen, setDropdownOpen, dropdownRef]);
 
   useEffect(() => {
     if (!userData && userId) {
@@ -39,10 +56,7 @@ function ProfileDropdown({
   console.log(userData, " <>?");
 
   return (
-    <div
-      className="
-    +idden md:flex relative items-center space-x-3"
-    >
+    <div className="hidden md:flex relative items-center space-x-3">
       <div className="relative w-[180px]">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ba6b7] w-4 h-4" />
         <input
@@ -78,11 +92,14 @@ function ProfileDropdown({
           ref={dropdownRef}
           className="absolute right-0 top-12 bg-white rounded-md shadow-lg py-2 w-56 z-50 border border-gray-200"
         >
-          <div className="px-4 py-2 text-gray-700 text-sm">
-            Login Time - {userData?.login_time}
-          </div>
-          <div className="px-4 py-2 text-gray-700 text-sm">
-            Last Activity - {userData?.last_activity_time}
+          <div className="px-4 font-bold">OUSPL</div>
+          <div className="px-4 py-2">
+            <div className=" text-gray-700 text-sm">
+              Login Time - {userData?.login_time}
+            </div>
+            <div className="text-gray-700 text-sm">
+              Last Activity - {userData?.last_activity_time}
+            </div>
           </div>
           <div
             onClick={() => {
@@ -98,7 +115,7 @@ function ProfileDropdown({
               });
               setDropdownOpen(false);
             }}
-            className="cursor-pointer block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm"
+            className="cursor-pointer block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm border-b"
           >
             My Profile
           </div>

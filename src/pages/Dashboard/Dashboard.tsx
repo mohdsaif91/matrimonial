@@ -13,7 +13,7 @@ import {
   birthdayColumns,
 } from "./component/columnsData";
 import moment from "moment";
-import { getAuthUserPermission } from "../../util/ClientUtils";
+import { getAuthUserPermission, openInNewTab } from "../../util/ClientUtils";
 import React from "react";
 import Button from "../../component/form/Button";
 
@@ -85,13 +85,13 @@ function Dashboard() {
               <h3 className="text-2xl font-bold mb-6">Pending Items</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <StatsCard
-                  onClick={() => navigate("/task-list")}
+                  onClick={() => openInNewTab("/task-list")}
                   bgColor="#27005d"
                   label="Task Follow Up"
                   value={handledDashboardData?.pending_task_followup || 0}
                 />
                 <StatsCard
-                  onClick={() => navigate("/manage-leads")}
+                  onClick={() => openInNewTab("/manage-leads")}
                   bgColor="#7149c6"
                   label="Leads Follow Up"
                   value={handledDashboardData?.pending_lead_followup || 0}
@@ -100,7 +100,6 @@ function Dashboard() {
             </div>
           </div>
         )}
-        {/* Second Row */}
         {getAuthUserPermission().includes("manage_clients.view_all") && (
           <React.Fragment>
             <h3 className="text-2xl font-bold mb-6">Client Details</h3>

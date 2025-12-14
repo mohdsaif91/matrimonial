@@ -36,7 +36,7 @@ const Pagination: React.FC<PaginationProps> = ({
               per_page: Number(e.target.value),
             })
           }
-          className="border border-gray-300 py-1 px-2 rounded-md"
+          className="border border-gray-300 py-1 px-2 rounded-md cursor-pointer"
         >
           {perPageOptions.map((opt) => (
             <option key={opt} value={opt}>
@@ -57,7 +57,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 per_page: pagination.per_page,
               })
             }
-            className={`px-3 py-1 rounded-md border text-sm font-medium transition
+            className={`px-3 py-1 rounded-md border text-sm font-medium transition cursor-pointer
     ${
       pagination.current_page === page
         ? "bg-blue-600 text-white border-blue-600" // ACTIVE PAGE

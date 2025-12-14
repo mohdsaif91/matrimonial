@@ -3,6 +3,7 @@ import { TimeFeildProps } from "../../types/form";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { parseTimeStringToDate } from "../../util/ClientUtils";
+import { TimerIcon } from "lucide-react";
 
 export default function TimePickerExample({
   label,
@@ -20,7 +21,8 @@ export default function TimePickerExample({
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
-      <div className="flex gap-2">
+      <div className="relative gap-2">
+        <TimerIcon className="absolute z-99 left-3 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4 pointer-events-none" />
         <DatePicker
           name={name}
           selected={value && value}
@@ -30,7 +32,7 @@ export default function TimePickerExample({
           timeIntervals={5} // intervals in minutes
           timeCaption="Time"
           dateFormat="h:mm aa" // 12-hour format
-          className="border rounded-lg px-3 py-2 w-full"
+          className="border pl-10 rounded-lg px-3 py-2 w-full"
           placeholderText="Select time"
         />
       </div>

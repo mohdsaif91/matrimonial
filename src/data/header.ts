@@ -229,7 +229,7 @@ export const headerLinks = [
       {
         id: "ml-2",
         show: true,
-        slug: "manage_lead_follow_up_view",
+        slug: "manage_lead_follow_up.view",
         text: "Leads Follow",
         link: "/leads-follow",
         element: lazy(() => import("../pages/ManageLeads/LeadsFollowUp")),

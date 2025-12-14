@@ -4,12 +4,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import bgImage from "../assets/bg_image.webp";
 import ousplLogo from "../assets/ouspl_logo.png";
-import { loginApi, markAttendenceCheckIN } from "../service/auth";
+import {
+  loginApi,
+  markAttendenceCheckIN,
+  receiveEmailForResetPassword,
+} from "../service/auth";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showForgetPass, setShowForgetPass] = useState(false);
+  const [info, setInfo] = useState("");
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -48,13 +54,25 @@ function LoginPage() {
     onSettled: () => {},
   });
 
+  const passwordResetMutation = useMutation({
+    mutationFn: receiveEmailForResetPassword,
+    onSuccess: async (data) => {
+      setInfo("Password reset link is been send on you register email!");
+    },
+    onError: (error: any) => {
+      setError("Invalid email or password.");
+    },
+    onSettled: () => {},
+  });
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     try {
-      await mutation.mutateAsync({ email, password });
+      !showForgetPass
+        ? await mutation.mutateAsync({ email, password })
+        : await passwordResetMutation.mutateAsync(email);
     } catch (err) {
-      // this stops the page refresh
       setError("Invalid email or password.");
     }
   };
@@ -72,7 +90,9 @@ function LoginPage() {
           style={{ height: "80px" }}
         />
         <h1 className="text-white text-2xl font-semibold mb-4">
-          Sign in to our platform
+          {!showForgetPass
+            ? "Sign in to our platform"
+            : "Enter your Email to receive reset Password link"}
         </h1>
         <form onSubmit={handleLogin} className="w-full">
           {error && (
@@ -109,53 +129,57 @@ function LoginPage() {
               </span>
             </div>
           </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block mb-1 text-white">
-              Your Password
-            </label>
-            <div className="relative">
-              <input
-                type="password"
-                id="password"
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white text-black placeholder-black/30 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={mutation.isPending}
-              />
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/70">
-                {/* Lock Icon */}
-                <svg
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </span>
+          {!showForgetPass && (
+            <div className="mb-4">
+              <label htmlFor="password" className="block mb-1 text-white">
+                Your Password
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  id="password"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg bg-white text-black placeholder-black/30 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={mutation.isPending}
+                />
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-black/70">
+                  {/* Lock Icon */}
+                  <svg
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center justify-between mb-6">
-            <label className="flex items-center text-white text-sm">
+            {/* <label className="flex items-center text-white text-sm">
               <input
                 type="checkbox"
                 className="form-checkbox bg-white/60 mr-2 rounded w-5 h-5 outline-none font-bold"
                 disabled={mutation.isPending}
               />
               Remember me
-            </label>
-            <a
-              onClick={() => navigate("/reset-password")}
-              className="text-sm text-black-200 hover:underline cursor-pointer"
-            >
-              Forgot password?
-            </a>
+            </label> */}
+            {!showForgetPass && (
+              <a
+                onClick={() => setShowForgetPass(true)}
+                className="text-sm text-black-200 hover:underline cursor-pointer"
+              >
+                Forgot password?
+              </a>
+            )}
           </div>
           <button
             type="submit"
@@ -186,10 +210,11 @@ function LoginPage() {
                 Signing in...
               </div>
             ) : (
-              "Sign in"
+              <>{!showForgetPass ? "Sign in" : "Receive Email"}</>
             )}
           </button>
         </form>
+        {info !== "" && <div className="mt-1">{info}</div>}
       </div>
     </div>
   );

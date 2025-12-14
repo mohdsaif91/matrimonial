@@ -35,9 +35,9 @@ export const TextField = memo(
           required={required}
           value={value}
           onChange={onChange}
-          className={`rounded-xl w-full px-3 py-2 outline-[#465dff] bg-[#F0F3F8] text-[#333] ${
-            label ? "placeholder:text-[#9ba6b7]" : "placeholder:text-[#000]"
-          } placeholder:text-[14px] ${disabled && "bg-[#E5E7EB]"}`}
+          className={`rounded-xl w-full px-3 py-2 outline-[#465dff] bg-[#F0F3F8] text-[#333] placeholder:text-[#8c96a6] placeholder:text-[14px] ${
+            disabled && "bg-[#E5E7EB]"
+          }`}
         />
         {extraText && extraText !== "" && (
           <span className="text-red-500"> {extraText}</span>

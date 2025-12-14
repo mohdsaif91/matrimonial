@@ -12,6 +12,7 @@ import ErrorPage from "./pages/ErrorPage";
 import NoInternetPage from "./pages/NoInternet";
 import { ToastContainer } from "react-toastify";
 import ResetPassword from "./pages/ResetPassword";
+import { noHeaderRoutes } from "./util/ClientUtils";
 
 // import { pdfjs } from "react-pdf";
 // import workerSrc from "pdfjs-dist/build/pdf.worker.min.js";
@@ -33,7 +34,7 @@ function App() {
   return (
     <AuthProvider>
       <ToastContainer />
-      {location.pathname !== "/noInternet" && <Header className={``} />}
+      {!noHeaderRoutes.includes(location.pathname) && <Header className={``} />}
       <div className={`flex-1 p-4 bg-[#F0F3F8]`}>
         <Suspense fallback={<LoadingPage />}>
           <Routes>
@@ -52,7 +53,7 @@ function App() {
             />
             <Route
               key="resetPassword"
-              path="/resetPassword"
+              path="/reset-password"
               element={<ResetPassword />}
             />
           </Routes>

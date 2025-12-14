@@ -1,4 +1,4 @@
-import { Login } from "../types/auth.js";
+import { Login, ResetPasswordProps } from "../types/auth.js";
 import api from "./axios.js";
 import { ROUTE } from "./route.js";
 
@@ -22,5 +22,17 @@ export async function markAttendenceCheckOut() {
 
 export async function getUserDataById(id: string) {
   const response = await api.get(`${ROUTE.MANAGE_USER.GET_USER_BY_ID}/${id}`);
+  return response.data;
+}
+
+export async function receiveEmailForResetPassword(email: string) {
+  const response = await api.post(`${ROUTE.FORGET_PASSWORD.F_P}`, { email });
+  return response.data;
+}
+
+export async function resetPassword(data: ResetPasswordProps) {
+  const response = await api.post(`${ROUTE.FORGET_PASSWORD.RESET_PASSWORD}`, {
+    ...data,
+  });
   return response.data;
 }

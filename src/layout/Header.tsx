@@ -1,7 +1,7 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { AuthContext } from "../context/AuthContext";
@@ -9,7 +9,7 @@ import ProfileComponent from "../component/ProfileComponent";
 import { headerLinks } from "../data/header";
 import { HeaderProps } from "../types/header";
 import ousplLogo from "../assets/one_unit_sol.png";
-import { getUserDataById, markAttendenceCheckOut } from "../service/auth";
+import { markAttendenceCheckOut } from "../service/auth";
 import { getAuthUserPermission } from "../util/ClientUtils";
 
 function Header({ className }: HeaderProps) {
@@ -19,14 +19,11 @@ function Header({ className }: HeaderProps) {
   const [innerLinkMenuOpen, setinnerLinkMenuOpen] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-
   const menuRef = useRef<HTMLUListElement | null>(null);
 
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-  // const authUser = queryClient.getQueryData(["authUser"]);
   const authUser = JSON.parse(sessionStorage.getItem("authUser") as string);
 
   useEffect(() => {

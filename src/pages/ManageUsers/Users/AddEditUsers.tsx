@@ -120,8 +120,7 @@ function AddEditUsers() {
     return <LoadingPage />;
   }
 
-  const handledRoleData = roleData ? getLabelValue(roleData.data, true) : [];
-  console.log(handledRoleData, " <>? ", formData);
+  const handledRoleData = roleData ? getLabelValue(roleData.data) : [];
 
   return (
     <form
