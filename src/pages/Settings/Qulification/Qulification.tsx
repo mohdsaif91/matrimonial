@@ -96,7 +96,6 @@ const Qulification = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Qulification"
         onClick={() => navigate("/addQualification")}

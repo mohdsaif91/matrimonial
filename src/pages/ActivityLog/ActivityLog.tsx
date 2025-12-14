@@ -145,7 +145,6 @@ export default function ActivityLog() {
   // const handledPaginationData = initialPaginationData;
   return (
     <div>
-      <ToastContainer />
       <div>
         <ActivityLogFilter />
       </div>

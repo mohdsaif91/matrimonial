@@ -37,7 +37,6 @@ export default function AttachProfile({ data }: SendProfileProps) {
 
   return (
     <div className="flex items-center justify-center bg-black/50 w-[750px]">
-      <ToastContainer />
       <div className="bg-white max-w-6xl shadow-lg overflow-y-auto">
         <div className="w-full border border-gray-300 rounded-md overflow-hidden">
           {/* ROW 1 */}

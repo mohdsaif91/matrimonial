@@ -95,7 +95,6 @@ function AddEditPDFTemplate() {
       onSubmit={handleSubmit}
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
-      <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">
         {state && state.data ? "Edit" : "ADD"} PDF Template
       </h2>

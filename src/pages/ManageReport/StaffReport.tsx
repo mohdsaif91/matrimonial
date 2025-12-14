@@ -75,7 +75,6 @@ export default function StaffReport() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <div className="flex">
         <PaymentReportFilter
           filterData={filter}

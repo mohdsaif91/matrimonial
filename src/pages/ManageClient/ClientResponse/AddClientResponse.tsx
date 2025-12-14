@@ -132,8 +132,6 @@ export default function ResponseRemarkTable({ data }: { data: any }) {
 
   return (
     <div className="flex flex-col gap-6 bg-[#f8f9fb] p-6 rounded-2xl">
-      <ToastContainer />
-      {/* Form Section */}
       <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           {/* Response */}

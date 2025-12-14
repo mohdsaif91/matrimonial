@@ -98,7 +98,6 @@ export default function EmailTemplate() {
   const handledEmailData = EmailData ? EmailData.data : [];
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Email Template"
         onClick={() => navigate("/addEmailTemplate")}

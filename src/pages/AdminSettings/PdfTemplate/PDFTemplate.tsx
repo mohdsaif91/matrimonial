@@ -99,7 +99,6 @@ export default function PDFTemplate() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add PDF Template"
         onClick={() => navigate("/addPDFTemplate")}

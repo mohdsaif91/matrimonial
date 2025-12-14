@@ -361,7 +361,6 @@ export default function LeadsList() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <div className="flex justify-between">
         <label className="font-bold text-2xl">Leads</label>
         <Button text="+ Add Leads" onClick={() => navigate("/addLeads")} />

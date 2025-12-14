@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -20,6 +20,13 @@ function LoginPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("access_token");
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    }
+  }, []);
+
   const attendenceMutation = useMutation({
     mutationFn: markAttendenceCheckIN,
     onSuccess: (data) => {
@@ -34,21 +41,22 @@ function LoginPage() {
   const mutation = useMutation({
     mutationFn: loginApi,
     onSuccess: async (data) => {
+      console.log("ON ERROR INVALID PASSWORD ON SUCCESS");
       const token = data?.token || data?.access_token || data?.data?.token;
       if (token) {
         queryClient.setQueryData(["authUser"], data.data.user);
         sessionStorage.setItem("authUser", JSON.stringify(data.data.user));
-        sessionStorage.setItem("access_token", token);
+        localStorage.setItem("access_token", token);
         sessionStorage.setItem("staffUserID", data.data.user.id);
         try {
           await attendenceMutation.mutateAsync();
         } catch (err) {}
-        // userMutation.mutate(data.data.user.id);
       } else {
         console.error("Token not found in response:", data);
       }
     },
     onError: (error: any) => {
+      console.log("ON ERROR INVALID PASSWORD ON ERROR");
       setError("Invalid email or password.");
     },
     onSettled: () => {},
@@ -68,15 +76,15 @@ function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    try {
-      !showForgetPass
-        ? await mutation.mutateAsync({ email, password })
-        : await passwordResetMutation.mutateAsync(email);
-    } catch (err) {
-      setError("Invalid email or password.");
-    }
+    // try {
+    !showForgetPass
+      ? await mutation.mutateAsync({ email, password })
+      : await passwordResetMutation.mutateAsync(email);
+    // } catch (err) {
+    //   setError("Invalid email or password.");
+    // }
   };
-
+  console.log(error, " JOJO <>?");
   return (
     <div
       className="min-h-screen flex items-center justify-start bg-center bg-no-repeat sm:bg-cover"
@@ -95,12 +103,6 @@ function LoginPage() {
             : "Enter your Email to receive reset Password link"}
         </h1>
         <form onSubmit={handleLogin} className="w-full">
-          {error && (
-            <div className="text-red-300 bg-red-500/20 border border-red-500/30 rounded-lg px-3 py-2 text-sm mb-4">
-              {error}
-            </div>
-          )}
-
           <div className="mb-4">
             <label htmlFor="email" className="block mb-1 text-white">
               Your Email
@@ -163,22 +165,20 @@ function LoginPage() {
               </div>
             </div>
           )}
+          {error && (
+            <div className="text-red-300  border border-red-500/30 rounded-lg px-3 py-2 text-sm mb-4">
+              {error}
+            </div>
+          )}
           <div className="flex items-center justify-between mb-6">
-            {/* <label className="flex items-center text-white text-sm">
-              <input
-                type="checkbox"
-                className="form-checkbox bg-white/60 mr-2 rounded w-5 h-5 outline-none font-bold"
-                disabled={mutation.isPending}
-              />
-              Remember me
-            </label> */}
             {!showForgetPass && (
-              <a
+              <button
+                type="button"
                 onClick={() => setShowForgetPass(true)}
-                className="text-sm text-black-200 hover:underline cursor-pointer"
+                className="text-sm text-black-200 hover:underline"
               >
                 Forgot password?
-              </a>
+              </button>
             )}
           </div>
           <button

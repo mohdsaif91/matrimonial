@@ -140,7 +140,6 @@ const AttendenceReport = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <div className="flex justify-between">
         <AttendenceReportFilter
           fetchAttendenceReport={(f) => {

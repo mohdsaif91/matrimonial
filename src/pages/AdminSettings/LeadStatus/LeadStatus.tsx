@@ -91,7 +91,6 @@ export default function LeadStatus() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Lead Status"
         onClick={() => navigate("/addLeadStatus")}

@@ -95,7 +95,6 @@ export default function WhatsAppProvider() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Whats App Provider"
         onClick={() => navigate("/addWhatsAppProvider")}

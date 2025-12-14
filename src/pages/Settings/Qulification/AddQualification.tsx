@@ -88,7 +88,6 @@ function AddCaste() {
       onSubmit={handleSubmit}
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
-      <ToastContainer />
       <h2 className="text-xl font-semibold mb-4">Add Qualification</h2>
       <div className="grid grid-cols-3 md:grid-cols-3 gap-3 gap-y-5">
         <TextField

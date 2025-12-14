@@ -104,7 +104,6 @@ const Module = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add Module" onClick={() => navigate("/addModule")} />
       <div className="mt-2 mb-2">
         <ModuleTable

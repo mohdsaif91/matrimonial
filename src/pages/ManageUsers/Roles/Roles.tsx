@@ -95,7 +95,6 @@ export default function Roles() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add Roles" onClick={() => navigate("/addRoles")} />
       <div className="mt-2 mb-2">
         <Table borderX columns={columns} data={data.data || []} />

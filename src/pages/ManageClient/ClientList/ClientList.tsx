@@ -84,6 +84,7 @@ export default function ClientList() {
       return fetchClientList(pageNumber as number, perPage as number);
     },
     retry: false,
+    refetchOnWindowFocus: true,
   });
 
   const { data: clientFormModuleData, isLoading: clientFromModuleLoading } =
@@ -532,7 +533,6 @@ export default function ClientList() {
 
   return (
     <div className="">
-      <ToastContainer />
       <div className="">
         <CommonFilters
           filters={filters}

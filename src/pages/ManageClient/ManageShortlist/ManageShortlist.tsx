@@ -103,7 +103,6 @@ export default function ManageShortlist() {
   const handledPaginationData = initialPaginationData;
   return (
     <div>
-      <ToastContainer />
       <ManageShortlistFilters />
       <div className="mt-2 mb-2">
         <Table

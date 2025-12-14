@@ -237,7 +237,6 @@ export default function Payment({
 
   return (
     <div className="overflow-y-auto" ref={scrollRef}>
-      <ToastContainer />
       <form
         onSubmit={(e) => {
           e.preventDefault();

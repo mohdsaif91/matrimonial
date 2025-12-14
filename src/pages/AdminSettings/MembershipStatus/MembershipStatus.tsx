@@ -98,7 +98,6 @@ export default function MembershipStatus() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Membership Status"
         onClick={() => navigate("/addMembershipStatus")}

@@ -93,7 +93,6 @@ const Caste = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add Country" onClick={() => navigate("/addCountry")} />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />

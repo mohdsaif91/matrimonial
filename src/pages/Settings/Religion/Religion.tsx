@@ -91,7 +91,6 @@ const Religion = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add Religion" onClick={() => navigate("/addReligion")} />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />

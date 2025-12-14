@@ -86,7 +86,6 @@ export default function WebsiteSettings() {
   const handledTaskData = taskData ? taskData.data : [];
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Website Setting"
         onClick={() => navigate("/addWebsiteSetting")}

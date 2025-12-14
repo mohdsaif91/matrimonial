@@ -232,7 +232,6 @@ export default function TaskList() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <TaskFilter
         setData={(d) => setPFilter({ ...d })}
         showAddTaskBtn={!(state && !state.clientIdForTask)}

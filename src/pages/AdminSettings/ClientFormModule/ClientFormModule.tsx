@@ -100,7 +100,6 @@ const ClientFormModule = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Client Form Module"
         onClick={() => navigate("/addClientFormModule")}

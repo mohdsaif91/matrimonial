@@ -98,7 +98,6 @@ export default function MembershipPlan() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Membership Plan"
         onClick={() => navigate("/addMembershipPlan")}

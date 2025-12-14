@@ -264,7 +264,14 @@ export default function ClientAdvanceSearch() {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex flex-col gap-2">
-          <Button text="Search Profile" />
+          <Button
+            text="Search Profile"
+            onClick={() =>
+              navigate("/search-profile", {
+                state: { profileData: row.original },
+              })
+            }
+          />
           <div className="flex flex-row justify-between">
             <Eye size={16} className="cursor-pointer text-gray-600" />
             <Pencil
@@ -333,7 +340,6 @@ export default function ClientAdvanceSearch() {
 
   return (
     <div className="">
-      <ToastContainer />
       <div className="">
         <AdvanceSearchFilter
           filters={filters}
@@ -345,7 +351,7 @@ export default function ClientAdvanceSearch() {
         />
       </div>
       <div className="mt-2 mb-2">
-        <Table columns={columns} data={transformedClientList || []} />
+        <Table borderX columns={columns} data={transformedClientList || []} />
         <Pagination
           onPageChange={() => {}}
           pagination={handledPaginationData}

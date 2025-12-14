@@ -11,11 +11,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const oldToken = localStorage.getItem("token");
-    if (oldToken && !sessionStorage.getItem("access_token")) {
+    if (oldToken && !localStorage.getItem("access_token")) {
       localStorage.removeItem("token");
     }
 
-    const savedToken = sessionStorage.getItem("access_token");
+    const savedToken = localStorage.getItem("access_token");
     const savedRefreshToken = localStorage.getItem("refresh_token");
     const savedUser = localStorage.getItem("user");
 
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
       if (access_token && refresh_token) {
         setToken(access_token);
         setRefreshToken(refresh_token);
-        sessionStorage.setItem("access_token", access_token);
+        localStorage.setItem("access_token", access_token);
         localStorage.setItem("refresh_token", refresh_token);
 
         const userProfile = await fetchUserProfile(access_token);
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setRefreshToken(null);
     setUser(null);
-    sessionStorage.removeItem("access_token");
+    localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user");
     localStorage.removeItem("token");

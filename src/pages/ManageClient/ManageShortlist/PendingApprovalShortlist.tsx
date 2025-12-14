@@ -299,7 +299,6 @@ export default function PendingApprovalShortlist() {
 
   return (
     <div>
-      <ToastContainer />
       {clientData.form_data && (
         <div className="p-2">
           <p className="font-bold">

@@ -97,7 +97,6 @@ const Visa = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add Visa" onClick={() => navigate("/addVisa")} />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />

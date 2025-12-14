@@ -110,7 +110,6 @@ export default function WhatsappKey() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Whats App Key"
         onClick={() => navigate("/addWhatsAppKey")}

@@ -103,7 +103,6 @@ export default function WhatsappTemplate() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Whats App Template"
         onClick={() => navigate("/addWhatsAppTemplate")}

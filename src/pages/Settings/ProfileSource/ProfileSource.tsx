@@ -106,7 +106,6 @@ export default function ProfileSource() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <div className="flex">
         <TextField
           label="Name"

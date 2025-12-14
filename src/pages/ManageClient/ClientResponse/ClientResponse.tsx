@@ -138,7 +138,6 @@ export default function ClientResponse() {
 
   return (
     <div className="">
-      <ToastContainer />
       <div className="">
         <ClientResponseFilter />
       </div>

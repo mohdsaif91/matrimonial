@@ -99,7 +99,6 @@ const Caste = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add Caste" onClick={() => navigate("/addCaste")} />
       <Button
         className="ml-3"

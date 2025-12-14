@@ -113,7 +113,6 @@ export default function CRMSetting() {
   const handledCRMData = CRMData ? CRMData.data : [];
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add CRM Setting"
         onClick={() => navigate("/addCRMSetting")}

@@ -27,6 +27,7 @@ import { fetchClientFormModule } from "../../service/clientFormModule";
 import ModalPopup from "../../component/ModalPopup";
 import AttachProfile from "./AttachProfile";
 import { getAuthUserPermission } from "../../util/ClientUtils";
+import Pagination from "../../component/Pagination";
 
 const initialPaginationData = {
   current_page: 1,
@@ -70,6 +71,7 @@ export default function SearchClient() {
     data: clientListData,
     error: clientListError,
     isLoading: clientListLoading,
+    refetch: clientDataRefetch,
   } = useQuery({
     queryKey: ["client-list", selectClientDetails?.id], // include it in the key
     queryFn: () => fetchOppClientList(selectClientDetails.id),
@@ -114,7 +116,7 @@ export default function SearchClient() {
     },
   });
 
-  const fetchMutation = useMutation({
+  const fetchClientFilterMutation = useMutation({
     mutationFn: fetchClientByFilters,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["client-list"] });
@@ -320,7 +322,6 @@ export default function SearchClient() {
                   from_client_id: selectClientDetails && selectClientDetails.id,
                   to_client_id: row.original.id,
                 };
-
                 setModalPopup({
                   open: true,
                   data: { ...sendObjs },
@@ -339,14 +340,6 @@ export default function SearchClient() {
             />
             <IndianRupee size={16} className="cursor-pointer text-gray-600" />
             <SquarePlus size={16} className="cursor-pointer text-gray-600" />
-            <List size={16} className="cursor-pointer text-gray-600" />
-            {/* <Trash
-              size={16}
-              className="text-gray-600"
-              onClick={() => {
-                row.original.id && deleteMutation.mutate(row.original.id);
-              }}
-            /> */}
           </div>
         </div>
       ),
@@ -377,6 +370,7 @@ export default function SearchClient() {
         ),
         client_documents: m.client_documents,
       }));
+  console.log(transformedClientList, " <>?");
 
   const handleChange = (updateFilter: any) => {
     setFilters({ ...updateFilter });
@@ -390,9 +384,17 @@ export default function SearchClient() {
   const partnerPrefrence = selectClientDetails
     ? selectClientDetails.items.partner_preferences.value
     : "";
+
+  // const handledPaginationData = clientListData.meta
+  //   ? {
+  //       current_page: clientListData.meta.current_page,
+  //       last_page: clientListData.meta.last_page,
+  //       per_page: clientListData.meta.per_page,
+  //     }
+  //   : initialPaginationData;
+
   return (
     <div className="">
-      <ToastContainer />
       {selectClientDetails && (
         <div className="p-2">
           <p>
@@ -407,8 +409,22 @@ export default function SearchClient() {
           formValues={formValues}
           clientFormModuleData={clientFormModuleData}
           handleChangeMethod={handleChange}
-          onSubmit={(filter) => {}}
-          onReset={(filter) => {}}
+          onSubmit={(filter) => {
+            const finalObj: any[] = [];
+            Object.keys(filters).forEach((key) => {
+              if (filters[key].value !== "") {
+                finalObj.push(filters[key]);
+              }
+            });
+            console.log("NEW CLICK");
+
+            fetchClientFilterMutation.mutate({ search_fields: finalObj });
+          }}
+          onReset={() => {
+            setFilterData(null);
+            setFilters({});
+            clientDataRefetch();
+          }}
         />
       </div>
       <div className="mt-2 mb-2 bg-[#fff]">
@@ -424,7 +440,8 @@ export default function SearchClient() {
                     client_id: clientId,
                     shortlisted_by:
                       (authUser && authUser.id) ||
-                      JSON.parse(sessionStorage.getItem("authUser")).id,
+                      JSON.parse(sessionStorage.getItem("authUser") as string)
+                        .id,
                     shortlisted_client_ids: selectedClient,
                   };
                   mutation.mutate(shortListObj);
@@ -445,9 +462,15 @@ export default function SearchClient() {
             />
           </div>
         </div>
-        <Table columns={columns} data={transformedClientList || []} />
+        <Table borderX columns={columns} data={transformedClientList || []} />
         {/* <Pagination
-          onPageChange={() => {}}
+          onActionChange={(pData) => {
+            setPaginationData({
+              current_page: pData.current_page,
+              per_page: pData.per_page,
+              last_page: paginationData.last_page,
+            });
+          }}
           pagination={handledPaginationData}
         /> */}
       </div>

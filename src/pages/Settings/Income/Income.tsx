@@ -95,7 +95,6 @@ export default function Income() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add Income" onClick={() => navigate("/addIncome")} />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />

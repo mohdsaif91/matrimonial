@@ -94,7 +94,6 @@ const Visa = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Occupation"
         onClick={() => navigate("/addOccupation")}

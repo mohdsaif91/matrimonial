@@ -106,7 +106,6 @@ const City = () => {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button text="+ Add City" onClick={() => navigate("/addCity")} />
       <div className="mt-2 mb-2">
         <Table columns={columns} data={data.data || []} />

@@ -100,7 +100,6 @@ export default function MembershipType() {
 
   return (
     <div className="p-4 bg-white">
-      <ToastContainer />
       <Button
         text="+ Add Membership Type"
         onClick={() => navigate("/addMembershipType")}

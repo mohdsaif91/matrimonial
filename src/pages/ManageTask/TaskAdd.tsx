@@ -115,7 +115,6 @@ function TaskAdd({ client_id }: { client_id?: string }) {
       onSubmit={handleSubmit}
       className="w-full bg-white p-6 rounded-xl shadow-md"
     >
-      <ToastContainer />
       {!client_id && (
         <h2 className="text-xl font-semibold mb-4">
           {state && state.data ? "Edit" : "ADD"} Task

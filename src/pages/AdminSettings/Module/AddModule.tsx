@@ -90,7 +90,6 @@ export default function AddModule() {
 
   return (
     <div>
-      <ToastContainer />
       <form
         onSubmit={handleSubmit}
         className="w-full bg-white p-6 rounded-xl shadow-md"
