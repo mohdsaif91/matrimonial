@@ -197,8 +197,6 @@ function AddEditRoles() {
     },
   ];
 
-  console.log(permissionArr);
-
   return (
     <form
       onSubmit={handleSubmit}

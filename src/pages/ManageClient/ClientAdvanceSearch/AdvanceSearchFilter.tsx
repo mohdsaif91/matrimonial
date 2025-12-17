@@ -61,6 +61,7 @@ export const AdvanceSearchFilter = ({
   handleChangeMethod,
   filters,
   formValues = [],
+  loading = false,
 }: AdvanceSearchProps) => {
   const {
     data: sourcedData,
@@ -570,8 +571,9 @@ export const AdvanceSearchFilter = ({
       )}
       <div className="flex items-end gap-3 ">
         <Button
+          loading={loading}
           text="Submit"
-          type="button"
+          type="submit"
           onClick={() => {
             const finalObj: any[] = [];
             Object.keys(filters).forEach((key) => {

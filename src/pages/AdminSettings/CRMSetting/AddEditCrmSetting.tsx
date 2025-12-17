@@ -40,8 +40,6 @@ function AddEditCrmSetting() {
 
   useEffect(() => {
     if (state && state.data) {
-      console.log(state.data);
-
       setFormData({ ...state.data });
     }
   }, []);
@@ -120,7 +118,6 @@ function AddEditCrmSetting() {
     mutationFn: updateCRMSettingAsImage,
     onSuccess: (data) => {
       refetch().then((res) => {
-        console.log(res.data.data);
         // invalidate or refresh client list queries
         sessionStorage.setItem("CRM", JSON.stringify([...res.data.data]));
         queryClient.invalidateQueries({ queryKey: ["crm-setting-list"] });

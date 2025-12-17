@@ -61,6 +61,7 @@ export default function CommonFilters({
   handleChangeMethod,
   filters,
   formValues = [],
+  loading = false,
 }: AdvanceSearchProps) {
   const {
     data: sourcedData,
@@ -564,8 +565,9 @@ export default function CommonFilters({
       })}
       <div className="flex items-end gap-3 ">
         <Button
+          loading={loading}
           text="Submit"
-          type="button"
+          type="submit"
           onClick={() => {
             const finalObj: any[] = [];
             Object.keys(filters).forEach((key) => {

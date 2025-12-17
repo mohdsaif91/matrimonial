@@ -30,8 +30,6 @@ const ProfileCardExpandedRow: React.FC<ProfileCardExpandedRowProps> = ({
 }) => {
   const [openModal, setOpenModal] = useState(initialModalData);
 
-  console.log(data, " <>?");
-
   const getComponent = (type: string) => {
     switch (type) {
       case "addResponse":

@@ -58,8 +58,6 @@ function AddEditUsers() {
       setFormData({ ...state.data, role_id: state.data.role });
     }
     if (data) {
-      console.log(data);
-
       setFormData({ ...data.data, role_id: data.data.role });
     }
   }, [data, state]);

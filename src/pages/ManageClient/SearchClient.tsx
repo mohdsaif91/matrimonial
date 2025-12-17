@@ -26,7 +26,11 @@ import { User } from "../../types/header";
 import { fetchClientFormModule } from "../../service/clientFormModule";
 import ModalPopup from "../../component/ModalPopup";
 import AttachProfile from "./AttachProfile";
-import { getAuthUserPermission } from "../../util/ClientUtils";
+import {
+  getAuthUserPermission,
+  getCRMObject,
+  getStatusColor,
+} from "../../util/ClientUtils";
 import Pagination from "../../component/Pagination";
 
 const initialPaginationData = {
@@ -57,6 +61,16 @@ export default function SearchClient() {
   useEffect(() => {
     if (state && state.profileData !== selectClientDetails) {
       setSelectedClientDetails({ ...state.profileData });
+      setFilters({
+        ...filters,
+        17: {
+          field_id: 17,
+          value:
+            state.profileData.items.gender?.value === "Male"
+              ? "Female"
+              : "Male",
+        },
+      });
     }
   }, [state]);
 
@@ -74,14 +88,25 @@ export default function SearchClient() {
     refetch: clientDataRefetch,
   } = useQuery({
     queryKey: ["client-list", selectClientDetails?.id], // include it in the key
-    queryFn: () => fetchOppClientList(selectClientDetails.id),
+    queryFn: () => {
+      const handledFilter = selectClientDetails
+        ? {
+            field_id: 17,
+            value:
+              state.profileData.items.gender?.value === "Male"
+                ? "Female"
+                : "Male",
+          }
+        : {};
+      return fetchClientByFilters({ search_fields: [{ ...handledFilter }] });
+    },
     enabled: !!selectClientDetails?.id, // run only when ID exists
     retry: false,
   });
 
   useEffect(() => {
     if (
-      Object.keys(filters).length === 0 &&
+      // Object.keys(filters).length === 0 &&
       clientFormModuleData &&
       clientFormModuleData?.data?.length
     ) {
@@ -90,10 +115,20 @@ export default function SearchClient() {
         item.client_forms.filter((innerItem) => {
           if (innerItem.show_in_common === 1) {
             advanceSearchFeilds.push(innerItem);
-            filters[innerItem.id] = {
-              value: innerItem.value || "",
-              field_id: innerItem.id,
-            };
+            if (innerItem.field_name.trim() === "gender") {
+              filters[innerItem.id] = {
+                value:
+                  state.profileData.items.gender?.value === "Male"
+                    ? "Female"
+                    : "Male",
+                field_id: innerItem.id,
+              };
+            } else {
+              filters[innerItem.id] = {
+                value: innerItem?.value || "",
+                field_id: innerItem.id,
+              };
+            }
           }
         });
       });
@@ -129,19 +164,7 @@ export default function SearchClient() {
     },
   });
 
-  const senProfileMutation = useMutation({
-    mutationFn: sendProfile,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["client-Profile"] });
-      toast("Successfully sent profile");
-      setFilterData(data.data);
-    },
-    onError: (error: any) => {
-      toast(error.response?.data?.message || "Failed to sent profile");
-    },
-  });
-
-  const columns: ColumnDef<SearchClientDataProps>[] = [
+  const columns: ColumnDef<ClientData>[] = [
     {
       header: "Shortlist Select",
       cell: ({ row }) => {
@@ -168,14 +191,48 @@ export default function SearchClient() {
       accessorKey: "status",
       header: "Profile Photo",
       cell: ({ row }) => {
-        const { documents } = row.original;
-        const mainPhoto = (documents && documents[0]?.document_path) || "";
+        const { client_documents, items } = row.original;
+        const mainPhoto = client_documents.find(
+          (f) => f.file_type === "main_photo"
+        );
+        let CRMImage = getCRMObject()?.DEFAULT_IMAGE?.value || "";
+        let color = "bg-[#fff]";
+        const date = new Date();
+        if (items?.expiry_date) {
+          color =
+            new Date(items?.expiry_date.value) <= new Date(date)
+              ? "#FA9189"
+              : getStatusColor(items?.membership_profile_status);
+        }
         return (
-          <img
-            alt="miain_photo"
-            src={mainPhoto}
-            className="w-[240px] h-[120px]"
-          />
+          <div className="flex justify-start h-full">
+            {mainPhoto?.file_path ? (
+              <div
+                style={{ backgroundColor: color }}
+                className={` h-auto w-[8px] mr-1`}
+              />
+            ) : (
+              <div
+                style={{ backgroundColor: color }}
+                className={` h-auto w-[32px] mr-1`}
+              />
+            )}
+            <div>
+              {mainPhoto?.file_path ? (
+                <img
+                  alt="miain_photo"
+                  src={mainPhoto?.file_path}
+                  className="w-[200px] h-[140px] p-2"
+                />
+              ) : (
+                <img
+                  alt="miain_photo"
+                  src={CRMImage}
+                  className="w-[800px] h-[140px] p-2"
+                />
+              )}
+            </div>
+          </div>
         );
       },
     },
@@ -184,11 +241,12 @@ export default function SearchClient() {
       header: "Name | Profile ID | Lead ID | DOB",
       cell: ({ row }) => {
         const { items } = row.original;
-        const leadValue = items.lead_id;
+        const leadValue = items?.lead_id?.value;
         return (
           <div>
-            {items.client_name} | | {leadValue || "-"}|
-            {moment(items.date_of_birth?.value).format("YYYY-MM-DD")}
+            {items?.client_name?.value} | | {leadValue || "-"}|
+            {items?.date_of_birth?.value &&
+              moment(items.date_of_birth.value).format("YYYY-MM-DD")}
           </div>
         );
       },
@@ -198,9 +256,9 @@ export default function SearchClient() {
       header: "Handle By | Sex | Height",
       cell: ({ row }) => {
         const { items } = row.original;
-        const value = items.profile_handled || "";
-        const genderValue = items.gender;
-        const heightValue = items.height;
+        const value = items?.profile_handled?.value || "";
+        const genderValue = items?.gender?.value;
+        const heightValue = items?.height?.value;
         return (
           <div className="">
             <span>
@@ -215,10 +273,10 @@ export default function SearchClient() {
       header: "Astrologically | Caste | Gotra | Marital Status",
       cell: ({ row }) => {
         const { items } = row.original;
-        const astroValue = items.astrologically || "";
-        const casteValue = items.caste;
-        const gotraValue = items.gotra;
-        const maritalValue = items.marital_status;
+        const astroValue = items?.astrologically?.value || "";
+        const casteValue = items?.caste?.value;
+        const gotraValue = items?.gotra?.value;
+        const maritalValue = items?.marital_status?.value;
         return (
           <div className="">
             <span>
@@ -233,10 +291,10 @@ export default function SearchClient() {
       header: "Education | Occupation | Personal Income | Annual Income",
       cell: ({ row }) => {
         const { items } = row.original;
-        const qualification = items.highest_qualification || "";
-        const occupation = items && items.occupation;
-        const pIncome = items && items.personal_income;
-        const aIncome = items && items.annual_family_income;
+        const qualification = items?.highest_qualification?.value || "";
+        const occupation = items && items?.occupation?.value;
+        const pIncome = items && items?.personal_income?.value;
+        const aIncome = items && items?.annual_family_income?.value;
         return (
           <div className="">
             {qualification} | {occupation} | {pIncome || 0} | {aIncome || 0}
@@ -249,8 +307,8 @@ export default function SearchClient() {
       header: "Client Mobile | Client Email",
       cell: ({ row }) => {
         const { items } = row.original;
-        const cMobileValue = items.client_mobile || "";
-        const cEmailValue = items.client_email;
+        const cMobileValue = items?.client_mobile?.value || "";
+        const cEmailValue = items?.client_email?.value;
         return (
           <div className="">
             <span>
@@ -265,8 +323,8 @@ export default function SearchClient() {
       header: "Budget",
       cell: ({ row }) => {
         const { items } = row.original;
-        const fromBudgetValue = items.from_marriage_budget || "";
-        const toBudgetValue = items.to_marriage_budget;
+        const fromBudgetValue = items?.from_marriage_budget?.value || "";
+        const toBudgetValue = items?.to_marriage_budget?.value;
 
         return (
           <div className="flex">
@@ -287,8 +345,8 @@ export default function SearchClient() {
       header: "Country | City",
       cell: ({ row }) => {
         const { items } = row.original;
-        const countryeValue = items.residing_country;
-        const cityValue = items.residential_city;
+        const countryeValue = items?.residing_country?.value;
+        const cityValue = items?.residential_city?.value;
         return (
           <div className="">
             {countryeValue} | {cityValue}
@@ -299,50 +357,55 @@ export default function SearchClient() {
     {
       id: "actions",
       header: "Action",
-      cell: ({ row }) => (
-        <div className="flex flex-col gap-2">
-          {getAuthUserPermission().includes(
-            "manage_send_profiles.view_profile_sent"
-          ) && (
-            <Button
-              text="Send Profile"
-              onClick={() => {
-                const sendObjs = {
-                  sendToName: selectClientDetails.items.client_name.value,
-                  sendToMobile: selectClientDetails.items.client_mobile.value,
-                  sendTPohoto: selectClientDetails.client_documents.find(
-                    (f) => f.file_type === "main_photo"
-                  ).file_path,
-                  sendToEmail: selectClientDetails.items.client_email.value,
-                  attachProfileName: row.original.items.client_name,
-                  attachProfileMobile: row.original.items.client_mobile,
-                  attachProfilePhoto: row.original.documents[0].document_path,
-                  attachProfileEmail: row.original.items.client_email || "-",
-                  subject: `Matrimonial Profile of ${selectClientDetails.items.client_name.value} for ${row.original.items.client_name}`,
-                  from_client_id: selectClientDetails && selectClientDetails.id,
-                  to_client_id: row.original.id,
-                };
-                setModalPopup({
-                  open: true,
-                  data: { ...sendObjs },
-                });
-              }}
-            />
-          )}
-          <div className="flex flex-row justify-between">
-            <Eye size={16} className="cursor-pointer text-gray-600" />
-            <Pencil
-              onClick={() =>
-                navigate("/editClient", { state: { data: row.original } })
-              }
-              size={16}
-              className="cursor-pointer text-gray-600"
-            />
-            <IndianRupee size={16} className="cursor-pointer text-gray-600" />
-            <SquarePlus size={16} className="cursor-pointer text-gray-600" />
+      cell: ({ row }) => {
+        const { items } = row.original;
+        return (
+          <div className="flex flex-col gap-2">
+            {getAuthUserPermission().includes(
+              "manage_send_profiles.view_profile_sent"
+            ) && (
+              <Button
+                text="Send Profile"
+                onClick={() => {
+                  const sendObjs = {
+                    sendToName: selectClientDetails.items.client_name?.value,
+                    sendToMobile:
+                      selectClientDetails.items.client_mobile?.value,
+                    sendTPohoto: selectClientDetails.client_documents.find(
+                      (f) => f.file_type === "main_photo"
+                    ).file_path,
+                    sendToEmail: selectClientDetails.items.client_email?.value,
+                    attachProfileName: items?.client_name?.value,
+                    attachProfileMobile: items?.client_mobile?.value,
+                    attachProfilePhoto: row.original.documents[0].document_path,
+                    attachProfileEmail: items?.client_email?.value || "-",
+                    subject: `Matrimonial Profile of ${selectClientDetails.items.client_name?.value} for ${row.original.items.client_name}`,
+                    from_client_id:
+                      selectClientDetails && selectClientDetails.id,
+                    to_client_id: row.original.id,
+                  };
+                  setModalPopup({
+                    open: true,
+                    data: { ...sendObjs },
+                  });
+                }}
+              />
+            )}
+            <div className="flex flex-row justify-between">
+              <Eye size={16} className="cursor-pointer text-gray-600" />
+              <Pencil
+                onClick={() =>
+                  navigate("/editClient", { state: { data: row.original } })
+                }
+                size={16}
+                className="cursor-pointer text-gray-600"
+              />
+              <IndianRupee size={16} className="cursor-pointer text-gray-600" />
+              <SquarePlus size={16} className="cursor-pointer text-gray-600" />
+            </div>
           </div>
-        </div>
-      ),
+        );
+      },
     },
   ];
 
@@ -350,18 +413,30 @@ export default function SearchClient() {
     return <LoadingPage />;
   }
 
+  const handledPaginationData = clientListData
+    ? {
+        current_page: clientListData.meta.current_page,
+        last_page: clientListData.meta.last_page,
+        per_page: clientListData.meta.per_page,
+      }
+    : initialPaginationData;
+
   const transformedClientList = !filterData
     ? clientListData &&
-      Array.isArray(clientListData) &&
-      clientListData.map((m: SearchClientDataProps) => ({
+      Array.isArray(clientListData.data) &&
+      clientListData.data.map((m: ClientData) => ({
         id: m.client_id,
         items: Object.fromEntries(
-          m.forms.map((item) => [item.field_name, item.value])
+          m.modules.flatMap((mm) =>
+            mm.fields.map((field) => [field.field_name, field])
+          )
         ),
-        documents: m.documents,
+        client_id: m.client_profile_id,
+        shared_profiles: m.shared_profiles,
+        client_documents: m.client_documents,
       }))
-    : Array.isArray(filterData) &&
-      filterData.map((m: ClientData) => ({
+    : Array.isArray(filterData)
+    ? filterData.map((m: ClientData) => ({
         id: m.client_id,
         items: Object.fromEntries(
           m.modules.flatMap((mm) =>
@@ -369,8 +444,8 @@ export default function SearchClient() {
           )
         ),
         client_documents: m.client_documents,
-      }));
-  console.log(transformedClientList, " <>?");
+      }))
+    : [];
 
   const handleChange = (updateFilter: any) => {
     setFilters({ ...updateFilter });
@@ -382,7 +457,7 @@ export default function SearchClient() {
   const clientId = selectClientDetails ? selectClientDetails?.id : "";
 
   const partnerPrefrence = selectClientDetails
-    ? selectClientDetails.items.partner_preferences.value
+    ? selectClientDetails.items.partner_preferences?.value
     : "";
 
   // const handledPaginationData = clientListData.meta
@@ -412,14 +487,13 @@ export default function SearchClient() {
           onSubmit={(filter) => {
             const finalObj: any[] = [];
             Object.keys(filters).forEach((key) => {
-              if (filters[key].value !== "") {
+              if (filters[key]?.value !== "") {
                 finalObj.push(filters[key]);
               }
             });
-            console.log("NEW CLICK");
-
             fetchClientFilterMutation.mutate({ search_fields: finalObj });
           }}
+          loading={fetchClientFilterMutation.isPending}
           onReset={() => {
             setFilterData(null);
             setFilters({});
@@ -463,17 +537,17 @@ export default function SearchClient() {
           </div>
         </div>
         <Table borderX columns={columns} data={transformedClientList || []} />
-        {/* <Pagination
-          onActionChange={(pData) => {
-            setPaginationData({
-              current_page: pData.current_page,
-              per_page: pData.per_page,
-              last_page: paginationData.last_page,
-            });
-          }}
-          pagination={handledPaginationData}
-        /> */}
       </div>
+      <Pagination
+        onActionChange={(pData) => {
+          setPaginationData({
+            current_page: pData.current_page,
+            per_page: pData.per_page,
+            last_page: paginationData.last_page,
+          });
+        }}
+        pagination={handledPaginationData}
+      />
       <ModalPopup
         children={
           <AttachProfile

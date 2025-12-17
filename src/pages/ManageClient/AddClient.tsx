@@ -308,7 +308,6 @@ const AddClient = () => {
   const updateMutation = useMutation({
     mutationFn: updateClient,
     onSuccess: (data) => {
-      console.log("Called <>? UPDAte Mutation");
       idRef.current = data.client_id;
       sessionStorage.setItem("id_forPhoto", data.client_id);
       // invalidate or refresh client list queries

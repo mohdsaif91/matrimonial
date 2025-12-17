@@ -16,8 +16,6 @@ export async function addCRMSettingAsImage(data: any) {
 
 export async function updateCRMSettingAsImage(data: any) {
   const { id, actualFormData } = data;
-  console.log(actualFormData, id);
-
   const response = await api.post(
     `${ROUTE.CRM_SETTING.UPDATE}/${id}`,
     actualFormData,

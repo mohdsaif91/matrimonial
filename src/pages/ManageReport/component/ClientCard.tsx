@@ -20,8 +20,6 @@ export default function ClientCard({
   clientRemark: string;
   staffRemark: string;
 }) {
-  console.log(img);
-
   return (
     <div
       style={{ border: `2px solid ${borderColor}` }}

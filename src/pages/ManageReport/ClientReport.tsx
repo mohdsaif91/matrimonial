@@ -99,11 +99,9 @@ const ClientReport = () => {
   const searchedProfileId = handledClientReport?.profile_id
     ? `(${handledClientReport?.profile_id})`
     : "";
-  console.log(data, " <>?<>?");
 
   return (
     <div className="p-4 bg-gray-100">
-      <ToastContainer />
       <div className="flex bg-white  mb-2 p-2 flex-col justify-between">
         <div className="flex justify-between">
           <ClientReportFilters

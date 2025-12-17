@@ -53,8 +53,6 @@ function ProfileDropdown({
     onSettled: () => {},
   });
 
-  console.log(userData, " <>?");
-
   return (
     <div className="hidden md:flex relative items-center space-x-3">
       <div className="relative w-[180px]">
@@ -106,8 +104,6 @@ function ProfileDropdown({
               const userData = JSON.parse(
                 sessionStorage.getItem("authUser") as string
               );
-              console.log(userData, " <>?");
-
               navigate("/editManageUsers", {
                 state: {
                   clientId: userData.id,

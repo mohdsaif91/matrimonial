@@ -31,8 +31,6 @@ function App() {
     );
   }
 
-  console.log("APP MAI AYA");
-
   return (
     <AuthProvider>
       <ToastContainer />

@@ -535,6 +535,7 @@ export default function ClientList() {
     <div className="">
       <div className="">
         <CommonFilters
+          loading={mutation.isPending}
           filters={filters}
           formValues={formValues}
           clientFormModuleData={clientFormModuleData}

@@ -172,6 +172,7 @@ export interface AdvanceSearchProps {
   handleChangeMethod: (arr: any) => void;
   filters: any;
   formValues: any;
+  loading: boolean;
 }
 
 export interface SendProfileProps {

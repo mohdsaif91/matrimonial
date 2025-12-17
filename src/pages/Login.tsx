@@ -41,7 +41,6 @@ function LoginPage() {
   const mutation = useMutation({
     mutationFn: loginApi,
     onSuccess: async (data) => {
-      console.log("ON ERROR INVALID PASSWORD ON SUCCESS");
       const token = data?.token || data?.access_token || data?.data?.token;
       if (token) {
         queryClient.setQueryData(["authUser"], data.data.user);
@@ -56,7 +55,6 @@ function LoginPage() {
       }
     },
     onError: (error: any) => {
-      console.log("ON ERROR INVALID PASSWORD ON ERROR");
       setError("Invalid email or password.");
     },
     onSettled: () => {},
@@ -73,18 +71,13 @@ function LoginPage() {
     onSettled: () => {},
   });
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     setError("");
-    // try {
     !showForgetPass
       ? await mutation.mutateAsync({ email, password })
       : await passwordResetMutation.mutateAsync(email);
-    // } catch (err) {
-    //   setError("Invalid email or password.");
-    // }
   };
-  console.log(error, " JOJO <>?");
+
   return (
     <div
       className="min-h-screen flex items-center justify-start bg-center bg-no-repeat sm:bg-cover"
@@ -102,7 +95,7 @@ function LoginPage() {
             ? "Sign in to our platform"
             : "Enter your Email to receive reset Password link"}
         </h1>
-        <form onSubmit={handleLogin} className="w-full">
+        <div onSubmit={handleLogin} className="w-full">
           <div className="mb-4">
             <label htmlFor="email" className="block mb-1 text-white">
               Your Email
@@ -182,6 +175,7 @@ function LoginPage() {
             )}
           </div>
           <button
+            onClick={() => handleLogin()}
             type="submit"
             disabled={mutation.isPending}
             className="w-full bg-[#2a3341] cursor-pointer text-white py-2 rounded-lg hover:bg-[#1d2029] transition-colors duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
@@ -213,7 +207,7 @@ function LoginPage() {
               <>{!showForgetPass ? "Sign in" : "Receive Email"}</>
             )}
           </button>
-        </form>
+        </div>
         {info !== "" && <div className="mt-1">{info}</div>}
       </div>
     </div>
